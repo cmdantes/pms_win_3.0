@@ -116,7 +116,7 @@ DATABASES = {
         'PASSWORD': '1sa]Inc]PMSisa.db',
         'PORT': '3306',
         'OPTIONS': {
-            "init_command": "SET foreign_key_checks = 0;",
+            'init_command': "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));"
         },
     }
 }

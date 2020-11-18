@@ -13,8 +13,9 @@ class Tblpermit(models.Model):
     vatreg = models.CharField(db_column='VATReg', max_length=255, blank=True, null=True)  # Field name made lowercase.
     accreddate = models.CharField(db_column='AccredDate', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
+
     class Meta:
-      
+
         db_table = 'tblpermit'
 
 

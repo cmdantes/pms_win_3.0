@@ -112,6 +112,14 @@ def bir(request):
     return response
 
 
+# registered = template.Library()
+
+
+def get_weekday(value):
+    """returns the weekday for the given number - 0 indexed"""
+    return wd_list[int(value)]
+
+
 @login_required(login_url="/accounts/login")
 def birmonthly(request):
     if request.method == 'POST':
@@ -160,9 +168,11 @@ def birmonthly(request):
                 [start_year, start_month])
 
             incom = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',[start_year, start_month])
-            for p in incomer3:
-                print(p)
+                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',
+                [start_year, start_month])
+
+            total = Transaction.objects.raw('SELECT t.pos_name,min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY  t.pos_name order by t.business_date;',
+                [start_year, start_month])
             month = {'1': 'Janauary',
                      '2': 'February',
                      '3': 'March',
@@ -177,25 +187,32 @@ def birmonthly(request):
                      '12': 'December'}
 
             new_date = month[start_month]
-            b = Transaction.objects.filter(business_date__year=start_year).filter(business_date__month=start_month).values('pos_name','business_date')
+            b = Transaction.objects.filter(business_date__year=start_year).filter(
+                business_date__month=start_month).values('pos_name', 'business_date')
             a = list()
-            for i in range(0,Tblpermit.objects.all().values('pc').count()):
+            for i in range(0, Tblpermit.objects.all().values('pc').count()):
                 a.append(str(i))
+            s = Tblpermit.objects.values_list('pc', flat=True)
+            b = list(Transaction.objects.values_list("pos_name", flat=True).distinct())
+            g = list(s)
+            for item in b:
+                if item in b:
+                    g.remove(item)
             context = {
                 'start_month': start_month,
                 'start_year': start_year,
 
-                'incomer': incomer,
-                'incomerg': incomerg,
-                'incomer2': incomer2,
+                # 'incomer': incomer,
+                'incomerg': total,
+                # 'incomer2': incomer2,
 
-                'incomer2g': incomer2g,
+                # 'incomer2g': incomer2g,
 
-                'incomer3': incomer3,
-                'incomer3g': incomer3g,
-                'incomerm': incomerm,
-                'incomermg': incomermg,
-                'incomer4': incomer4,
+                # 'incomer3': incomer3,
+                # 'incomer3g': incomer3g,
+                # 'incomerm': incomerm,
+                # 'incomermg': incomermg,
+                # 'incomer4': incomer4,
 
                 'start_date': start_date,
                 'com': com,
@@ -203,7 +220,9 @@ def birmonthly(request):
                 'new_date': new_date,
                 'start_year': start_year,
                 'pos_name': Tblpermit.objects.all(),
-                'sampsss': incom.order_by('business_date', '-pos_name'),
+                'sampsss': incom,
+                # 'ex': total,
+                'how': g,
             }
 
             if not com:
@@ -232,6 +251,7 @@ def birmonthly(request):
         response.write(output.read())
     logger.info('bir monthly pdfreport generated successfully')
     return response
+
 
 @login_required(login_url="/accounts/login")
 def discountpos(request):

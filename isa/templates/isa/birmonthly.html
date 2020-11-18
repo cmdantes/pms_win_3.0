@@ -183,9 +183,9 @@
             <th>Remarks</th>
          </thead>
          <tbody>
-         {% if i.name_pos.pc == "POS-1" %}
-         {% for incom in sampsss %}
-         <tr>
+            {% for incom in sampsss %}
+            {% if i.pc == incom.pos_name %}
+            <tr>
                <td style="text-align: center">{{ incom.business_date|date:"m-d-Y" }}</td>
                <td style="text-align: center">{{incom.pos_name}}</td>
                <td>{{ incom.beginning_or }}</td>
@@ -216,14 +216,18 @@
                <td>{{ incom.reset_counter }}</td>
                <td></td>
             </tr>
-         {% endfor %}
-         {% endif %}
+            {% endif %}
+            {% endfor %}
          </tbody>
          <tfoot>
-            {% for incom in incomer2g %}
-            <tr>
+         <tr>
                <th colspan="8" style="text-align: center">TOTAL</th>
-               <td>{{ incom.gross_sales_day }}</td>
+
+            {% if i.pc  %}
+
+            {% for incom in incomerg %}
+               {% if i.pc in incom.pos_name %}
+               <td>{{ incom.gross_sales_day|default:"nothing" }}</td>
                <td>{{ incom.vatable_sales|floatformat:2 }}</td>
                <td>{{ incom.vat_amount|floatformat:2 }}</td>
                <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>
@@ -243,9 +247,36 @@
                <td>{{ incom.sales_overrun_overflow }}</td>
                <td>{{ incom.total_net_sales|floatformat:2 }}</td>
                <td>{{ incom.reset_counter }}</td>
-               <td></td>
-            </tr>
+            <td></td>
+            {% endif %}
             {% endfor %}
+            {% if i.pc in how %}
+               <td>None</td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>None</td>
+               <td>None</td>
+               <td>None</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>None</td>
+               <td>None</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>None</td>
+               <td></td>
+               <td></td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td></td>
+               <td>0</td>
+            <td></td>
+            {% endif %}
+            {% endif %}
+
+
+            </tr>
          </tfoot>
       </table>
       <br>
