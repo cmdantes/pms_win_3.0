@@ -1,0 +1,41 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "*"
+weasyprint = "*"
+cairocffi = "*"
+cairosvg = "*"
+cffi = "*"
+cssselect2 = "*"
+defusedxml = "*"
+django-crispy-forms = "*"
+django-datetime-widget = "*"
+django-session-security = "*"
+django-session-timeout = "*"
+django-weasyprint = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+et-xmlfile = "*"
+html5lib = "*"
+jdcal = "*"
+mysqlclient = "*"
+openpyxl = "*"
+pillow = "*"
+pycparser = "*"
+pyjwt = "*"
+pyphen = "*"
+python-dateutil = "*"
+pytz = "*"
+six = "*"
+sqlparse = "*"
+tinycss2 = "*"
+webencodings = "*"
+paho-mqtt = "*"
+
+[requires]
+python_version = "3.8"
