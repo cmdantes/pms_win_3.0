@@ -1,0 +1,237 @@
+{% extends 'base/main.html' %}
+{% block content %}
+{% block title %} Devices {% endblock %}
+<div class="container-fluid mt-5">
+   <div class="row">
+      <div class="col-md-6 card text-white bg-info pl-5">
+         <div class="card-header text-center">1SA PARKING STATUS</div>
+         <div class="card-body">
+            <table class="table borderless text-white">
+               <tr>
+                  <th>Today is:</th>
+                  <th>{% now "F j Y H:i" %}</th>
+               </tr>
+               <tr>
+                  <th>Logged user:</th>
+                  <th>{{ user }}</th>
+               </tr>
+               <tr>
+                  <th>Total Pay Parking Slots:</th>
+                  <th>140</th>
+               </tr>
+               <tr>
+                  <th>Total Reserved Slots:</th>
+                  <th>80</th>
+               </tr>
+               <tr>
+                  <th>Total Number POS:</th>
+                  <th>3</th>
+               </tr>
+               <tr>
+                  <th>Total Number of Entrances:</th>
+                  <th>2</th>
+               </tr>
+               <tr>
+                  <th>Total Number of Exits:</th>
+                  <th>2</th>
+               </tr>
+               <tr>
+                  <th>Total Number of Dispenser:</th>
+                  <th>2</th>
+               </tr>
+               <tr>
+                  <th>Total Number of Capturer:</th>
+                  <th>2</th>
+               </tr>
+               <tr>
+                  <th>Total Number of Barrier:</th>
+                  <th>2</th>
+               </tr>
+            </table>
+         </div>
+      </div>
+      <div class="card text-white bg-info col-md-6">
+         <div class="card-header text-center">DEVICES MONITORING</div>
+         <div class="card-body">
+            <table class="table text-white">
+               <tr>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Status</th>
+               </tr>
+               <tr>
+                  <td>Dispenser</td>
+                  <td>Entrance</td>
+                  <td>
+                     <a class="btn btn-danger btn-block text-uppercase" data-target="#dispenser_entrance" data-toggle="modal">{{dispenser_entrance}}</a>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Dispenser</td>
+                  <td>Exit</td>
+                  <td>
+                     <a class="btn btn-danger btn-block text-uppercase" data-target="#dispenser_exit" data-toggle="modal">{{dispenser_exit}}</a>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Capturer</td>
+                  <td>Entrance</td>
+                  <td>
+                     <a class="btn btn-warning btn-block text-uppercase" data-target="#capturer_entrance" data-toggle="modal">{{capturer_entrance}}</a>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Capturer</td>
+                  <td>Exit</td>
+                  <td>
+                     <a class="btn btn-warning btn-block text-uppercase" data-target="#capturer_exit" data-toggle="modal">{{capturer_exit}}</a>
+                  </td>
+               </tr>
+               <tr>
+                  <td>POS-1</td>
+                  <td>Back Area</td>
+                  <td>
+                     <a class="btn btn-success btn-block text-uppercase" data-target="#pos1" data-toggle="modal">{{status}}</a>
+                  </td>
+               </tr>
+               <tr>
+                  <td>POS-2</td>
+                  <td>Front Area</td>
+                  <td>
+                     <a class="btn btn-success btn-block text-uppercase" data-target="#pos2" data-toggle="modal">{{status}}</a>
+                  </td>
+               </tr>
+               <tr>
+                  <td>POS-3</td>
+                  <td>Middle Area</td>
+                  <td>
+                     <a class="btn btn-success btn-block text-uppercase" data-target="#pos3" data-toggle="modal">{{status}}</a>
+                  </td>
+               </tr>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="dispenser_entrance" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Dispenser Entrance:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Error: 402</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="dispenser_exit" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Dispenser Exit:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Error: 144</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="capturer_entrance" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Capturer Entrance:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Warning:</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="capturer_exit" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Capturer Exit:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Warning:</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="pos1" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">POS-1 BACK AREA:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Status Connected</p>
+            <p>Last OR: 1-00000001</p>
+            <p>Cashier: Ivana</p>
+            <p>Transaction Date: {% now "F j Y H:i" %}</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="pos2" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">POS-2 FRONT AREA:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Status Connected</p>
+            <p>Last OR: 2-00000001</p>
+            <p>Cashier: MK</p>
+            <p>Transaction Date: {% now "F j Y H:i" %}</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="pos3" tabindex="-1">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">POS-3 MIDDLE AREA</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body text-center">
+            <p>{% now "F j Y H:i" %}</p>
+            <p>Status Connected</p>
+            <p>Last OR: 3-00000001</p>
+            <p>Cashier: SASHA</p>
+            <p>Transaction Date: {% now "F j Y H:i" %}</p>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

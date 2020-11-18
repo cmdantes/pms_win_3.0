@@ -1,0 +1,192 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto Slab', serif;
+}
+
+.desk {
+    /* background: #373B44;  
+    background: -webkit-linear-gradient(to right, #4286f4, #373B44); 
+    background: linear-gradient(to right, #4286f4, #373B44);  */
+    background-image: url('/static/vendor/assets/img/park.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+}
+
+.split {
+    margin-top: 0;
+    padding-top: 20px;
+    font-size: 60px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.split span {
+    display: inline-flex;
+    color: black;
+}
+
+.split span:nth-child(even) {
+    overflow: hidden;
+    transition: ease-in-out 0.5s;
+    color: black;
+    /* border-bottom: 8px solid #a1ff34; */
+    letter-spacing: -1em;
+}
+
+.split:hover span:nth-child(even) {
+    
+    letter-spacing: 0;
+}
+
+.split:hover span:nth-child(4){
+    transition-delay: 0.5s;
+}
+
+.split:hover span:nth-child(6){
+    transition-delay: 1s;   
+}
+
+.split:hover span:nth-child(8){
+    transition-delay: 1.5s;  
+}
+
+
+
+.container1 {
+	
+	height:100vh; 
+}
+
+
+.main-section {
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 0;
+}
+
+.modal-content {
+    background-color: #3b4652;
+    opacity: .95;
+    padding: 0 18px;
+    box-shadow: 0px 0px 3px #848484;
+}
+
+.user-img {
+    margin-top: -50px;
+    margin-bottom: 35px;
+}
+
+.user-img img {
+    height: 100px;
+    width: 100px;
+    border-radius: 5px;
+    /* box-shadow: 0px 0px 2px #848484; */
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group input {
+    height: 42px;
+    border-radius: 5px;
+    border: 0;
+    font-size: 18px;
+    padding-left: 54px;
+}
+
+.form-group::before {
+    font-family: "Font Awesome\ 5 Free";
+    font-weight: 900;
+    content: "\f007";
+    position: absolute;
+    font-size: 22px;
+    color: #555e60;
+    left: 28px;
+    padding-top: 4px;
+}
+
+.form-group:last-of-type::before {
+    content: "\f023";
+}
+
+button {
+    width: 40%;
+    margin: 5px 0 25px;
+}
+
+.btn {
+    /* background-color: #13438a; */
+    color: #fff;
+    font-size: 19px;
+    padding: 7px 14px;
+    border-radius: 5px;
+    /* border-bottom: 4px solid #13438a; */
+}
+
+.btn:hover, .btn:focus {
+    background-color: #2583a8;
+    border-bottom: 4px solid #2583a8!important;
+}
+
+.fa-sign-in-alt {
+    font-size: 20px;
+    margin-right: 7px;
+}
+
+.forgot {
+    padding: 5px 0 25px;
+}
+
+.forgot a {
+    color: #c2fbfe;
+}
+
+/* cashierxl */
+
+.detail {
+    border: hidden;
+    outline: hidden;
+  }
+
+  .detail td{
+    text-align: left;
+    font-size: 15px;
+
+  }
+
+  
+
+  .data th, .data td{
+    font-size: 13px;
+  }
+
+  #test {
+    float: right;
+    margin-top: 10px;
+    
+  }
+
+  tfoot {
+    font-weight: bold;
+  }
+
+  th {
+      text-align: center;
+  }
+
+  td {
+      text-align: center;
+  }
+
+  .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: skyblue;
+  }
+
+  .tableFixHead thead th { 
+      position: sticky; 
+      top: 0px; 
+    }

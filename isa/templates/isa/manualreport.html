@@ -1,0 +1,66 @@
+{% extends 'base/main.html' %}
+{% block content %}
+<div class="container-fluid">
+   <div class="mt-5 pt-5 col-md-2 offset-md-10">
+      <a href="{%url 'example' %}"><button class="btn btn-success">GO BACK TO MANUAL TICKET ENCODING</button></a>
+   </div>
+</div>
+<h1 class="text-center mb-4 white1">Latest Manual Encoding </h1>
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-md-12">
+         <table id="mreport" class="data table table-bordered table-hover">
+            <thead class="thead-dark fixed ">
+               <th style="text-align:center">MANUAL TICKET NO.</th>
+               <th style="text-align:center">BUSINESS DATE</th>
+               <th style="text-align:center">OPERATOR</th>
+               <th style="text-align:center">PLATE #</th>
+               <th style="text-align:center">TIME-IN</th>
+               <th style="text-align:center">TIME-OUT</th>
+               <th style="text-align:center">VEHICLE</th>
+               <th style="text-align:center">GROSS SALES</th>
+               <th style="text-align:center">VAT AMOUNT</th>
+               <th style="text-align:center">VATABLE SALES</th>
+               <th style="text-align:center">VAT EXEMPT SALE</th>
+               <th style="text-align:center">DISCOUNT TYPE</th>
+               <th style="text-align:center">REGULAR DISCOUNT</th>
+               <th style="text-align:center">SPECIAL DISCOUNT</th>
+               <th style="text-align:center">VAT DISCOUNT</th>
+               <th style="text-align:center">VAT PAYABLE</th>
+               <th style="text-align:center">NET SALES</th>
+               <th style="text-align:center">DATE ENTRY</th>
+               <th style="text-align:center">PARKER NAME</th>
+               <th style="text-align:center">PARKER ID</th>
+               <th style="text-align:center">REMARKS</th>
+            <tbody>
+               {% for cas in tocash %}
+               <tr>
+                  <td style="text-align:center">{{ cas.ticket_no }}</td>
+                  <td style="text-align:center">{{ cas.business_date }}</td>
+                  <td style="text-align:center">{{ cas.operator }}</td>
+                  <td style="text-align:center">{{ cas.plate_number }}</td>
+                  <td style="text-align:center">{{ cas.time_in|date:'M-d-Y H:i:s' }}</td>
+                  <td style="text-align:center">{{ cas.time_out|date:'M-d-Y H:i:s'  }}</td>
+                  <td style="text-align:center">{{ cas.vehicle_type }}</td>
+                  <td style="text-align:center">{{ cas.gross_amount|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.vat|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.vatable_sale|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.vat_exempt_sale|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.discount_type }}</td>
+                  <td style="text-align:center">{{ cas.regular_discount|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.special_discount|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.vat_adjustment|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.vat_payable|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.net_sales|floatformat:2 }}</td>
+                  <td style="text-align:center">{{ cas.date_entry|date:'M-d-Y H:i:s' }}</td>
+                  <td style="text-align:center">{{ cas.parker_name }}</td>
+                  <td style="text-align:center">{{ cas.parker_id }}</td>
+                  <td style="text-align:center">{{ cas.remarks }}</td>
+                  {% endfor %}
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+{% endblock %}

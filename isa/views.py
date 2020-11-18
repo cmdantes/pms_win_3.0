@@ -9,6 +9,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import auth
+from rest_framework.views import APIView
+
 from .models import *
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count, Min, Sum, Max, IntegerField, Window, Func, Subquery, Case, When, F, Func, Q
@@ -53,11 +55,8 @@ def index(request):
 def income(request):
     # operators = Transaction.objects.values('pos_name').distinct()
     operators = Transaction.objects.values('pos_name').distinct()
-    context = {
-        'operators': operators,
-    }
     logger.info('accessing bir report')
-    return render(request, 'isa/income.html', context)
+    return render(request, 'isa/income.html', {'operators': operators})
 
 
 @login_required(login_url="/accounts/login")
@@ -126,21 +125,18 @@ def birmonthly(request):
             start_year = year_join
             user = request.user
             com = Companydb.objects.all()
-
             incomer = Transaction.objects.raw(
                 'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-1" GROUP BY t.business_date, t.pos_name order by t.business_date;',
                 [start_year, start_month])
-
             incomerg = Transaction.objects.raw(
                 'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-1" order by t.business_date',
                 [start_year, start_month])
-
             incomer2 = Transaction.objects.raw(
                 'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-2" GROUP BY t.business_date, t.pos_name order by t.business_date;',
                 [start_year, start_month])
 
             incomer2g = Transaction.objects.raw(
-                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-2" order by t.business_date',
+                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s order by t.business_date',
                 [start_year, start_month])
 
             incomer3 = Transaction.objects.raw(
@@ -163,6 +159,10 @@ def birmonthly(request):
                 'select 1 as id, sum(gross_amount) as gross_sales_day, sum(vat_sales) as vatable_sales, sum(vat)as vat_amount, sum(vat_exempt_sales)as vat_exempt_sales, 0.00 as zero_rated_sales, sum(discount_regular)as regular_discount,sum(discount_special)as special_discount, 0.00 as void, 0.00 as returns, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(net_amount)as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(net_amount)as total_net_sales, 0 as reset_counter from `transaction` where year(business_date) = %s and month(business_date) = %s;',
                 [start_year, start_month])
 
+            incom = Transaction.objects.raw(
+                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',[start_year, start_month])
+            for p in incomer3:
+                print(p)
             month = {'1': 'Janauary',
                      '2': 'February',
                      '3': 'March',
@@ -177,24 +177,33 @@ def birmonthly(request):
                      '12': 'December'}
 
             new_date = month[start_month]
-
+            b = Transaction.objects.filter(business_date__year=start_year).filter(business_date__month=start_month).values('pos_name','business_date')
+            a = list()
+            for i in range(0,Tblpermit.objects.all().values('pc').count()):
+                a.append(str(i))
             context = {
                 'start_month': start_month,
                 'start_year': start_year,
+
                 'incomer': incomer,
                 'incomerg': incomerg,
                 'incomer2': incomer2,
+
                 'incomer2g': incomer2g,
+
                 'incomer3': incomer3,
                 'incomer3g': incomer3g,
                 'incomerm': incomerm,
                 'incomermg': incomermg,
                 'incomer4': incomer4,
+
                 'start_date': start_date,
                 'com': com,
                 'user': user,
                 'new_date': new_date,
                 'start_year': start_year,
+                'pos_name': Tblpermit.objects.all(),
+                'sampsss': incom.order_by('business_date', '-pos_name'),
             }
 
             if not com:
@@ -223,7 +232,6 @@ def birmonthly(request):
         response.write(output.read())
     logger.info('bir monthly pdfreport generated successfully')
     return response
-
 
 @login_required(login_url="/accounts/login")
 def discountpos(request):
@@ -414,7 +422,8 @@ def cashpdf(request):
 def cashpospdf(request):
     if request.method == 'POST':
         try:
-            pos = request.POST['pos']
+            # pos = request.POST['pos']
+            pass
         except Exception:
             return render(request, 'isa/cash.html', {'error': 'No POS Selected'})
         if request.POST['start'] and request.POST['end'] and request.POST['pos']:
@@ -731,10 +740,55 @@ def transactionexcel(request):
     return render(request, 'isa/excel/transactionexcel.html', context)
 
 
-@login_required(login_url="/accounts/login")
-def vehicle(request):
-    logger.info('accessing vehicle in/out report')
-    return render(request, 'isa/vehicle.html')
+class Vehicle(APIView):
+    def get(self, request):
+        logger.info('accessing vehicle in/out report')
+        return render(request, 'isa/vehicle.html')
+
+    def post(self, request):
+        # vehicle pdf
+        if request.POST['start'] and request.POST['end']:
+            start_date = request.POST['start']
+            end_date = request.POST['end']
+            com = Companydb.objects.all()
+            user = request.user
+
+            cash = Transaction.objects.values('pos_name', 'or_number', 'cardcode', 'plate_num', 'vehicle_type',
+                                              'time_in', 'time_out', 'duration', 'gross_amount').filter(
+                time_out__gte=start_date, time_out__lte=end_date).order_by('pos_name', 'time_in').order_by('or_number')
+
+            trans = Transaction.objects.filter(
+                time_out__gte=start_date, time_out__lte=end_date).aggregate(
+                gross=Sum('gross_amount'), timein=Min('time_in'), timeout=Max('time_out'), txncount=Count('or_number'))
+
+            context = {
+                'user': user,
+                'com': com,
+                'cash': cash,
+                'trans': trans,
+
+            }
+        else:
+            logger.info('Missing field')
+            return render(request, 'isa/vehicle.html', {'error': 'All fields required'})
+
+        # Rendered
+
+        html_string = render_to_string('isa/pdf/vehiclepdf.html', context)
+        html = HTML(string=html_string)
+        result = html.write_pdf()
+
+        # Creating http response
+        response = HttpResponse(content_type='application/pdf;')
+        response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
+        response['Content-Transfer-Encoding'] = 'binary'
+        with tempfile.NamedTemporaryFile(delete=True) as output:
+            output.write(result)
+            output.flush()
+            output = open(output.name, 'rb')
+            response.write(output.read())
+        print('vehicle in/out pdfreport generated successfully')
+        return response
 
 
 @login_required(login_url="/accounts/login")
@@ -761,28 +815,22 @@ def vehiclepdf(request):
                 'trans': trans,
 
             }
-
+            html_string = render_to_string('isa/pdf/vehiclepdf.html', context)
+            html = HTML(string=html_string)
+            result = html.write_pdf()
+            response = HttpResponse(content_type='application/pdf;')
+            response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
+            response['Content-Transfer-Encoding'] = 'binary'
+            with tempfile.NamedTemporaryFile(delete=True) as output:
+                output.write(result)
+                output.flush()
+                output = open(output.name, 'rb')
+                response.write(output.read())
+            print('vehicle in/out pdfreport generated successfully')
+            return response
         else:
             logger.info('Missing field')
             return render(request, 'isa/vehicle.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/vehiclepdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('vehicle in/out pdfreport generated successfully')
-    return response
 
 
 @login_required(login_url="/accounts/login")
@@ -810,28 +858,26 @@ def vehiclepdfbdate(request):
                 'trans': trans,
 
             }
+            # Rendered
 
+            html_string = render_to_string('isa/pdf/vehiclepdfbdate.html', context)
+            html = HTML(string=html_string)
+            result = html.write_pdf()
+
+            # Creating http response
+            response = HttpResponse(content_type='application/pdf;')
+            response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
+            response['Content-Transfer-Encoding'] = 'binary'
+            with tempfile.NamedTemporaryFile(delete=True) as output:
+                output.write(result)
+                output.flush()
+                output = open(output.name, 'rb')
+                response.write(output.read())
+            logger.info('vehicle in/out pdfreport generated successfully')
+            return response
         else:
             logger.info('Missing field')
             return render(request, 'isa/vehicle.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/vehiclepdfbdate.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('vehicle in/out pdfreport generated successfully')
-    return response
 
 
 @login_required(login_url="/accounts/login")
@@ -875,6 +921,156 @@ def stay_inpdf(request):
     return response
 
 
+class Cashier(APIView):
+    def get(self, request):
+        operators = Transaction.objects.values('username').distinct()
+        pos = Transaction.objects.values('pos_name').distinct()
+
+        context = {
+            'operators': operators,
+            'pos': pos,
+        }
+        logger.info('accessing cashier detailed report')
+        return render(request, 'isa/cashier.html', context)
+
+    def post(self, request):
+        user = request.user
+        operator = request.POST.get('pos', '')
+        pos = request.POST.get('pos', '')
+        start_date = request.POST['start']
+        end_date = request.POST['end']
+        com = Companydb.objects.all()
+        rep = request.POST.get("rep", None)
+        if rep == "operators":
+            cash = Transaction.objects.values(
+                'or_number', 'pos_name', 'business_date', 'cardcode', 'plate_num', 'voucher', 'vehicle_type', 'time_in',
+                'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
+                'net_amount', 'vat_sales', 'vat', 'cash', 'credit', 'vat_payable', 'vat_spcl_disc').filter(
+                business_date__gte=start_date, business_date__lte=end_date, username=operator).order_by('or_number')
+
+            trans = Transaction.objects.filter(
+                business_date__gte=start_date, business_date__lte=end_date, username=operator).aggregate(
+                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
+                voucher=Sum('voucher'),
+                timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
+                vat_special=Sum('vat_spcl_disc'))
+
+            context = {
+                'start_date': start_date,
+                'operator': operator,
+                'cash': cash,
+                'com': com,
+                'trans': trans,
+                'user': user,
+            }
+            html_string = render_to_string('isa/pdf/cashierpdf.html', context)
+            html = HTML(string=html_string)
+            result = html.write_pdf()
+
+            # Creating http response
+            response = HttpResponse(content_type='application/pdf;')
+            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
+            response['Content-Transfer-Encoding'] = 'binary'
+            with tempfile.NamedTemporaryFile(delete=True) as output:
+                output.write(result)
+                output.flush()
+                output = open(output.name, 'rb')
+                response.write(output.read())
+            logger.info('cash operator pdfreport generated successfully')
+            return response
+        elif rep == "terminal":
+            cash = Transaction.objects.values(
+                'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type', 'time_in',
+                'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
+                'net_amount', 'vat_sales', 'vat', 'cash', 'credit', 'vat_payable', 'vat_spcl_disc').filter(
+                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).order_by('or_number')
+
+            trans = Transaction.objects.filter(
+                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
+                gross=Sum('gross_amount'), voucher=Sum('voucher'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
+                timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
+                vat_special=Sum('vat_spcl_disc'))
+
+            context = {
+                'cash': cash,
+                'com': com,
+                'trans': trans,
+                'pos': pos,
+                'user': user
+            }
+            html_string = render_to_string('isa/pdf/cashierpospdf.html', context)
+            html = HTML(string=html_string)
+            result = html.write_pdf()
+
+            # Creating http response
+            response = HttpResponse(content_type='application/pdf;')
+            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
+            response['Content-Transfer-Encoding'] = 'binary'
+            with tempfile.NamedTemporaryFile(delete=True) as output:
+                output.write(result)
+                output.flush()
+                output = open(output.name, 'rb')
+                response.write(output.read())
+            logger.info('cashier pos detailed pdfreport successfully')
+            return response
+        else:
+            start_date = request.POST['start']
+            end_date = request.POST['end']
+            com = Companydb.objects.all()
+            user = request.user
+            cash = Transaction.objects.values(
+                'or_number', 'username', 'pos_name', 'business_date', 'voucher', 'cardcode', 'plate_num',
+                'vehicle_type', 'time_in', 'time_out', 'duration', 'gross_amount', 'discount_special',
+                'discount_regular', 'vat_exempt_sales', 'net_amount', 'vat_sales', 'vat', 'cash', 'credit',
+                'vat_payable', 'vat_spcl_disc').filter(
+                business_date__gte=start_date, business_date__lte=end_date).order_by('or_number')
+
+            trans = Transaction.objects.filter(
+                business_date__gte=start_date, business_date__lte=end_date).aggregate(
+                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
+                timein=Min('time_in'), voucher=Sum('voucher'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
+                vat_special=Sum('vat_spcl_disc'))
+
+            context = {
+                'start_date': start_date,
+                'cash': cash,
+                'com': com,
+                'trans': trans,
+                'user': user,
+            }
+            html_string = render_to_string('isa/pdf/cashierallpdf.html', context)
+            html = HTML(string=html_string)
+            result = html.write_pdf()
+
+            # Creating http response
+            response = HttpResponse(content_type='application/pdf;')
+            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
+            response['Content-Transfer-Encoding'] = 'binary'
+            with tempfile.NamedTemporaryFile(delete=True) as output:
+                output.write(result)
+                output.flush()
+                output = open(output.name, 'rb')
+                response.write(output.read())
+            logger.info('cash all detailed pdfreport successfully')
+            return response
+        logger.info('Missing field')
+        return render(request, 'isa/cashier.html', {'error': 'All fields required'})
+
+        # Rendered
+
+
 @login_required(login_url="/accounts/login")
 def cashier(request):
     operators = Transaction.objects.values('username').distinct()
@@ -896,6 +1092,8 @@ def cashierpdf(request):
             end_date = request.POST['end']
             operator = request.POST['pos']
             user = request.user
+            print(user)
+            print(operator)
             com = Companydb.objects.all()
 
             cash = Transaction.objects.values(
@@ -955,6 +1153,7 @@ def cashierallpdf(request):
             end_date = request.POST['end']
             com = Companydb.objects.all()
             user = request.user
+            print(user)
 
             cash = Transaction.objects.values(
                 'or_number', 'username', 'pos_name', 'business_date', 'voucher', 'cardcode', 'plate_num',
@@ -1012,6 +1211,8 @@ def cashierpospdf(request):
             end_date = request.POST['end']
             pos = request.POST['pos']
             user = request.user
+            print(pos)
+            print(user)
             com = Companydb.objects.all()
 
             cash = Transaction.objects.values(
@@ -1037,28 +1238,24 @@ def cashierpospdf(request):
                 'pos': pos,
                 'user': user
             }
+            html_string = render_to_string('isa/pdf/cashierpospdf.html', context)
+            html = HTML(string=html_string)
+            result = html.write_pdf()
 
+            # Creating http response
+            response = HttpResponse(content_type='application/pdf;')
+            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
+            response['Content-Transfer-Encoding'] = 'binary'
+            with tempfile.NamedTemporaryFile(delete=True) as output:
+                output.write(result)
+                output.flush()
+                output = open(output.name, 'rb')
+                response.write(output.read())
+            logger.info('cashier pos detailed pdfreport successfully')
+            return response
         else:
             logger.info('Missing field')
             return render(request, 'isa/cashier.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/cashierpospdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('cashier pos detailed pdfreport successfully')
-    return response
 
 
 @login_required(login_url="/accounts/login")
@@ -1265,6 +1462,15 @@ def manualreport(request):
     return render(request, 'isa/manualreport.html', {'tocash': tocash}, )
 
 
+class Manual(APIView):
+    def get(self, request):
+        logger.info('accessing manual ticketing report')
+        return render(request, 'isa/manual.html')
+
+    def post(self):
+        print("dsadasda")
+
+
 @login_required(login_url="/accounts/login")
 def manual(request):
     logger.info('accessing manual ticketing report')
@@ -1328,7 +1534,7 @@ def manualpdf(request):
 @login_required(login_url="/accounts/login")
 def manualxl(request):
     logger.info('accessing manual ticketing report')
-    return render(request, 'isa/manualxl.html', )
+    return render(request, 'isa/excel/manualxl.html', )
 
 
 @login_required(login_url="/accounts/login")

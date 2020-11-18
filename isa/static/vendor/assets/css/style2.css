@@ -1,0 +1,359 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto Slab', serif;
+    
+}
+
+body{    
+    
+  background-color: skyblue;
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+  font-family: 'Roboto Condensed', sans-serif;
+  overflow: scroll;
+
+}
+
+
+.card {
+    background-color: #3b4652;
+    opacity: .95;
+    padding: 10px 18px 10px 18px;
+
+    box-shadow: 0px 0px 3px #848484;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+/* .sk1 {
+  position: relative;
+  animation-name: animatebottom;
+  animation-duration: 1s;
+} */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeIn {
+  animation-name: fadeInLeft;
+  animation-duration: 1s;
+}
+
+.fadeIn2 {
+  animation-name: fadeInDown;
+  animation-duration: 1s;
+  /* animation-delay: 1s; */
+}
+
+.fadeIn3 {
+  animation-name: fadeInDown;
+  animation-duration: 1s;
+  /* animation-delay: 2s; */
+}
+
+.fadeIn4 {
+  animation-name: fadeInRight;
+  animation-duration: 1s;
+  /* animation-delay: 3s; */
+}
+
+.fadeIn5 {
+  animation-name: fadeInUp;
+  animation-duration: 1s;
+  /* animation-delay: 4s; */
+}
+
+.fadeIn6 {
+  animation-name: fadeInUp;
+  animation-duration:1s;
+  /* animation-delay: 5s; */
+}
+
+
+.wrapper{
+  width: 90%;
+  margin: 0 auto;
+  max-width: 80rem;
+  margin-top: 15px;
+}
+
+.cols{
+  display: -webkit-box;   
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  justify-content: center;
+    
+}
+
+
+.col1{
+  width: calc(25% - 2rem);
+  margin: 1rem;
+  cursor: pointer;
+  margin-left: -5px;
+  margin-bottom: -5px;
+}
+
+.container1{
+        transform-style: preserve-3d;
+      perspective: 1000px;
+}
+
+.front,
+.back{
+  background-size: cover;
+  background-position: center; 
+  transition: transform .7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  backface-visibility: hidden;
+  text-align: center;
+  min-height: 280px;
+  height: auto; 
+  color: #fff;
+  font-size: 1rem;
+}
+
+.back{
+  background: #fff;  
+}
+
+.front:after{
+  position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    content: '';
+    display: block;
+        
+    backface-visibility: hidden;
+     
+}
+.container1:hover .front,
+.container1:hover .back{
+     
+    transition: transform .7s cubic-bezier(0.4, 0.2, 0.2, 1);
+     
+}
+
+.back{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.inner{
+  
+    transform: translateY(-50%) translateZ(60px) scale(0.94);
+    top: 50%;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 2rem;     
+    box-sizing: border-box;
+    outline: 1px solid transparent;     
+    perspective: inherit;
+    z-index: 2;
+}
+
+.container1 .back{    
+    transform: rotateY(180deg);     
+    transform-style: preserve-3d;
+}
+
+.container1 .front{
+    transform: rotateY(0deg);
+    transform-style: preserve-3d;
+}
+
+.container1:hover .back{
+   transform: rotateY(0deg);
+   transform-style: preserve-3d;
+}
+
+.container1:hover .front{
+      transform: rotateY(-180deg);
+      transform-style: preserve-3d;
+}
+
+.front .inner p{
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.front .inner p:after{
+  content: '';
+  width: 4rem;
+  height: 2px;
+  position: absolute;
+  background: #fff;
+  display: block;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: -.75rem;
+}
+
+.front .inner span{
+  color: fff;   
+  font-family: 'Roboto Condensed', sans-serif;   
+  font-weight: 300;
+}
+
+@media screen and (max-width: 64rem){
+  .col1{
+    width: calc(33.333333% - 2rem);
+  }
+}
+
+@media screen and (max-width: 48rem){
+  .col1{
+    width: calc(50% - 2rem);
+  }
+}
+
+@media screen and (max-width: 32rem){
+  .col1{
+    width: 100%;
+    margin: 0 0 2rem 0;
+  }
+}
+
+footer{
+  margin-top: 15px;
+  padding:4px;
+  background-color: #2583a8;
+  color: #f2f2f2;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  }
+
+.white{
+    color: white !important;
+    }
+
+label {
+    color: white;
+}
+
+.white1 {
+    color: black;
+}
+
+footer p {
+    padding-top: 10px;
+}
+
+
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+
+button#vatable {
+  visibility: hidden;
+}

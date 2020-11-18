@@ -1,0 +1,214 @@
+{% extends 'base/main.html' %}
+{% block content %}
+<h3 class="text-center">{{title}}</h3>
+<h1 class="mt-5 pt-5 text-center"></h1>
+<body>
+   <div class="container-fluid">
+      <div class="wrapper">
+         <div class="cols">
+            <div class="col1 sk1 fadeIn">
+               <div class="container1">
+                  <a href="{% url 'income' %}">
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/bir.jpg)">
+                     </div>
+                  </a>
+                  <a href="{% url 'income' %}" class="text-white fadeIn"><button class="btn btn-danger btn-block">BIR
+                  REPORT</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a href="{% url 'income' %}">
+                        <img src="/static/vendor/assets/img/bir.jpg" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk2 fadeIn2">
+               <div class="container1">
+                  <a href="{% url 'cash' %}">
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/cash.png);">
+                     </div>
+                  </a>
+                  <a href="{% url 'cash' %}" class="text-white fadeIn2"><button class="btn btn-danger btn-block">CASHIER ACCOUNT REPORT</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a href="{% url 'cash' %}">
+                        <img src="/static/vendor/assets/img/cash.png" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk3 fadeIn3">
+               <div class="container1">
+                  <a data-target="#exampleModal" data-toggle="modal">
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/trans.jpg);">
+                     </div>
+                  </a>
+                  <button class="btn btn-danger btn-block text-white fadeIn3" data-target="#exampleModal"
+                     data-toggle="modal">DAILY REPORT</button>
+                  <div class="back">
+                     <div class="inner">
+                        <a data-target="#exampleModal" data-toggle="modal">
+                        <img src="/static/vendor/assets/img/trans.jpg" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+               aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Daily Report</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                     </div>
+                     <div class="modal-body">
+                        Choose Type of Report:
+                     </div>
+                     <div class="modal-footer">
+                        <a href="{% url 'transaction' %}" class="text-white"><button type="button" class="btn btn-danger"><i
+                           class="fas fa-file-alt"></i> PDF</button></a>
+                        <a href="{% url 'transactionxl' %}" class="text-white"><button type="button" class="btn btn-success"><i
+                           class="far fa-file-excel"></i> EXCEL</button></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk4 fadeIn4">
+               <div class="container1">
+                  <a href="{% url 'vehicle' %}">
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/vehicle.jpg)">
+                     </div>
+                  </a>
+                  <a href="{% url 'vehicle' %}" class="text-white fadeIn4"><button class="btn btn-danger btn-block">VEHICLE
+                  IN/OUT REPORT</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a href="{% url 'vehicle' %}">
+                        <img src="/static/vendor/assets/img/vehicle.jpg" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk5 fadeIn">
+               <div class="container1">
+                  <a data-target="#exampleModa2l" data-toggle="modal">
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/cashier_detail.jpg)">
+                     </div>
+                  </a>
+                  <a data-target="#exampleModal2" data-toggle="modal" class="text-white fadeIn5"><button
+                     class="btn btn-danger btn-block">CASHIER DETAILED REPORT</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a data-target="#exampleModal2" data-toggle="modal">
+                        <img src="/static/vendor/assets/img/cashier_detail.jpg" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+               aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cashier Detailed Report</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                     </div>
+                     <div class="modal-body">
+                        Choose Type of Report:
+                     </div>
+                     <div class="modal-footer">
+                        <a href="{% url 'cashier' %}" class="text-white"><button type="button" class="btn btn-danger"><i
+                           class="fas fa-file-alt"></i> PDF</button></a>
+                        <a href="{% url 'cashierxl' %}" class="text-white"><button type="button" class="btn btn-success"><i
+                           class="far fa-file-excel"></i> EXCEL</button></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk6 fadeIn6">
+               <div class="container1">
+                  <a href="{% url 'discountpos' %}">
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/discount.jpg)">
+                     </div>
+                  </a>
+                  <a href="{% url 'discountpos' %}" class="text-white fadeIn6" target="_blank"><button
+                     class="btn btn-danger btn-block">DISCOUNT REPORT</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a href="{% url 'discountpos' %}">
+                        <img src="/static/vendor/assets/img/discount.jpg" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk6 fadeIn6">
+               <div class="container1">
+                  <a href="{% url 'example' %}" >
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/comp.jpg)">
+                     </div>
+                  </a>
+                  <a href="{% url 'example' %}"><button
+                     class="btn btn-danger btn-block">MANUAL TICKET ENCODING</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a href="{% url 'example' %}" >
+                        <img src="/static/vendor/assets/img/comp.jpg" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col1 sk6 fadeIn4">
+               <div class="container1">
+                  <a data-target="#manual" data-toggle="modal" >
+                     <div class="front" style="background-image: url(/static/vendor/assets/img/ticket.png)">
+                     </div>
+                  </a>
+                  <a data-target="#manual" data-toggle="modal" ><button
+                     class="btn btn-danger btn-block">MANUAL TICKET REPORT</button></a>
+                  <div class="back">
+                     <div class="inner">
+                        <a data-target="#manual" data-toggle="modal"  >
+                        <img src="/static/vendor/assets/img/ticket.png" alt="" width="250" height="250">
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal fade" id="manual" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+               aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Manual Ticketing Report</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                     </div>
+                     <div class="modal-body">
+                        Choose Type of Report:
+                     </div>
+                     <div class="modal-footer">
+                        <a href="{% url 'manual' %}" class="text-white"><button type="button" class="btn btn-danger"><i class="fas fa-file-alt"></i> PDF</button></a>
+                        <a href="{% url 'manualxl' %}" class="text-white"><button type="button" class="btn btn-success"><i class="far fa-file-excel"></i> EXCEL</button></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <footer>
+         <p class="text-center">ISA Copyright &copy; 2020</p>
+      </footer>
+   </div>
+   {% endblock %}

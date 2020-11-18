@@ -7,20 +7,24 @@ urlpatterns = [
     path('income', views.income, name='income'),
     path('bir', views.bir, name='bir'),
 
+    # url("cash", views.Cash.as_view()),
+
     path('cash', views.cash, name='cash'),
     path('cashpdf', views.cashpdf, name='cashpdf'),
     path('cashallpdf', views.cashallpdf, name='cashallpdf'),
     path('cashpospdf', views.cashpospdf, name='cashpospdf'),
 
-    path('vehicle', views.vehicle, name='vehicle'),
+    url("vehicle", views.Vehicle.as_view(), name='vehicle'),
 
-    path('vehiclepdf', views.vehiclepdf, name='vehiclepdf'),
+    # path('vehiclepdf', views.vehiclepdf, name='vehiclepdf'),
     path('vehiclepdfbdate', views.vehiclepdfbdate, name='vehiclepdfbdate'),
 
-    path('cashier', views.cashier, name='cashier'),
-    path('cashierpdf', views.cashierpdf, name='cashierpdf'),
-    path('cashierpospdf', views.cashierpospdf, name='cashierpospdf'),
-    path('cashierallpdf', views.cashierallpdf, name='cashierallpdf'),
+    url("cashier", views.Cashier.as_view(), name='cashier'),
+
+    # path('cashier', views.cashier, name='cashier'),
+    # path('cashierpdf', views.cashierpdf, name='cashierpdf'),
+    # path('cashierpospdf', views.cashierpospdf, name='cashierpospdf'),
+    # path('cashierallpdf', views.cashierallpdf, name='cashierallpdf'),
 
     path('transaction', views.transaction, name='transaction'),
     path('transactionpdf', views.transactionpdf, name='transactionpdf'),
@@ -41,6 +45,8 @@ urlpatterns = [
     path('seniorpospdf', views.seniorpospdf, name='seniorpospdf'),
 
     path('example', views.example, name='example'),
+
+    # url("manual", views.Manual.as_view(), name='manual'),
 
     path('manual', views.manual, name='manual'),
     path('manualpdf', views.manualpdf, name='manualpdf'),

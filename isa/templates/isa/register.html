@@ -1,0 +1,34 @@
+{% extends "base/main.html" %}
+{% block content %}
+{% block title %} Create Operator {% endblock %}
+<h1 class="mt-5 pt-5 text-center text-white">Sign-up</h1>
+{% if error %}
+<p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
+<br>
+<br>
+{% endif %}
+<div class="container">
+   <div class="card text-center bg-info col-md-4 offset-md-4">
+      <form action="{% url 'register' %}" method="POST">
+         {% csrf_token %}
+         <label for="username" class="mt-2 text-dark">Username*</label>
+         <br>
+         <input type="text" name="username" class="form-control" required>
+         <label for="username" class="mt-2 text-dark">Email*</label>
+         <br>
+         <input type="text" name="email" class="form-control" required>
+         <br>
+         <label for="password" class="text-dark">Password*</label>
+         <br>
+         <input type="password" name="password" class="form-control" required>
+         <br>
+         <label for="confirm-password" class="text-dark">Confirm Password*</label>
+         <br>
+         <input type="password" name="confirm-password" class="form-control" required>
+         <br>
+         <br>
+         <input type="submit" value="Sign Up!" class="btn btn-block btn-primary mb-2">
+      </form>
+   </div>
+</div>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+<div class="mb-4 mt-5 pt-5 col-md-2 offset-md-10">
+        <a href="{%url 'manualreport' %}"><button class="btn btn-success">SHOW LATEST MANUAL TICKET
+                ENTRY </button></a>
+</div>
+</div>
+{% if error %}
+    <script>
+    $(function() {
+      $('#error').modal('show');
+    });
+    </script>
+{% endif %}
+{% if messages %}
+    <script>
+        
+    $(function() {
+      $('#success').modal({show: true});
+    });
+    </script>
+{% endif %}
+<div class="animate-bottom">
+
+    <h1 class="text-center">Manual Ticketing Transaction </h1>
+   
+
+  
+
+    <div class="container">
+        <div class="card bg-info">
+            <div class="card-body">
+                <form action="{% url 'example' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+
+
+                        <!-- <div class="form-group col-md-3">
+
+                            <label for="inputAddress">Transaction No.</label>
+
+                            <input type="text" class="form-control-plaintext text-white" name="trno"
+                                value="{% for man in mtrans %}{{man.mor}}{% endfor %}{% for trn in trnos %}{{ trn.maxt }}{% endfor %}" readonly>
+                            
+                        </div> -->
+                        <div class="form-group col-md-3">
+
+                            <label for="inputPassword4">*Manual Ticket No.</label>
+                            <input type="number" class="form-control" name="trno" id="manual" value="{% for man in mtrans %}{{man.mor}}{% endfor %}">
+
+
+                        </div>
+
+                        <div class="form-group col-md-3">
+
+                            <label for="inputEmail4">*Business Date {% now 'm/d/y' %}</label>
+                            <input type="date" class="form-control" name="businessdate" id="bdate" value="">
+                        </div>
+                        <div class="form-group col-md-3">
+
+                            <label for="inputPassword4">*Operator</label>
+                            <input type="text" class="form-control-plaintext text-white" name="operator" value="{{user}}" id="operator" readonly>
+
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress2">*Plate #</label>
+                            <input type="text" class="form-control" name="plate" id="plate">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputEmail4">*Time-in</label>
+                            <input type="datetime-local" class="form-control" name="timein" id="timein">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputPassword4">*Time-Out</label>
+                            <input type="datetime-local" class="form-control" name="timeout" id="timeout">
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress2">*Vehicle Type</label>
+                            <select class="form-control" name="vehicle" id="vehicle">
+
+                                <option value="CAR">CAR</option>
+                                <option value="MOTOR">MOTOR</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress2">Remarks</label>
+                            <input type="text" class="form-control" name="remarks">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputAddress">*Total Amount:</label>
+                            <input type="number" class="form-control" id="total" name="total" placeholder="Gross Sales"
+                                min=0 oninput="this.value = Math.abs(this.value)">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputState">DiscountType</label>
+                            <select id="discount" class="form-control" name="type" onchange="calc()">
+                                <option value="-">-</option>
+                                <option value="REGULAR DISCOUNT">REGULAR DISCOUNT</option>
+                                <option value="SENIOR">SENIOR</option>
+                                <option value="PWD">PWD</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="inputAddress2" style="text-align: center;">Vat</label>
+                            <input type="number" class="form-control" id="vat" step = "any" name="vat" min=0 oninput="this.value = Math.abs(this.value)">
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress2"> Vatable Sale</label>
+                            <input type="number" class="form-control" id="nonvat" step = "any" name="nonvat" min=0 oninput="this.value = Math.abs(this.value)"
+                            >
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress">Vatexempt Sale</label>
+                            <input type="number" class="form-control" id="vatexempt" step = "any" min=0 oninput="this.value = Math.abs(this.value)"
+                                name="vatexempt">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress">DiscountAmount</label>
+                            <input type="number" class="form-control" name="discount" step = "any" id="damount" min=0 oninput="this.value = Math.abs(this.value)"
+                            >
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="inputAddress2">Cash</label>
+                            <input type="number" class="form-control-plaintext text-white" id="cash" name="cash"
+                                readonly>
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg go">SUBMIT</button>
+                </form>
+
+            </div>
+        </div> <!-- end of card -->
+
+    </div>
+
+    <div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Manual Ticketing Transaction</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <p style="color:red; text-align:center; text-transform: uppercase">{{ error }}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">BACK TO TRANSACTION</span>
+              </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+  <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Manual Ticketing Transaction</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <p style="color:green; text-align:center; text-transform: uppercase;" >{% for message in messages %}{{ message }}{% endfor %}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">BACK TO TRANSACTION</span>
+              </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <footer>
+        <p class="text-center">ISA Copyright &copy; 2019</p>
+    </footer>
+</div>
+
+
+
+
+
+{% endblock %}
+
+

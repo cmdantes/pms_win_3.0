@@ -1,0 +1,129 @@
+{% load static %}
+<nav class="navbar navbar-expand-md navbar-dark bg-info fixed-top mb-3">
+   <a class="navbar-brand" href="/"><img src="{% static 'vendor/assets/img/isa_logo.png' %}" alt="logo" width="70"></a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.view_name == 'index' %}active{% endif %}"
+               href="/"><i class="fas fa-home"></i> HOME</a>
+         </li>
+         {% if user.is_authenticated %}
+         <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if request.resolver_match.view_name == 'income' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'cash' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'transaction' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'discountpos' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'stay_in' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'cashierxl' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'transactionxl' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'vehicle' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'manual' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'manualxl' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'cashier' %}active{% endif %}" href="#" id="navbarDropdown"
+               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+               class="fas fa-chart-bar"></i>
+            REPORTS
+            </a>
+            <div class="dropdown-menu">
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'income' %}active{% endif %}"
+                  href="{% url 'income' %}"><i class="fas fa-book-open"></i> BIR Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'discountpos' %}active{% endif %}"
+                  href="{% url 'discountpos' %}"><i class="fas fa-percentage"></i> Discount Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'cash' %}active{% endif %}"
+                  href="{% url 'cash' %}"><i class="fas fa-money-bill"></i> Cashier Accountability Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'transaction' %}active{% endif %}"
+                  href="{% url 'transaction' %}"><i class="fas fa-cash-register"></i> Daily Summary Sales Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'vehicle' %}active{% endif %}"
+                  href="{% url 'vehicle' %}"><i class="fas fa-car-alt"></i> Exited Vehicles Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'stay_in' %}active{% endif %}"
+                  href="{% url 'stay_in' %}"><i class="fas fa-car-alt"></i> Stay-In Vehicle Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'cashier' %}active{% endif %}"
+                  href="{% url 'cashier' %}"><i class="fas fa-users"></i> Cashier Detailed Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'cashierxl' %}active{% endif %}"
+                  href="{% url 'cashierxl' %}"><i class="fas fa-users"></i> Cashier Detailed Excel Report</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'manual' %}active{% endif %}"
+                  href="{% url 'manual' %}"><i class="fas fa-ticket-alt"></i> Manual Ticket Report</a>
+               <div class="dropdown-divider"></div>
+            </div>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.view_name == 'example' %}active{% endif %}"
+               href="{% url 'example' %}"><i class="far fa-edit"></i> MANUAL TICKET ENCODING</a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link"
+               href="{% url 'admin:index' %}"><i class="far fa-edit"></i> ADMIN</a>
+         </li>
+         <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if request.resolver_match.view_name == 'status' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'trigger_devices' %}active{% endif %}" href="#" id="navbarDropdown"
+               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-desktop"></i>
+            DEVICES
+            </a>
+            <div class="dropdown-menu">
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'status' %}active{% endif %}"
+                  href="{% url 'status' %}" target="_blank"><i class="fa fa-table"></i> Monitoring of Devices</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'trigger_devices' %}active{% endif %}"
+                  href="{% url 'trigger_devices' %}"><i class="fa fa-play"></i> Triggering of Devices</a>
+               <div class="dropdown-divider"></div>
+            </div>
+         </li>
+         <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if request.resolver_match.view_name == 'register' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'change_password' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'operator_reg' %}active{% endif %}
+               {% if request.resolver_match.view_name == 'password_change_form' %}active{% endif %}" href="#" id="navbarDropdown"
+               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+               class="fa fa-users"></i>
+            POS/PMS USER REGISTRATION
+            </a>
+            <div class="dropdown-menu">
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'register' %}active{% endif %}"
+                  href="{% url 'register' %}"><i class="fa fa-user-plus"></i> PMS User Registration</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'password_change_form' %}active{% endif %}"
+                  href="{% url 'password_change' %}"><i class="fa fa-unlock-alt"></i> Change PMS user password</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'operator_reg' %}active{% endif %}"
+                  href="{% url 'operator_reg' %}"><i class="fa fa-user-plus"></i> POS User Registration</a>
+               <div class="dropdown-divider"></div>
+               <a class="dropdown-item {% if request.resolver_match.view_name == 'change_password' %}active{% endif %}"
+                  href="{% url 'change_password' %}"><i class="fa fa-unlock-alt"></i> Change POS user password</a>
+               <div class="dropdown-divider"></div>
+            </div>
+         </li>
+         <!-- <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.view_name == 'occupancy' %}active{% endif %}"
+              href="{% url 'occupancy' %}"><i class="far fa-edit"></i> OCCUPANCY</a>
+            </li> -->
+         {%  else %}
+         <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.view_name == 'login' %}active{% endif %}"
+               href="{% url 'login' %}">Login</a>
+         </li>
+         {%  endif %}
+      </ul>
+      {% if user.is_authenticated %}
+      <span class="text-light">Welcome {{ user }}</span>
+      <a class="nav-link white" href="javascript:{document.getElementById('logout').submit()}"><i
+         class="fas fa-sign-out-alt"></i> LOGOUT</a>
+      <form action="{% url 'logout' %}" id="logout" method="POST">
+         {% csrf_token %}
+         <input type="hidden">
+      </form>
+      {%  endif %}
+   </div>
+</nav>

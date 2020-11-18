@@ -33,6 +33,7 @@ class Companydb(models.Model):
 
 class Transaction(models.Model):
     pos_name = models.CharField(max_length=45, blank=True, null=True)
+    pos = models.ForeignKey(Tblpermit, on_delete=models.CASCADE,null=True, related_name='name_pos')
     cardcode = models.CharField(max_length=45, blank=True, null=True)
     or_number = models.CharField(max_length=45, blank=True, null=True)
     time_in = models.DateTimeField(blank=True, null=True)

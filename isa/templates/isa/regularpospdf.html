@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      {% load staticfiles %}
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta charset="UTF-8">
+      <title>BIR REGULAR DISCOUNT REPORT</title>
+      <style>
+         @page {
+         margin-top: 0.8cm;
+         margin-bottom: 2cm;
+         margin-right: 0.56cm;
+         margin-left:1.5cm;
+         size: 330mm 215.9mm;
+         }
+         @media print {
+         @page {
+         size: 330mm 215.9mm;
+         }
+         }
+         @page {
+         @bottom-right{
+         content: "Page " counter(page) " of " counter(pages);
+         font-size: 12px;
+         }
+         }
+         .header h2, .header h4, .header p, .header h3 {
+         text-align: center;
+         padding-bottom: 0px;
+         margin-bottom: 0px;
+         }
+         .header, .hearder p {
+         padding: 0;
+         margin-bottom: 20px;
+         line-height: .4;
+         }
+         th {
+         font-size: 6px;
+         padding: 4px;
+         background-color: lightblue;
+         border: 1px solid black;
+         /* border-bottom: 2px solid black; */
+         text-align: center;
+         }
+         td {
+         font-size: 6px;
+         padding: 4px;
+         border: 1px solid black;
+         text-align: right;
+         }
+         table {
+         border-collapse: collapse;
+         width: 100%;
+         }
+         p {
+         font-size:10px;
+         padding:0px;
+         }
+         #tin {
+         font-size: 11px;
+         }
+         .blue {
+         margin-top: 20px;
+         text-transform: uppercase;
+         }
+         .footer {
+         line-height: 0.4;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header">
+         {% for coms in com %}
+         <h4 style="text-transform:uppercase">{{ coms.company }}</h4>
+         <p style="text-transform:uppercase">{{ coms.address }}</p>
+         <p style="text-transform:uppercase">PERMIT: {{ coms.permit }}</p>
+         <p id="tin">VAT REG TIN: {{coms.tin}}</p>
+         <p>{{ pos }}</p>
+         <h3>REGULAR DISCOUNT SALES SUMMARY REPORT</h3>
+         {% endfor %}
+      </div>
+      <table>
+         <thead>
+            <th>Date</th>
+            <th>Beginning OR No.</th>
+            <th>Ending OR No.</th>
+            <th>Grand Accum Sales Ending Balance</th>
+            <th>Grand Accum Sales Beginning Balance</th>
+            <th>Gross Sales for the Day</th>
+            <th>Sales issued with Manual SI/OR (per RR 16-2018)</th>
+            <th>Gross Sales From POS</th>
+            <th>VATable Sales</th>
+            <th>VAT Amount</th>
+            <th>VAT-Exempt Sales</th>
+            <th>Zero Rated Sales</th>
+            <th>Regular Discount</th>
+            <th>Special Discount (SC/PWD)</th>
+            <th>Returns</th>
+            <th>Void</th>
+            <th>Total Deductions</th>
+            <th>Vat Special Discount</th>
+            <th>VAT on Returns</th>
+            <th>Others</th>
+            <th>Total VAT Adjustment</th>
+            <th>Vat Payable</th>
+            <th>Net Sales</th>
+            <th>Other Income</th>
+            <th>Sales Overrun/Overflow</th>
+            <th>Total Net Sales</th>
+            <th>Reset Counter</th>
+            <th>Remarks</th>
+         </thead>
+         <tbody>
+            {% for incom in incomer %}
+            <tr>
+               <td style="text-align: center">{{ incom.busnessdate|date:"SHORT_DATE_FORMAT" }}</td>
+               <td>{{ incom.begin }}</td>
+               <td>{{ incom.ending_or }}</td>
+               <td>{{ incom.accum_sales_ending }}</td>
+               <td>{{ incom.accum_sales_beginning }}</td>
+               <td>{{ incom.gross_sales_day }}</td>
+               <td>{{ incom.manual_or }}</td>
+               <td>{{ incom.gross_sales_pos }}</td>
+               <td>{{ incom.vatable_sales|floatformat:2 }}</td>
+               <td>{{ incom.vat_amount|floatformat:2 }}</td>
+               <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>
+               <td>{{ incom.zero_rated_sales }}</td>
+               <td>{{ incom.regular_discount }}</td>
+               <td>{{ incom.special_discount }}</td>
+               <td>{{ incom.returns }}</td>
+               <td>{{ incom.void }}</td>
+               <td>{{ incom.total_deductions }}</td>
+               <td>{{ incom.vat_special_discount }}</td>
+               <td>{{ incom.vat_on_returns }}</td>
+               <td>{{ incom.other }}</td>
+               <td>{{ incom.total_vat_adjustment }}</td>
+               <td>{{ incom.vat_payable|floatformat:2 }}</td>
+               <td>{{ incom.net_sales|floatformat:2 }}</td>
+               <td>{{ incom.other_income }}</td>
+               <td>{{ incom.sales_overrun_overflow }}</td>
+               <td>{{ incom.total_net_sales|floatformat:2 }}</td>
+               <td>{{ incom.reset_counter }}</td>
+               <td>none</td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+      <div class="footer">
+         <p style="margin-top: 20px">GENERATED BY :</p>
+         <p>___________________</p>
+         <p>ISA ADMIN</p>
+         <p>Date Generated: {% now "jS F Y H:i" %}</p>
+      </div>
+   </body>
+</html>

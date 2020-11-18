@@ -1,0 +1,100 @@
+{% extends 'base/main.html' %}
+{% block content %}
+{% block title %} Cashier Excel Detailed Report {% endblock %}
+<h1 class="text-center mb-3 mt-5 pt-5 white1">Cashier Excel Detailed Report</h1>
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+   <li class="nav-item">
+      <a class="nav-link active white1" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+         aria-selected="true">Operators</a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link white1" id="profile-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="profile"
+         aria-selected="false">Terminal</a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link white1" id="contact-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="contact"
+         aria-selected="false">All</a>
+   </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class="container">
+         <div class="card text-center col-md-4 offset-md-4">
+            {% if error %}
+            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
+            <br>
+            {% endif %}
+            <form action="{% url 'excel' %}" method="POST">
+               {% csrf_token %}
+               <Label class="mt-2">Choose Operator: </Label>
+               <br>
+               <select name="operator" class="form-control">
+                  {% for oper in operators %}
+                  <option value="{{ oper.username }}">{{ oper.username }}</option>
+                  {% endfor %}
+               </select>
+               <br>
+               <Label>Start Date: </Label>
+               <input type="date" class="form-control" name="start" >
+               <br>
+               <Label>End Date: </Label>
+               <input type="date" class="form-control" name="end">
+               <br>
+               <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
+            </form>
+         </div>
+      </div>
+   </div>
+   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+         <div class="container">
+            <div class="card text-center col-md-4 offset-md-4">
+               {% if error %}
+               <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
+               <br>
+               {% endif %}
+               <form action="{% url 'cashierallexcel' %}" method="POST">
+                  {% csrf_token %}
+                  <Label>Start Date: </Label>
+                  <input type="date" class="form-control" name="start">
+                  <br>
+                  <Label>End Date: </Label>
+                  <input type="date" class="form-control" name="end">
+                  <br>
+                  <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+         <div class="container">
+            <div class="card text-center col-md-4 offset-md-4">
+               {% if error %}
+               <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
+               <br>
+               {% endif %}
+               <form action="{% url 'cashierposexcel' %}" method="POST">
+                  {% csrf_token %}
+                  <Label class="mt-2">Choose POS: </Label>
+                  <br>
+                  <select name="pos" class="form-control">
+                     {% for po in pos %}
+                     <option value="{{ po.pos_name }}">{{ po.pos_name }}</option>
+                     {% endfor %}
+                  </select>
+                  <Label>Start Date: </Label>
+                  <input type="date" class="form-control" name="start">
+                  <br>
+                  <Label>End Date: </Label>
+                  <input type="date" class="form-control" name="end">
+                  <br>
+                  <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

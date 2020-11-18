@@ -1,0 +1,37 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+{% block title %}Stay-In Vehicles Report {% endblock %}
+<h1 class="text-center mb-4 mt-5 pt-5 white1">Stay-In Vehicles Report</h1>
+<div class="container">
+        <div class="card text-center col-md-4 offset-md-4">
+            {% if error %}
+            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
+            <br>
+
+            {% endif %}
+            <a href="{% url 'stay_inpdf' %}" class="btn btn-primary btn-block" target="_blank">Check Stay-IN</a>
+            <!-- <form action="{% url 'stay_inpdf' %}" method="POST">
+                {% csrf_token %}
+
+                <br>
+                <Label>Start Date: </Label>
+                <input type="datetime-local" class="form-control" name="start" step="1">
+                <br>
+                <Label>End Date: </Label>
+                <input type="datetime-local" class="form-control" name="end" step="1">
+                <br>
+
+                <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
+            </form> -->
+        </div>
+    </div>
+
+    <footer>
+            <p class="text-center">ISA Copyright &copy; 2019</p>
+          </footer>
+        
+
+
+
+{% endblock %}

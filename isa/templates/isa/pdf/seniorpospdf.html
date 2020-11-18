@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta charset="UTF-8">
+      <title>Special Discount Summary Report</title>
+      <style>
+         @page {
+         margin-top: 0.8cm;
+         margin-bottom: 2cm;
+         margin-right: 0.56cm;
+         margin-left:1.5cm;
+         size: 330mm 215.9mm;
+         }
+         @media print {
+         @page {
+         size: 330mm 215.9mm;
+         }
+         }
+         @page {
+         @bottom-right{
+         content: "Page " counter(page) " of " counter(pages);
+         font-size: 12px;
+         }
+         }
+         .header h2, .header h4, .header p, .header h3 {
+         text-align: center;
+         padding-bottom: 0px;
+         margin-bottom: 0px;
+         }
+         .header, .hearder p {
+         padding: 0;
+         margin-bottom: 20px;
+         line-height: .4;
+         }
+         th {
+         font-size: 12px;
+         padding: 4px;
+         background-color: lightblue;
+         border: 1px solid black;
+         /* border-bottom: 2px solid black; */
+         text-align: center;
+         }
+         td {
+         font-size: 10px;
+         padding: 4px;
+         border: 1px solid black;
+         text-align: right;
+         }
+         table {
+         border-collapse: collapse;
+         width: 100%;
+         }
+         p {
+         font-size:10px;
+         padding:0px;
+         }
+         #tin {
+         font-size: 11px;
+         }
+         .blue {
+         margin-top: 20px;
+         text-transform: uppercase;
+         }
+         .footer {
+         line-height: 0.4;
+         }
+         .senior td {
+         font-weight: bold;
+         }
+         #footer {
+         position: fixed;
+         width: 100%;
+         bottom: -60px;
+         left: 0;
+         right: 0;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header">
+         {% for coms in com %}
+         <h4 style="text-transform:uppercase">{{ coms.company }}</h4>
+         <p style="text-transform:uppercase">{{ coms.address }}</p>
+         <p id="tin">VAT REG TIN: {{coms.tin}}</p>
+         <p style="text-transform:uppercase">ACCR # 0000-0000-0000</p>
+         <p>DATE ISSUED: MM-dd-YYYY</p>
+         <p>VALID UNTIL: MM-dd-YYYY</p>
+         <P>S/N: 000000000001</P>
+         <h3>Special Discount Summary Report</h3>
+         <h4>{{gtotal.min_date }} - {{gtotal.max_date}}</h4>
+         {% endfor %}
+      </div>
+      <!-- gross SALES
+         vat_exempt_sales
+         special discount
+         net sales -->
+      <table>
+         <thead>
+            <th>DATE</th>
+            <th>OR NO.</th>
+            <th style="width: 15%">NAME</th>
+            <th  style="width: 9%">PARKER TYPE</th>
+            <th>OSCA/SC/PWD ID</th>
+            <th>GROSS SALES</th>
+            <th style="width: 10%">VAT EXEMPT SALES</th>
+            <th style="width: 10%">VAT SPECIAL DISCOUNT</th>
+            <th style="width: 10%">SALES SPECIAL DISCOUNT</th>
+            <th style="width: 10%">NET SALES</th>
+         </thead>
+         <tbody>
+            {% for senior in seniors %}
+            <tr>
+               <td style="text-align: center">{{ senior.business_date|date:"m-d-Y" }}</td>
+               <td>{{ senior.or_number }}</td>
+               <td style="text-align: center;">{{ senior.parker_name }}</td>
+               <td>{{ senior.discount_name }}</td>
+               <td>{{ senior.parker_ref_id }}</td>
+               <td>{{ senior.gross_amount }}</td>
+               <td>{{ senior.vat_exempt_sales }}</td>
+               <td>{{ senior.vat_spcl_disc }}</td>
+               <td>{{ senior.discount_special }}</td>
+               <td>{{ senior.net_amount }}</td>
+            </tr>
+            {% endfor %}
+         </tbody>
+         <tfoot>
+            <tr class="senior">
+               <th colspan="5" style="text-align: center">TOTAL</th>
+               <td>{{ gtotal.gross|floatformat:2 }}</td>
+               <td>{{ gtotal.vat_exempt|floatformat:2 }}</td>
+               <td>{{ gtotal.vat_special|floatformat:2 }}</td>
+               <td>{{ gtotal.discount|floatformat:2 }}</td>
+               <td>{{ gtotal.net_sales|floatformat:2 }}</td>
+            </tr>
+         </tfoot>
+      </table>
+      <div id="footer">
+         <hr>
+         <p> Special Discount Summary Report - {% now "F j Y H:i" %}</p>
+      </div>
+   </body>
+</html>
