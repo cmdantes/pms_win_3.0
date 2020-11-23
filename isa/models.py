@@ -8,14 +8,14 @@ class Tblpermit(models.Model):
     min = models.CharField(db_column='MIN', max_length=255, blank=True, null=True)  # Field name made lowercase.
     serial = models.CharField(db_column='Serial', max_length=255, blank=True, null=True)  # Field name made lowercase.
     accred = models.CharField(db_column='Accred', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    dateissued = models.CharField(db_column='DateIssued', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    dateissued = models.CharField(db_column='DateIssued', max_length=255, blank=True,
+                                  null=True)  # Field name made lowercase.
     permit = models.CharField(db_column='Permit', max_length=255, blank=True, null=True)  # Field name made lowercase.
     vatreg = models.CharField(db_column='VATReg', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    accreddate = models.CharField(db_column='AccredDate', max_length=255, blank=True, null=True)  # Field name made lowercase.
-
+    accreddate = models.CharField(db_column='AccredDate', max_length=255, blank=True,
+                                  null=True)  # Field name made lowercase.
 
     class Meta:
-
         db_table = 'tblpermit'
 
 
@@ -26,15 +26,16 @@ class Companydb(models.Model):
     tin = models.CharField(db_column='TIN', max_length=255, blank=True, null=True)  # Field name made lowercase.
     permit = models.CharField(db_column='Permit', max_length=255, blank=True, null=True)  # Field name made lowercase.
     parkingslot = models.BigIntegerField(db_column='ParkingSlot', blank=True, null=True)  # Field name made lowercase.
-    parkingarea = models.CharField(db_column='ParkingArea', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    parkingarea = models.CharField(db_column='ParkingArea', max_length=255, blank=True,
+                                   null=True)  # Field name made lowercase.
 
     class Meta:
-      
         db_table = 'companydb'
+
 
 class Transaction(models.Model):
     pos_name = models.CharField(max_length=45, blank=True, null=True)
-    pos = models.ForeignKey(Tblpermit, on_delete=models.CASCADE,null=True, related_name='name_pos')
+    pos = models.ForeignKey(Tblpermit, on_delete=models.CASCADE, null=True, related_name='name_pos')
     cardcode = models.CharField(max_length=45, blank=True, null=True)
     or_number = models.CharField(max_length=45, blank=True, null=True)
     time_in = models.DateTimeField(blank=True, null=True)
@@ -82,6 +83,7 @@ class Transaction(models.Model):
     class Meta:
         db_table = 'transaction'
 
+
 class ManualTransaction(models.Model):
     ticket_no = models.IntegerField(unique=True)
     business_date = models.DateField()
@@ -107,8 +109,8 @@ class ManualTransaction(models.Model):
     pos_name = models.CharField(max_length=10, blank=True)
 
     class Meta:
-     
         db_table = 'manual_transaction'
+
 
 class ChargingRule(models.Model):
     name = models.CharField(max_length=100)
@@ -116,7 +118,7 @@ class ChargingRule(models.Model):
     minimum_minutes = models.IntegerField()
     minimum_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     succeeding_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    flat_rate =  models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    flat_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     overnight_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     lost_card = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     command = models.CharField(max_length=10)
@@ -132,12 +134,11 @@ class ChargingRule(models.Model):
     status = models.CharField(max_length=9, choices=STATUS_CHOICES, default='active')
 
     class Meta:
-
         db_table = 'charging_rule'
         verbose_name_plural = 'charging_rules'
 
-class FlatRateDays(models.Model):
 
+class FlatRateDays(models.Model):
     rule_name = models.CharField(max_length=100)
     monday = models.SmallIntegerField(null=True, blank=True)
     tuesday = models.SmallIntegerField(null=True, blank=True)
@@ -149,12 +150,11 @@ class FlatRateDays(models.Model):
     holiday = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = 'flatrate_days'
         verbose_name_plural = 'flatrate_days'
 
-class Discount(models.Model):
 
+class Discount(models.Model):
     discount_type = models.CharField(max_length=100)
     vat_exempt = models.SmallIntegerField(null=True, blank=True)
     percentage = models.DecimalField(max_digits=10, decimal_places=2, null=True)
@@ -162,12 +162,11 @@ class Discount(models.Model):
     status = models.SmallIntegerField(null=True, blank=True)
 
     class Meta:
-
         db_table = 'discount'
         verbose_name_plural = 'discounts'
 
-class DiscountFix(models.Model):
 
+class DiscountFix(models.Model):
     discount_type = models.CharField(max_length=100)
     vat_exempt = models.SmallIntegerField(null=True, blank=True)
     percentage = models.DecimalField(max_digits=10, decimal_places=2, null=True)
@@ -175,43 +174,40 @@ class DiscountFix(models.Model):
     status = models.SmallIntegerField(null=True, blank=True)
 
     class Meta:
-
         db_table = 'discount_fix'
         verbose_name_plural = 'discount_fix'
 
-class Vouchers(models.Model):
 
+class Vouchers(models.Model):
     voucher_type = models.CharField(max_length=100)
     amount_value = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     status = models.SmallIntegerField(null=True, blank=True)
 
     class Meta:
-
         db_table = 'vouchers'
         verbose_name_plural = 'vouchers'
 
-class NonCash(models.Model):
 
+class NonCash(models.Model):
     name = models.CharField(max_length=100)
     status = models.SmallIntegerField()
 
     class Meta:
-
         db_table = 'non_cash'
         verbose_name_plural = 'non_cash'
 
-class Holiday(models.Model):
 
+class Holiday(models.Model):
     holiday_date = models.DateField(null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-
         db_table = 'holiday'
         verbose_name_plural = 'holidays'
 
+
 class UserRoles(models.Model):
-    rule_name = models.CharField(unique=True,max_length=50)
+    rule_name = models.CharField(unique=True, max_length=50)
     server_set = models.IntegerField()
     user_set = models.IntegerField()
     device_set = models.IntegerField()
@@ -226,6 +222,7 @@ class UserRoles(models.Model):
     class Meta:
         db_table = 'user_roles'
 
+
 class Users(models.Model):
     username = models.CharField(unique=True, max_length=45)
     salted_hash = models.CharField(max_length=87)
@@ -237,6 +234,7 @@ class Users(models.Model):
 
     class Meta:
         db_table = 'users'
+
 
 class TransactionZeroAmount(models.Model):
     transaction_datetime = models.DateTimeField(blank=True, null=True)
