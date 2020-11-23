@@ -18,11 +18,8 @@
             <option value="{{ po.pos_name }}">{{ po.pos_name }}</option>
             {% endfor %}
          </select>
-         <Label class="mt-3">Start Date: </Label>
-         <input type="date" class="form-control" name="start">
-         <br>
-         <Label>End Date: </Label>
-         <input type="date" class="form-control" name="end">
+         <label>Start & End Date</label>
+         <input name="daterange" id="daterange" class="form-control">
          <br>
          <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
       </form>

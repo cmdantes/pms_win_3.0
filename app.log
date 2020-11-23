@@ -12072,3 +12072,1473 @@ django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '
 2020-11-18 15:40:26,374:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
 2020-11-18 15:40:26,374:asyncio:Using selector: EpollSelector
 2020-11-18 15:40:30,726:isa.views:bir monthly pdfreport generated successfully
+2020-11-18 16:47:58,180:asyncio:Using selector: EpollSelector
+2020-11-19 09:01:29,512:isa.views:accessing homepage
+2020-11-19 09:01:31,475:isa.views:accessing bir report
+2020-11-19 09:01:34,279:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:01:34,566:django.request:Not Found: /favicon.ico
+2020-11-19 09:01:48,230:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:03:10,874:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:03:24,455:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:04:14,325:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:04:33,873:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:26:42,616:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-19 09:26:42,616:asyncio:Using selector: EpollSelector
+2020-11-19 09:38:39,040:isa.views:accessing homepage
+2020-11-19 09:38:42,111:isa.views:accessing bir report
+2020-11-19 09:38:44,528:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:39:19,306:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:39:42,635:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:56:59,517:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-19 09:56:59,517:asyncio:Using selector: EpollSelector
+2020-11-19 09:57:02,793:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 09:58:03,934:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 10:00:02,001:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-19 10:00:02,002:asyncio:Using selector: EpollSelector
+2020-11-19 10:00:14,493:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 10:01:44,117:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-19 10:01:44,118:asyncio:Using selector: EpollSelector
+2020-11-19 10:01:46,650:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 10:04:43,072:isa.views:bir monthly pdfreport generated successfully
+2020-11-19 13:56:55,554:asyncio:Using selector: EpollSelector
+2020-11-20 08:13:09,295:isa.views:accessing homepage
+2020-11-20 08:13:14,249:isa.views:accessing bir report
+2020-11-20 08:13:17,951:isa.views:bir monthly pdfreport generated successfully
+2020-11-20 08:13:18,150:django.request:Not Found: /favicon.ico
+2020-11-20 08:13:55,049:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 08:13:55,049:asyncio:Using selector: EpollSelector
+2020-11-20 08:16:40,077:isa.views:accessing homepage
+2020-11-20 08:16:43,666:isa.views:accessing cash and card report
+2020-11-20 08:16:50,278:django.request:Internal Server Error: /isa/cashpdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/mysql/base.py", line 73, in execute
+    return self.cursor.execute(query, args)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 206, in execute
+    res = self._query(query)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 319, in _query
+    db.query(q)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/connections.py", line 259, in query
+    _mysql.connection.query(self, query)
+MySQLdb._exceptions.OperationalError: (1054, "Unknown column 'transaction_zero_amount.transaction_datetime' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 392, in cashpdf
+    graces = TransactionZeroAmount.objects.filter(
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/models/query.py", line 398, in aggregate
+    return query.get_aggregation(self.db, kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/models/sql/query.py", line 500, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/models/sql/compiler.py", line 1156, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 98, in execute
+    return super().execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 66, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 75, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/utils.py", line 90, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/mysql/base.py", line 73, in execute
+    return self.cursor.execute(query, args)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 206, in execute
+    res = self._query(query)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 319, in _query
+    db.query(q)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/connections.py", line 259, in query
+    _mysql.connection.query(self, query)
+django.db.utils.OperationalError: (1054, "Unknown column 'transaction_zero_amount.transaction_datetime' in 'field list'")
+2020-11-20 08:16:56,377:isa.views:accessing transaction flow report
+2020-11-20 08:17:04,242:isa.views:accessing bir report
+2020-11-20 08:17:07,867:isa.views:accessing homepage
+2020-11-20 08:17:12,454:isa.views:accessing vehicle in/out report
+2020-11-20 08:17:20,618:isa.views:accessing cashier detailed report
+2020-11-20 08:17:26,737:isa.views:cash operator pdfreport generated successfully
+2020-11-20 08:17:29,933:isa.views:accessing cashier detailed report
+2020-11-20 08:17:35,799:weasyprint:Anchor defined twice: tin
+2020-11-20 08:17:35,829:weasyprint:Anchor defined twice: footer
+2020-11-20 08:17:36,113:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 08:17:50,122:isa.views:cash all detailed pdfreport successfully
+2020-11-20 08:17:59,135:isa.views:accessing discount bir report
+2020-11-20 08:18:06,740:isa.views:accessing discount bir report
+2020-11-20 08:22:17,734:isa.views:accessing homepage
+2020-11-20 08:24:02,557:isa.views:accessing vehicle in/out report
+2020-11-20 08:25:22,111:isa.views:accessing homepage
+2020-11-20 08:25:51,685:isa.views:accessing cashier detailed report
+2020-11-20 08:25:58,798:isa.views:cash operator pdfreport generated successfully
+2020-11-20 08:29:39,858:asyncio:Using selector: EpollSelector
+2020-11-20 10:12:54,828:django.request:Not Found: /Subscribe/Verify
+2020-11-20 10:12:56,642:django.request:Not Found: /Subscribe/Verify
+2020-11-20 10:12:56,692:django.request:Not Found: /Subscribe/Verify
+2020-11-20 10:12:56,728:django.request:Not Found: /dashing
+2020-11-20 10:13:00,335:django.request:Not Found: /landing/
+2020-11-20 10:13:00,346:django.request:Not Found: /Subscribe/Verify
+2020-11-20 10:13:09,550:isa.views:accessing homepage
+2020-11-20 10:13:18,517:isa.views:accessing cash and card report
+2020-11-20 10:13:20,694:isa.views:accessing transaction flow report
+2020-11-20 10:13:35,439:isa.views:bir pdfreport generated successfully
+2020-11-20 10:14:54,415:django.request:Not Found: /landing/
+2020-11-20 10:14:57,271:django.request:Not Found: /landing/
+2020-11-20 10:14:59,681:isa.views:inserting new data
+2020-11-20 10:15:02,558:isa.views:accessing vehicle in/out report
+2020-11-20 10:15:14,320:isa.views:accessing stay-in vehicles report
+2020-11-20 10:15:15,857:isa.views:vehicle in/out pdfreport generated successfully
+2020-11-20 10:15:21,266:isa.views:accessing discount bir report
+2020-11-20 10:15:49,512:isa.views:accessing cash and card report
+2020-11-20 10:15:52,295:isa.views:accessing transaction flow report
+2020-11-20 10:16:16,807:isa.views:accessing transaction flow report
+2020-11-20 10:18:00,410:isa.views:accessing transaction flow report
+2020-11-20 10:18:01,620:isa.views:accessing transaction flow report
+2020-11-20 10:18:03,439:isa.views:accessing transaction flow report
+2020-11-20 10:18:04,064:isa.views:accessing transaction flow report
+2020-11-20 10:19:08,096:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 10:19:08,096:asyncio:Using selector: EpollSelector
+2020-11-20 10:19:11,732:isa.views:accessing transaction flow report
+2020-11-20 10:19:12,723:isa.views:accessing transaction flow report
+2020-11-20 10:19:33,533:isa.views:accessing transaction flow report
+2020-11-20 10:19:34,782:isa.views:accessing transaction flow report
+2020-11-20 10:20:05,873:django.request:Not Found: /landing/
+2020-11-20 10:20:09,615:isa.views:inserting new data
+2020-11-20 10:20:12,544:isa.views:accessing bir report
+2020-11-20 10:21:13,755:isa.views:accessing transaction flow report
+2020-11-20 10:21:31,311:isa.views:accessing bir report
+2020-11-20 10:21:40,008:isa.views:accessing bir report
+2020-11-20 10:21:43,546:django.request:Not Found: /landing/
+2020-11-20 10:21:47,188:isa.views:inserting new data
+2020-11-20 10:21:49,338:isa.views:accessing transaction flow report
+2020-11-20 10:22:28,027:isa.views:accessing discount bir report
+2020-11-20 10:22:32,671:isa.views:accessing cash and card report
+2020-11-20 10:22:37,078:isa.views:accessing transaction flow report
+2020-11-20 10:31:01,528:isa.views:accessing transaction flow report
+2020-11-20 10:31:18,431:isa.views:accessing transaction flow report
+2020-11-20 10:31:27,193:isa.views:accessing transaction flow report
+2020-11-20 10:31:35,194:isa.views:accessing transaction flow report
+2020-11-20 10:31:47,431:isa.views:accessing transaction flow report
+2020-11-20 10:36:44,473:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 10:36:44,474:asyncio:Using selector: EpollSelector
+2020-11-20 10:36:46,020:django.request:Not Found: /landing/
+2020-11-20 10:36:51,434:django.request:Not Found: /bir/transaction
+2020-11-20 10:36:55,700:django.request:Internal Server Error: /bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 98, in bir
+    html_string = render_to_string('isa/bir.html', context)
+UnboundLocalError: local variable 'context' referenced before assignment
+2020-11-20 10:36:59,497:django.request:Internal Server Error: /birmonthly
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 237, in birmonthly
+    html_string = render_to_string('isa/birmonthly.html', context)
+UnboundLocalError: local variable 'context' referenced before assignment
+2020-11-20 10:37:04,176:django.request:Not Found: /landing/
+2020-11-20 10:37:06,591:django.request:Not Found: /landing/
+2020-11-20 10:37:25,622:isa.views:accessing homepage
+2020-11-20 10:37:27,060:isa.views:accessing bir report
+2020-11-20 10:37:30,910:isa.views:bir monthly pdfreport generated successfully
+2020-11-20 10:38:48,971:isa.views:accessing homepage
+2020-11-20 10:38:50,075:isa.views:accessing cash and card report
+2020-11-20 10:38:52,332:isa.views:accessing transaction flow report
+2020-11-20 10:39:07,457:isa.views:accessing transaction flow report
+2020-11-20 10:40:21,509:isa.views:accessing transaction flow report
+2020-11-20 10:40:27,803:isa.views:accessing transaction flow report
+2020-11-20 10:40:28,627:isa.views:accessing transaction flow report
+2020-11-20 10:40:29,095:isa.views:accessing transaction flow report
+2020-11-20 10:40:41,437:isa.views:accessing transaction flow report
+2020-11-20 10:40:42,578:isa.views:accessing transaction flow report
+2020-11-20 10:40:48,873:isa.views:accessing transaction flow report
+2020-11-20 10:40:52,721:isa.views:accessing transaction flow report
+2020-11-20 10:41:07,501:isa.views:accessing transaction flow report
+2020-11-20 10:41:21,107:isa.views:accessing transaction flow report
+2020-11-20 10:41:23,387:isa.views:accessing transaction flow report
+2020-11-20 10:41:24,133:isa.views:accessing transaction flow report
+2020-11-20 10:41:24,384:isa.views:accessing transaction flow report
+2020-11-20 10:41:24,623:isa.views:accessing transaction flow report
+2020-11-20 10:43:53,989:isa.views:accessing transaction flow report
+2020-11-20 10:43:55,172:isa.views:accessing transaction flow report
+2020-11-20 10:43:55,866:isa.views:accessing transaction flow report
+2020-11-20 10:43:56,146:isa.views:accessing transaction flow report
+2020-11-20 10:46:41,733:isa.views:accessing transaction flow report
+2020-11-20 10:46:42,649:isa.views:accessing transaction flow report
+2020-11-20 10:47:02,280:isa.views:accessing transaction flow report
+2020-11-20 10:48:41,627:isa.views:accessing transaction flow report
+2020-11-20 10:49:06,867:isa.views:accessing transaction flow report
+2020-11-20 10:49:29,688:isa.views:accessing transaction flow report
+2020-11-20 10:49:41,364:isa.views:accessing transaction flow report
+2020-11-20 10:50:01,829:isa.views:accessing transaction flow report
+2020-11-20 10:50:50,324:isa.views:accessing transaction flow report
+2020-11-20 10:50:51,476:isa.views:accessing transaction flow report
+2020-11-20 10:50:57,880:isa.views:accessing transaction flow report
+2020-11-20 10:51:09,002:isa.views:accessing transaction flow report
+2020-11-20 10:52:35,095:isa.views:accessing transaction flow report
+2020-11-20 10:52:58,751:isa.views:accessing transaction flow report
+2020-11-20 10:53:00,818:isa.views:accessing transaction flow report
+2020-11-20 10:53:45,877:isa.views:accessing transaction flow report
+2020-11-20 10:53:46,771:isa.views:accessing transaction flow report
+2020-11-20 10:54:23,431:isa.views:accessing transaction flow report
+2020-11-20 10:54:40,698:isa.views:accessing transaction flow report
+2020-11-20 10:54:53,379:isa.views:accessing transaction flow report
+2020-11-20 10:55:16,159:isa.views:accessing transaction flow report
+2020-11-20 10:55:21,690:isa.views:accessing transaction flow report
+2020-11-20 10:55:37,905:isa.views:accessing transaction flow report
+2020-11-20 10:55:40,072:isa.views:accessing transaction flow report
+2020-11-20 10:55:49,076:isa.views:accessing transaction flow report
+2020-11-20 10:56:03,247:isa.views:accessing transaction flow report
+2020-11-20 10:56:10,816:isa.views:accessing transaction flow report
+2020-11-20 10:56:25,953:isa.views:accessing transaction flow report
+2020-11-20 10:58:11,967:isa.views:accessing transaction flow report
+2020-11-20 10:58:13,444:isa.views:accessing transaction flow report
+2020-11-20 10:58:15,050:isa.views:accessing transaction flow report
+2020-11-20 10:58:26,274:isa.views:accessing transaction flow report
+2020-11-20 10:58:42,587:isa.views:accessing transaction flow report
+2020-11-20 10:58:59,460:isa.views:accessing transaction flow report
+2020-11-20 10:59:28,326:isa.views:accessing transaction flow report
+2020-11-20 11:00:05,224:isa.views:accessing transaction flow report
+2020-11-20 11:00:06,592:isa.views:accessing transaction flow report
+2020-11-20 11:00:31,987:isa.views:accessing transaction flow report
+2020-11-20 11:00:58,776:isa.views:accessing transaction flow report
+2020-11-20 11:03:02,320:isa.views:accessing transaction flow report
+2020-11-20 11:03:07,525:isa.views:accessing transaction flow report
+2020-11-20 11:05:27,707:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:05:27,707:asyncio:Using selector: EpollSelector
+2020-11-20 11:05:33,228:isa.views:accessing transaction flow report
+2020-11-20 11:05:37,115:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:06:18,721:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:06:18,722:asyncio:Using selector: EpollSelector
+2020-11-20 11:06:24,024:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:06:27,761:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:06:49,428:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:06:49,428:asyncio:Using selector: EpollSelector
+2020-11-20 11:06:55,280:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:07:02,576:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:07:23,758:isa.views:accessing transaction flow report
+2020-11-20 11:07:26,113:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:07:30,783:isa.views:accessing bir report
+2020-11-20 11:07:34,731:isa.views:bir monthly pdfreport generated successfully
+2020-11-20 11:07:54,431:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:07:54,432:asyncio:Using selector: EpollSelector
+2020-11-20 11:07:58,791:isa.views:accessing transaction flow report
+2020-11-20 11:08:02,827:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:08:18,753:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:08:18,754:asyncio:Using selector: EpollSelector
+2020-11-20 11:08:25,002:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'daterange'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 65, in bir
+    print(request.POST['daterange'])
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'daterange'
+2020-11-20 11:08:43,915:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:08:43,915:asyncio:Using selector: EpollSelector
+2020-11-20 11:08:50,136:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:09:17,334:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:09:17,339:asyncio:Using selector: EpollSelector
+2020-11-20 11:10:28,650:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:10:28,651:asyncio:Using selector: EpollSelector
+2020-11-20 11:10:34,269:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:11:48,023:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:11:48,024:asyncio:Using selector: EpollSelector
+2020-11-20 11:11:58,126:isa.views:accessing transaction flow report
+2020-11-20 11:11:59,960:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:12:52,194:isa.views:accessing transaction flow report
+2020-11-20 11:13:08,632:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:13:08,633:asyncio:Using selector: EpollSelector
+2020-11-20 11:13:18,037:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:14:40,309:isa.views:accessing transaction flow report
+2020-11-20 11:14:51,650:isa.views:accessing transaction flow report
+2020-11-20 11:14:58,976:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:15:36,357:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:15:39,097:isa.views:accessing transaction flow report
+2020-11-20 11:15:42,390:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:16:10,680:isa.views:accessing transaction flow report
+2020-11-20 11:16:14,767:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:16:35,865:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:16:37,602:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:16:38,947:isa.views:accessing transaction flow report
+2020-11-20 11:17:09,476:isa.views:accessing transaction flow report
+2020-11-20 11:17:13,333:isa.views:accessing transaction flow report
+2020-11-20 11:17:25,422:isa.views:accessing transaction flow report
+2020-11-20 11:17:42,233:isa.views:accessing transaction flow report
+2020-11-20 11:17:50,820:isa.views:accessing transaction flow report
+2020-11-20 11:17:55,017:isa.views:accessing transaction flow report
+2020-11-20 11:18:18,262:isa.views:accessing transaction flow report
+2020-11-20 11:18:19,585:isa.views:accessing transaction flow report
+2020-11-20 11:18:31,253:isa.views:accessing transaction flow report
+2020-11-20 11:18:44,213:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:18:44,214:asyncio:Using selector: EpollSelector
+2020-11-20 11:18:51,028:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:21:19,312:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:21:19,313:asyncio:Using selector: EpollSelector
+2020-11-20 11:22:22,185:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:22:22,185:asyncio:Using selector: EpollSelector
+2020-11-20 11:22:30,691:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 68, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:22:53,556:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:22:53,557:asyncio:Using selector: EpollSelector
+2020-11-20 11:23:05,248:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:23:05,249:asyncio:Using selector: EpollSelector
+2020-11-20 11:23:10,162:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 67, in bir
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:23:30,649:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:23:30,650:asyncio:Using selector: EpollSelector
+2020-11-20 11:23:51,359:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:23:51,360:asyncio:Using selector: EpollSelector
+2020-11-20 11:23:56,369:isa.views:accessing transaction flow report
+2020-11-20 11:24:00,930:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 67, in bir
+    start_date = request.POST['start']
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 11:24:20,877:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:24:20,878:asyncio:Using selector: EpollSelector
+2020-11-20 11:24:28,377:isa.views:accessing bir report
+2020-11-20 11:24:41,105:isa.views:accessing bir report
+2020-11-20 11:24:48,562:isa.views:accessing bir report
+2020-11-20 11:24:57,834:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:24:57,834:asyncio:Using selector: EpollSelector
+2020-11-20 11:25:07,884:isa.views:bir monthly pdfreport generated successfully
+2020-11-20 11:25:40,326:isa.views:accessing bir report
+2020-11-20 11:25:42,035:isa.views:accessing discount bir report
+2020-11-20 11:26:17,933:isa.views:accessing bir report
+2020-11-20 11:26:19,919:isa.views:accessing transaction flow report
+2020-11-20 11:26:29,626:isa.views:accessing bir report
+2020-11-20 11:26:41,125:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:26:41,126:asyncio:Using selector: EpollSelector
+2020-11-20 11:29:42,700:asyncio:Using selector: EpollSelector
+2020-11-20 11:35:31,678:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:35:31,679:asyncio:Using selector: EpollSelector
+2020-11-20 11:36:22,128:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:36:22,134:asyncio:Using selector: EpollSelector
+2020-11-20 11:37:06,437:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:37:06,438:asyncio:Using selector: EpollSelector
+2020-11-20 11:37:32,631:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:37:32,632:asyncio:Using selector: EpollSelector
+2020-11-20 11:37:41,908:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:37:41,908:asyncio:Using selector: EpollSelector
+2020-11-20 11:37:59,214:isa.views:accessing homepage
+2020-11-20 11:38:02,120:isa.views:accessing discount bir report
+2020-11-20 11:38:04,913:isa.views:accessing transaction flow report
+2020-11-20 11:38:12,292:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 66, in bir
+    start_date = datetime.datetime.strptime(startnend[0], '%m/%d/%Y').strftime('%Y-%m-%d')
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+2020-11-20 11:38:12,590:django.request:Not Found: /favicon.ico
+2020-11-20 11:38:20,814:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 11:38:20,814:asyncio:Using selector: EpollSelector
+2020-11-20 11:38:34,277:isa.views:bir pdfreport generated successfully
+2020-11-20 11:39:05,757:isa.views:accessing cash and card report
+2020-11-20 11:39:13,047:django.request:Internal Server Error: /isa/cashpdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/mysql/base.py", line 73, in execute
+    return self.cursor.execute(query, args)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 206, in execute
+    res = self._query(query)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 319, in _query
+    db.query(q)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/connections.py", line 259, in query
+    _mysql.connection.query(self, query)
+MySQLdb._exceptions.OperationalError: (1054, "Unknown column 'transaction_zero_amount.transaction_datetime' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 394, in cashpdf
+    graces = TransactionZeroAmount.objects.filter(
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/models/query.py", line 398, in aggregate
+    return query.get_aggregation(self.db, kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/models/sql/query.py", line 500, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/models/sql/compiler.py", line 1156, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 98, in execute
+    return super().execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 66, in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 75, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/utils.py", line 90, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/db/backends/mysql/base.py", line 73, in execute
+    return self.cursor.execute(query, args)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 206, in execute
+    res = self._query(query)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/cursors.py", line 319, in _query
+    db.query(q)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/MySQLdb/connections.py", line 259, in query
+    _mysql.connection.query(self, query)
+django.db.utils.OperationalError: (1054, "Unknown column 'transaction_zero_amount.transaction_datetime' in 'field list'")
+2020-11-20 11:40:26,589:isa.views:accessing homepage
+2020-11-20 11:40:31,609:isa.views:inserting new data
+2020-11-20 11:40:36,959:isa.views:accessing vehicle in/out report
+2020-11-20 11:40:42,698:isa.views:accessing homepage
+2020-11-20 11:40:45,975:isa.views:accessing transaction flow report
+2020-11-20 11:41:01,060:isa.views:accessing bir report
+2020-11-20 11:41:08,343:isa.views:bir pdfreport generated successfully
+2020-11-20 11:41:14,220:isa.views:accessing vehicle in/out report
+2020-11-20 11:41:16,715:isa.views:accessing stay-in vehicles report
+2020-11-20 11:41:17,813:isa.views:vehicle in/out pdfreport generated successfully
+2020-11-20 11:41:23,220:isa.views:accessing cashier detailed report
+2020-11-20 11:41:37,217:isa.views:cash operator pdfreport generated successfully
+2020-11-20 11:41:56,531:isa.views:accessing cashier detailed report
+2020-11-20 11:42:15,520:weasyprint:Anchor defined twice: tin
+2020-11-20 11:42:15,636:weasyprint:Anchor defined twice: footer
+2020-11-20 11:42:17,402:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 11:42:50,425:isa.views:cash all detailed pdfreport successfully
+2020-11-20 12:46:42,960:asyncio:Using selector: EpollSelector
+2020-11-20 12:46:53,895:isa.views:accessing cashier detailed report
+2020-11-20 12:46:56,903:isa.views:accessing homepage
+2020-11-20 13:01:34,538:isa.views:accessing homepage
+2020-11-20 13:01:39,649:isa.views:accessing cash and card report
+2020-11-20 13:01:47,384:isa.views:accessing cashier detailed report
+2020-11-20 13:01:53,699:isa.views:cash operator pdfreport generated successfully
+2020-11-20 13:02:02,284:isa.views:accessing homepage
+2020-11-20 13:02:17,993:isa.views:accessing discount bir report
+2020-11-20 13:02:25,983:isa.views:accessing discount bir report
+2020-11-20 13:02:58,051:isa.views:accessing discount bir report
+2020-11-20 13:03:45,195:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:03:45,195:asyncio:Using selector: EpollSelector
+2020-11-20 13:03:50,648:isa.views:accessing discount bir report
+2020-11-20 13:03:53,961:isa.views:Missing field
+2020-11-20 13:06:12,802:isa.views:accessing discount bir report
+2020-11-20 13:06:21,665:isa.views:accessing discount bir report
+2020-11-20 13:06:33,268:isa.views:accessing discount bir report
+2020-11-20 13:06:35,702:isa.views:accessing discount bir report
+2020-11-20 13:06:43,538:isa.views:accessing discount bir report
+2020-11-20 13:07:08,562:isa.views:accessing discount bir report
+2020-11-20 13:14:56,850:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:14:56,850:asyncio:Using selector: EpollSelector
+2020-11-20 13:15:03,849:isa.views:accessing bir report
+2020-11-20 13:15:07,045:isa.views:accessing transaction flow report
+2020-11-20 13:15:13,393:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 67, in bir
+    start_date = Library.timeanddateconversion(startnend[0])
+  File "/home/chrisansd/pms_win_3.0/isa/library.py", line 7, in timeanddateconversion
+    return datetime.strptime(data, '%m/%d/%Y').strftime('%Y-%m-%d')
+TypeError: strptime() argument 1 must be str, not list
+2020-11-20 13:15:25,198:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:15:25,199:asyncio:Using selector: EpollSelector
+2020-11-20 13:15:32,403:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 67, in bir
+    start_date = Library.timeanddateconversion(str(startnend[0]))
+  File "/home/chrisansd/pms_win_3.0/isa/library.py", line 7, in timeanddateconversion
+    return datetime.strptime(data, '%m/%d/%Y').strftime('%Y-%m-%d')
+TypeError: strptime() argument 1 must be str, not list
+2020-11-20 13:15:38,193:django.request:Internal Server Error: /isa/bir
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 67, in bir
+    start_date = Library.timeanddateconversion(str(startnend[0]))
+  File "/home/chrisansd/pms_win_3.0/isa/library.py", line 7, in timeanddateconversion
+    return datetime.strptime(data, '%m/%d/%Y').strftime('%Y-%m-%d')
+TypeError: strptime() argument 1 must be str, not list
+2020-11-20 13:16:49,108:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:16:49,109:asyncio:Using selector: EpollSelector
+2020-11-20 13:17:12,761:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:17:12,762:asyncio:Using selector: EpollSelector
+2020-11-20 13:20:05,655:isa.views:bir pdfreport generated successfully
+2020-11-20 13:20:13,709:isa.views:accessing cash and card report
+2020-11-20 13:20:16,074:isa.views:accessing homepage
+2020-11-20 13:20:20,532:isa.views:accessing discount bir report
+2020-11-20 13:20:25,008:django.request:Internal Server Error: /isa/seniorpospdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 270, in seniorpospdf
+    print(request.POST['start'])
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 13:21:50,450:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:21:50,450:asyncio:Using selector: EpollSelector
+2020-11-20 13:22:39,634:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:22:39,635:asyncio:Using selector: EpollSelector
+2020-11-20 13:22:51,390:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:22:51,391:asyncio:Using selector: EpollSelector
+2020-11-20 13:22:56,583:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:22:56,584:asyncio:Using selector: EpollSelector
+2020-11-20 13:23:04,763:isa.views:accessing discount bir report
+2020-11-20 13:23:31,515:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:23:31,515:asyncio:Using selector: EpollSelector
+2020-11-20 13:23:54,259:django.request:Internal Server Error: /isa/seniorpospdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 310, in seniorpospdf
+    html_string = render_to_string('isa/isa/seniorpospdf.html', context)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: isa/isa/seniorpospdf.html
+2020-11-20 13:24:09,440:isa.views:accessing discount bir report
+2020-11-20 13:24:11,918:isa.views:accessing discount bir report
+2020-11-20 13:24:51,615:django.request:Internal Server Error: /isa/seniorpospdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 310, in seniorpospdf
+    html_string = render_to_string('isa/isa/seniorpospdf.html', context)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: isa/isa/seniorpospdf.html
+2020-11-20 13:25:18,214:isa.views:accessing discount bir report
+2020-11-20 13:25:18,635:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:25:18,636:asyncio:Using selector: EpollSelector
+2020-11-20 13:25:23,948:isa.views:senior discount pdfreport generated successfully
+2020-11-20 13:25:55,124:isa.views:senior discount pdfreport generated successfully
+2020-11-20 13:26:19,560:isa.views:accessing cash and card report
+2020-11-20 13:26:24,008:isa.views:Missing field
+2020-11-20 13:26:32,642:isa.views:Missing field
+2020-11-20 13:26:38,400:isa.views:accessing manual ticketing report
+2020-11-20 13:26:40,816:isa.views:accessing cashier detailed report
+2020-11-20 13:26:47,229:isa.views:cash operator pdfreport generated successfully
+2020-11-20 13:26:59,228:isa.views:accessing discount bir report
+2020-11-20 13:27:08,561:isa.views:accessing bir report
+2020-11-20 13:27:12,170:isa.views:accessing cash and card report
+2020-11-20 13:27:18,156:isa.views:accessing manual ticketing report
+2020-11-20 13:31:00,160:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:31:00,160:asyncio:Using selector: EpollSelector
+2020-11-20 13:32:13,928:isa.views:accessing manual ticketing report
+2020-11-20 13:33:21,647:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:33:21,648:asyncio:Using selector: EpollSelector
+2020-11-20 13:33:27,207:isa.views:accessing manual ticketing report
+2020-11-20 13:34:07,014:isa.views:accessing cashier detailed report
+2020-11-20 13:34:09,710:isa.views:accessing stay-in vehicles report
+2020-11-20 13:34:11,333:isa.views:vehicle in/out pdfreport generated successfully
+2020-11-20 13:34:15,890:isa.views:accessing vehicle in/out report
+2020-11-20 13:34:19,340:isa.views:accessing manual ticketing report
+2020-11-20 13:34:28,791:isa.views:manual ticketing pdfreport generated successfully
+2020-11-20 13:34:59,013:isa.views:accessing manual ticketing report
+2020-11-20 13:35:16,851:django.request:Internal Server Error: /isa/manualpdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 1503, in manualpdf
+    if request.POST['start'] and request.POST['end']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 13:36:01,963:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 13:36:01,964:asyncio:Using selector: EpollSelector
+2020-11-20 13:36:07,849:isa.views:manual ticketing pdfreport generated successfully
+2020-11-20 13:36:20,385:isa.views:manual ticketing pdfreport generated successfully
+2020-11-20 13:37:00,443:isa.views:inserting new data
+2020-11-20 13:37:02,781:isa.views:accessing cashier detailed report
+2020-11-20 13:37:09,273:isa.views:cash operator pdfreport generated successfully
+2020-11-20 13:38:35,434:isa.views:accessing cashier detailed report
+2020-11-20 13:38:38,224:isa.views:accessing cashier detailed report
+2020-11-20 13:38:41,680:isa.views:accessing cashier detailed report
+2020-11-20 13:38:45,255:isa.views:accessing cashier detailed report
+2020-11-20 13:41:38,436:isa.views:accessing cashier detailed report
+2020-11-20 13:41:39,509:isa.views:accessing cashier detailed report
+2020-11-20 13:41:41,804:isa.views:accessing cashier detailed report
+2020-11-20 13:41:47,514:isa.views:accessing cashier detailed report
+2020-11-20 13:42:48,980:isa.views:accessing cashier detailed report
+2020-11-20 13:43:13,595:isa.views:accessing cashier detailed report
+2020-11-20 13:48:20,697:isa.views:accessing cashier detailed report
+2020-11-20 13:48:38,098:isa.views:accessing cashier detailed report
+2020-11-20 13:49:56,072:isa.views:accessing cashier detailed report
+2020-11-20 13:50:04,367:isa.views:accessing cashier detailed report
+2020-11-20 13:51:10,695:isa.views:accessing cashier detailed report
+2020-11-20 13:51:28,174:isa.views:accessing cashier detailed report
+2020-11-20 13:52:28,129:isa.views:accessing cashier detailed report
+2020-11-20 13:53:47,651:isa.views:accessing cashier detailed report
+2020-11-20 13:53:48,918:isa.views:accessing cashier detailed report
+2020-11-20 13:53:50,318:isa.views:accessing cashier detailed report
+2020-11-20 13:53:56,743:isa.views:accessing cashier detailed report
+2020-11-20 13:55:29,675:isa.views:accessing cashier detailed report
+2020-11-20 13:55:50,017:isa.views:accessing cashier detailed report
+2020-11-20 13:56:15,871:isa.views:accessing cashier detailed report
+2020-11-20 13:58:16,775:isa.views:accessing cashier detailed report
+2020-11-20 13:58:23,401:isa.views:accessing cashier detailed report
+2020-11-20 14:00:15,929:isa.views:accessing cashier detailed report
+2020-11-20 14:00:29,948:isa.views:accessing cashier detailed report
+2020-11-20 14:00:39,747:isa.views:accessing cashier detailed report
+2020-11-20 14:00:56,218:isa.views:accessing cashier detailed report
+2020-11-20 14:01:17,163:isa.views:accessing cashier detailed report
+2020-11-20 14:01:24,639:isa.views:accessing cashier detailed report
+2020-11-20 14:02:41,304:isa.views:accessing cashier detailed report
+2020-11-20 14:04:43,765:isa.views:accessing cashier detailed report
+2020-11-20 14:04:59,721:isa.views:accessing cashier detailed report
+2020-11-20 14:05:07,375:isa.views:accessing cashier detailed report
+2020-11-20 14:05:28,470:isa.views:accessing cashier detailed report
+2020-11-20 14:05:29,654:isa.views:accessing cashier detailed report
+2020-11-20 14:06:29,249:isa.views:accessing cashier detailed report
+2020-11-20 14:06:50,999:isa.views:accessing cashier detailed report
+2020-11-20 14:08:08,133:django.request:Internal Server Error: /isa/cashier
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 960, in post
+    start_date = request.POST['start']
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 14:08:09,473:django.request:Not Found: /favicon.ico
+2020-11-20 14:10:30,893:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:10:30,893:asyncio:Using selector: EpollSelector
+2020-11-20 14:10:54,156:isa.views:accessing homepage
+2020-11-20 14:10:59,718:isa.views:accessing cash and card report
+2020-11-20 14:11:04,991:isa.views:accessing cashier detailed report
+2020-11-20 14:11:06,750:django.request:Internal Server Error: /isa/cashier
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 1046, in post
+    start_date = request.POST['start']
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 14:11:39,360:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:11:39,360:asyncio:Using selector: EpollSelector
+2020-11-20 14:11:49,330:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:13:30,630:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:13:30,630:asyncio:Using selector: EpollSelector
+2020-11-20 14:13:37,141:isa.views:accessing cashier detailed report
+2020-11-20 14:13:41,989:isa.views:accessing cashier detailed report
+2020-11-20 14:13:45,308:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:13:54,272:isa.views:accessing cashier detailed report
+2020-11-20 14:15:21,312:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:17:37,032:isa.views:accessing cashier detailed report
+2020-11-20 14:17:38,393:isa.views:accessing cashier detailed report
+2020-11-20 14:17:39,869:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:17:41,996:isa.views:accessing cashier detailed report
+2020-11-20 14:17:44,532:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:19:52,754:isa.views:accessing cashier detailed report
+2020-11-20 14:19:54,323:isa.views:accessing cashier detailed report
+2020-11-20 14:19:56,723:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:19:56,838:django.request:Not Found: /favicon.ico
+2020-11-20 14:20:22,367:isa.views:accessing cashier detailed report
+2020-11-20 14:20:23,962:isa.views:accessing cashier detailed report
+2020-11-20 14:20:26,033:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:20:26,166:django.request:Not Found: /favicon.ico
+2020-11-20 14:20:28,629:isa.views:accessing cashier detailed report
+2020-11-20 14:20:31,296:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:20:35,962:isa.views:accessing cashier detailed report
+2020-11-20 14:20:49,858:isa.views:accessing cashier detailed report
+2020-11-20 14:20:50,863:isa.views:accessing cashier detailed report
+2020-11-20 14:20:51,326:isa.views:accessing cashier detailed report
+2020-11-20 14:20:51,587:isa.views:accessing cashier detailed report
+2020-11-20 14:20:51,739:isa.views:accessing cashier detailed report
+2020-11-20 14:20:51,916:isa.views:accessing cashier detailed report
+2020-11-20 14:20:51,993:isa.views:accessing cashier detailed report
+2020-11-20 14:20:53,706:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:20:53,851:django.request:Not Found: /favicon.ico
+2020-11-20 14:20:56,122:isa.views:accessing cashier detailed report
+2020-11-20 14:20:58,142:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:20:59,872:isa.views:accessing cashier detailed report
+2020-11-20 14:21:57,137:isa.views:accessing cashier detailed report
+2020-11-20 14:21:59,536:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:21:59,703:django.request:Not Found: /favicon.ico
+2020-11-20 14:22:02,580:isa.views:accessing cashier detailed report
+2020-11-20 14:22:04,830:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:22:06,693:isa.views:accessing cashier detailed report
+2020-11-20 14:23:18,591:isa.views:accessing cashier detailed report
+2020-11-20 14:23:23,105:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:23:23,500:django.request:Not Found: /favicon.ico
+2020-11-20 14:23:25,374:isa.views:accessing cashier detailed report
+2020-11-20 14:24:02,343:isa.views:accessing cashier detailed report
+2020-11-20 14:24:04,195:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:24:06,092:isa.views:accessing cashier detailed report
+2020-11-20 14:25:33,805:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:25:33,806:asyncio:Using selector: EpollSelector
+2020-11-20 14:26:00,499:isa.views:accessing cashier detailed report
+2020-11-20 14:26:02,928:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:26:03,375:django.request:Not Found: /favicon.ico
+2020-11-20 14:26:06,707:isa.views:accessing cashier detailed report
+2020-11-20 14:26:10,552:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:26:15,031:isa.views:accessing cashier detailed report
+2020-11-20 14:26:18,403:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:26:52,869:isa.views:accessing cashier detailed report
+2020-11-20 14:27:15,007:isa.views:accessing cashier detailed report
+2020-11-20 14:27:16,795:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:27:19,637:isa.views:accessing cashier detailed report
+2020-11-20 14:27:22,522:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:27:24,181:isa.views:accessing cashier detailed report
+2020-11-20 14:28:52,674:isa.views:accessing cashier detailed report
+2020-11-20 14:28:54,600:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:29:26,876:isa.views:accessing cashier detailed report
+2020-11-20 14:29:28,428:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:29:30,857:isa.views:accessing cashier detailed report
+2020-11-20 14:29:32,740:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:29:35,052:isa.views:accessing cashier detailed report
+2020-11-20 14:29:48,513:isa.views:accessing cashier detailed report
+2020-11-20 14:29:49,067:isa.views:accessing cashier detailed report
+2020-11-20 14:29:49,350:isa.views:accessing cashier detailed report
+2020-11-20 14:29:49,576:isa.views:accessing cashier detailed report
+2020-11-20 14:29:49,831:isa.views:accessing cashier detailed report
+2020-11-20 14:29:51,117:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:29:53,541:isa.views:accessing cashier detailed report
+2020-11-20 14:30:05,216:isa.views:accessing cashier detailed report
+2020-11-20 14:30:05,460:isa.views:accessing cashier detailed report
+2020-11-20 14:30:05,719:isa.views:accessing cashier detailed report
+2020-11-20 14:30:05,954:isa.views:accessing cashier detailed report
+2020-11-20 14:30:06,163:isa.views:accessing cashier detailed report
+2020-11-20 14:30:07,758:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:30:09,868:isa.views:accessing cashier detailed report
+2020-11-20 14:30:12,201:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:30:13,828:isa.views:accessing cashier detailed report
+2020-11-20 14:30:15,984:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:30:20,004:isa.views:accessing cashier detailed report
+2020-11-20 14:30:21,847:isa.views:accessing cashier detailed report
+2020-11-20 14:33:01,867:isa.views:accessing cashier detailed report
+2020-11-20 14:33:07,991:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:33:08,087:django.request:Not Found: /favicon.ico
+2020-11-20 14:33:10,136:isa.views:accessing cashier detailed report
+2020-11-20 14:33:12,515:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:33:16,437:isa.views:accessing cashier detailed report
+2020-11-20 14:33:30,544:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:33:30,544:asyncio:Using selector: EpollSelector
+2020-11-20 14:33:58,687:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:34:00,810:isa.views:accessing cashier detailed report
+2020-11-20 14:34:02,825:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:34:06,903:isa.views:accessing cashier detailed report
+2020-11-20 14:34:30,330:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:34:30,330:asyncio:Using selector: EpollSelector
+2020-11-20 14:34:50,924:isa.views:accessing cashier detailed report
+2020-11-20 14:34:53,008:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:34:55,544:isa.views:accessing cashier detailed report
+2020-11-20 14:34:57,328:weasyprint:Anchor defined twice: tin
+2020-11-20 14:34:57,356:weasyprint:Anchor defined twice: footer
+2020-11-20 14:34:57,670:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:35:01,586:isa.views:accessing cashier detailed report
+2020-11-20 14:35:03,793:weasyprint:Anchor defined twice: tin
+2020-11-20 14:35:03,813:weasyprint:Anchor defined twice: footer
+2020-11-20 14:35:04,127:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:35:07,637:isa.views:accessing cashier detailed report
+2020-11-20 14:35:35,097:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:35:35,098:asyncio:Using selector: EpollSelector
+2020-11-20 14:35:38,737:isa.views:accessing cashier detailed report
+2020-11-20 14:35:41,390:weasyprint:Anchor defined twice: tin
+2020-11-20 14:35:41,413:weasyprint:Anchor defined twice: footer
+2020-11-20 14:35:41,898:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:35:44,803:isa.views:accessing cashier detailed report
+2020-11-20 14:35:51,981:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:35:51,981:asyncio:Using selector: EpollSelector
+2020-11-20 14:35:58,647:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:36:00,468:isa.views:accessing cashier detailed report
+2020-11-20 14:36:02,541:weasyprint:Anchor defined twice: tin
+2020-11-20 14:36:02,566:weasyprint:Anchor defined twice: footer
+2020-11-20 14:36:02,863:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:36:04,774:isa.views:accessing cashier detailed report
+2020-11-20 14:36:06,343:weasyprint:Anchor defined twice: tin
+2020-11-20 14:36:06,376:weasyprint:Anchor defined twice: footer
+2020-11-20 14:36:06,636:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:36:08,804:isa.views:accessing cashier detailed report
+2020-11-20 14:36:56,653:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:36:56,656:asyncio:Using selector: EpollSelector
+2020-11-20 14:37:00,937:isa.views:accessing cashier detailed report
+2020-11-20 14:37:03,311:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:37:05,653:isa.views:accessing cashier detailed report
+2020-11-20 14:37:07,184:weasyprint:Anchor defined twice: tin
+2020-11-20 14:37:07,213:weasyprint:Anchor defined twice: footer
+2020-11-20 14:37:07,560:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:37:10,699:isa.views:accessing cashier detailed report
+2020-11-20 14:37:13,231:isa.views:cash all detailed pdfreport successfully
+2020-11-20 14:37:19,267:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 14:37:19,267:asyncio:Using selector: EpollSelector
+2020-11-20 14:37:24,685:isa.views:accessing cashier detailed report
+2020-11-20 14:37:26,650:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:37:28,682:isa.views:accessing cashier detailed report
+2020-11-20 14:37:31,417:weasyprint:Anchor defined twice: tin
+2020-11-20 14:37:31,447:weasyprint:Anchor defined twice: footer
+2020-11-20 14:37:31,797:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 14:37:37,502:isa.views:accessing cashier detailed report
+2020-11-20 14:37:53,516:isa.views:cash operator pdfreport generated successfully
+2020-11-20 14:37:59,820:isa.views:accessing cashier detailed report
+2020-11-20 14:38:04,833:isa.views:accessing homepage
+2020-11-20 14:38:09,777:isa.views:accessing discount bir report
+2020-11-20 14:38:13,597:isa.views:inserting new data
+2020-11-20 14:38:22,664:isa.views:accessing cash and card report
+2020-11-20 14:38:38,509:isa.views:accessing transaction flow report
+2020-11-20 14:38:43,147:isa.views:accessing bir report
+2020-11-20 14:38:46,395:isa.views:accessing bir report
+2020-11-20 14:38:50,515:isa.views:accessing homepage
+2020-11-20 14:38:53,322:isa.views:accessing transactionxl report
+2020-11-20 14:58:19,085:isa.views:accessing transactionxl report
+2020-11-20 14:59:07,987:isa.views:accessing transactionxl report
+2020-11-20 14:59:28,794:isa.views:accessing transactionxl report
+2020-11-20 14:59:32,337:isa.views:accessing transactionxl report
+2020-11-20 14:59:36,850:django.request:Internal Server Error: /isa/transactionexcel
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'start'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 721, in transactionexcel
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'start'
+2020-11-20 15:01:23,331:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 15:01:23,332:asyncio:Using selector: EpollSelector
+2020-11-20 15:01:28,560:isa.views:accessing transactionxl report
+2020-11-20 15:01:40,925:isa.views:accessing homepage
+2020-11-20 15:01:49,748:isa.views:accessing transaction flow report
+2020-11-20 15:01:53,616:isa.views:accessing transactionxl report
+2020-11-20 15:01:56,424:isa.views:accessing vehicle in/out report
+2020-11-20 15:02:01,921:isa.views:accessing cashier detailed report
+2020-11-20 15:02:05,646:isa.views:accessing cashier detailed report
+2020-11-20 15:02:12,018:isa.views:accessing discount bir report
+2020-11-20 15:02:15,854:isa.views:inserting new data
+2020-11-20 15:02:27,160:isa.views:accessing homepage
+2020-11-20 15:02:32,106:isa.views:accessing manual ticketing report
+2020-11-20 15:02:37,698:isa.views:accessing manual ticketing report
+2020-11-20 15:02:41,736:isa.views:accessing vehicle in/out report
+2020-11-20 15:02:46,249:isa.views:accessing cash and card report
+2020-11-20 15:02:57,695:isa.views:accessing transaction flow report
+2020-11-20 15:03:00,988:isa.views:accessing cash and card report
+2020-11-20 15:03:24,604:isa.views:Missing field
+2020-11-20 15:03:33,006:django.request:Internal Server Error: /isa/cashpospdf
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'pos'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/core/handlers/base.py", line 179, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/chrisansd/pms_win_3.0/isa/views.py", line 449, in cashpospdf
+    if request.POST['start'] and request.POST['end'] and request.POST['pos']:
+  File "/home/chrisansd/.local/share/virtualenvs/pms_win_3.0-IajFThvm/lib/python3.8/site-packages/django/utils/datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'pos'
+2020-11-20 15:03:55,062:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 15:03:55,063:asyncio:Using selector: EpollSelector
+2020-11-20 15:04:19,751:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 15:04:19,751:asyncio:Using selector: EpollSelector
+2020-11-20 15:04:27,542:isa.views:Missing field
+2020-11-20 15:04:32,584:isa.views:Missing field
+2020-11-20 15:04:34,447:isa.views:accessing homepage
+2020-11-20 15:04:38,221:isa.views:accessing cash and card report
+2020-11-20 15:05:24,040:isa.views:accessing cash and card report
+2020-11-20 15:06:19,674:isa.views:accessing cash and card report
+2020-11-20 15:07:51,812:isa.views:accessing cash and card report
+2020-11-20 15:11:53,898:isa.views:accessing cash and card report
+2020-11-20 15:11:54,537:isa.views:accessing cash and card report
+2020-11-20 15:11:54,597:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/urls.py changed, reloading.
+2020-11-20 15:11:54,597:asyncio:Using selector: EpollSelector
+2020-11-20 15:11:59,440:isa.views:accessing cash and card report
+2020-11-20 15:12:49,655:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 15:12:49,656:asyncio:Using selector: EpollSelector
+2020-11-20 15:13:10,488:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 15:13:10,488:asyncio:Using selector: EpollSelector
+2020-11-20 15:13:46,830:isa.views:accessing homepage
+2020-11-20 15:13:49,419:isa.views:accessing cash and card report
+2020-11-20 15:13:59,064:isa.views:accessing transaction flow report
+2020-11-20 15:14:12,153:isa.views:accessing homepage
+2020-11-20 15:14:14,957:isa.views:accessing vehicle in/out report
+2020-11-20 15:14:25,293:isa.views:accessing cash and card report
+2020-11-20 15:14:31,449:isa.views:accessing cash and card report
+2020-11-20 15:14:35,092:isa.views:accessing cash and card report
+2020-11-20 15:15:24,631:django.utils.autoreload:/home/chrisansd/pms_win_3.0/isa/views.py changed, reloading.
+2020-11-20 15:15:24,632:asyncio:Using selector: EpollSelector
+2020-11-20 15:15:26,271:isa.views:accessing cash and card report
+2020-11-20 15:15:27,423:isa.views:accessing homepage
+2020-11-20 15:15:30,077:isa.views:accessing cashier detailed report
+2020-11-20 15:15:34,822:isa.views:accessing cashier detailed report
+2020-11-20 15:16:02,315:isa.views:accessing transaction flow report
+2020-11-20 15:16:15,013:isa.views:accessing manual ticketing report
+2020-11-20 15:16:26,584:isa.views:accessing manual ticketing report
+2020-11-20 15:16:37,262:isa.views:inserting new data
+2020-11-20 15:16:40,359:isa.views:accessing discount bir report
+2020-11-20 15:17:02,717:isa.views:accessing cashier detailed report
+2020-11-20 15:17:06,725:isa.views:accessing cashier detailed report
+2020-11-20 15:17:28,888:isa.views:accessing cash and card report
+2020-11-20 15:17:37,883:isa.views:accessing transaction flow report
+2020-11-20 15:17:48,980:isa.views:accessing vehicle in/out report
+2020-11-20 15:17:51,406:isa.views:accessing stay-in vehicles report
+2020-11-20 15:17:53,376:isa.views:accessing cashier detailed report
+2020-11-20 15:17:59,448:isa.views:accessing cashier detailed report
+2020-11-20 15:18:02,831:isa.views:accessing cashier detailed report
+2020-11-20 15:18:05,438:isa.views:accessing manual ticketing report
+2020-11-20 15:18:58,384:isa.views:accessing cashier detailed report
+2020-11-20 15:19:00,420:isa.views:cash operator pdfreport generated successfully
+2020-11-20 15:19:00,641:django.request:Not Found: /favicon.ico
+2020-11-20 15:19:48,983:isa.views:accessing cashier detailed report
+2020-11-20 15:20:06,089:isa.views:accessing cashier detailed report
+2020-11-20 15:20:17,229:django.request:Not Found: /isa/ierxl
+2020-11-20 15:20:23,452:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:03,469:django.request:Not Found: /ierxl
+2020-11-20 15:21:25,886:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:27,131:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:27,705:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:28,006:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:30,922:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:31,013:django.request:Not Found: /favicon.ico
+2020-11-20 15:21:32,315:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:32,409:django.request:Not Found: /favicon.ico
+2020-11-20 15:21:32,741:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:32,823:django.request:Not Found: /favicon.ico
+2020-11-20 15:21:41,995:django.request:Not Found: /isa/ierxl
+2020-11-20 15:21:47,015:isa.views:accessing cashier detailed report
+2020-11-20 15:26:01,624:isa.views:cash operator pdfreport generated successfully
+2020-11-20 15:26:05,566:weasyprint:Anchor defined twice: tin
+2020-11-20 15:26:05,599:weasyprint:Anchor defined twice: footer
+2020-11-20 15:26:05,980:isa.views:cashier pos detailed pdfreport successfully
+2020-11-20 15:26:18,788:isa.views:cash operator pdfreport generated successfully
+2020-11-23 08:25:23,373:django.request:Not Found: /landing/
+2020-11-23 08:25:24,163:django.request:Not Found: /favicon.ico
+2020-11-23 08:25:39,721:isa.views:accessing homepage
+2020-11-23 08:25:49,499:isa.views:accessing bir report
+2020-11-23 08:25:52,457:isa.views:accessing cash and card report
+2020-11-23 08:25:58,265:isa.views:accessing discount bir report
+2020-11-23 08:26:08,593:isa.views:accessing cash and card report
+2020-11-23 08:26:13,166:isa.views:accessing transactionxl report
+2020-11-23 08:26:45,759:django.request:Not Found: /landing/
+2020-11-23 08:26:49,789:isa.views:accessing manual ticketing report

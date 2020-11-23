@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.contrib import auth
 from rest_framework.views import APIView
 
+from .library import Library
 from .models import *
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count, Min, Sum, Max, IntegerField, Window, Func, Subquery, Case, When, F, Func, Q
@@ -62,9 +63,10 @@ def income(request):
 @login_required(login_url="/accounts/login")
 def bir(request):
     if request.method == 'POST':
-        if request.POST['start'] and request.POST['end'] and request.POST['pos']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = datetime.strptime(startnend[0], '%m/%d/%Y').strftime('%Y-%m-%d')
+        end_date = datetime.strptime(startnend[1], '%m/%d/%Y').strftime('%Y-%m-%d')
+        if start_date and end_date and request.POST['pos']:
             pos = request.POST['pos']
             user = request.user
             incomer = Transaction.objects.raw(
@@ -168,10 +170,11 @@ def birmonthly(request):
                 [start_year, start_month])
 
             incom = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',
+                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT IFNULL(SUM(x.gross_amount), 0)  FROM transaction x WHERE x.business_date < t.business_date AND t.pos_name = x.pos_name)  AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.business_date <= t.business_date AND t.pos_name = x.pos_name) AS accum_sales_ending,  0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',
                 [start_year, start_month])
 
-            total = Transaction.objects.raw('SELECT t.pos_name,min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY  t.pos_name order by t.business_date;',
+            total = Transaction.objects.raw(
+                'SELECT t.pos_name,min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY  t.pos_name order by t.business_date;',
                 [start_year, start_month])
             month = {'1': 'Janauary',
                      '2': 'February',
@@ -187,8 +190,6 @@ def birmonthly(request):
                      '12': 'December'}
 
             new_date = month[start_month]
-            b = Transaction.objects.filter(business_date__year=start_year).filter(
-                business_date__month=start_month).values('pos_name', 'business_date')
             a = list()
             for i in range(0, Tblpermit.objects.all().values('pc').count()):
                 a.append(str(i))
@@ -210,9 +211,9 @@ def birmonthly(request):
 
                 # 'incomer3': incomer3,
                 # 'incomer3g': incomer3g,
-                # 'incomerm': incomerm,
-                # 'incomermg': incomermg,
-                # 'incomer4': incomer4,
+                'incomerm': incomerm,
+                'incomermg': incomermg,
+                'incomer4': incomer4,
 
                 'start_date': start_date,
                 'com': com,
@@ -267,12 +268,11 @@ def discountpos(request):
 @login_required(login_url="/accounts/login")
 def seniorpospdf(request):
     if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            # new_start = list(start_date)
-            # new_start = month['6']
-            user = request.user
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        user = request.user
+        if start_date and end_date:
             seniors = Transaction.objects.values(
                 'business_date', 'vat_spcl_disc', 'vat_exempt_sales', 'discount_special', 'net_amount', 'or_number',
                 'parker_name', 'parker_ref_id', 'discount_name', 'gross_amount', 'discount_special').filter(
@@ -307,7 +307,7 @@ def seniorpospdf(request):
 
     # Rendered
 
-    html_string = render_to_string('isa/isa/seniorpospdf.html', context)
+    html_string = render_to_string('isa/pdf/seniorpospdf.html', context)
     html = HTML(string=html_string)
     result = html.write_pdf()
 
@@ -446,9 +446,10 @@ def cashpospdf(request):
             pass
         except Exception:
             return render(request, 'isa/cash.html', {'error': 'No POS Selected'})
-        if request.POST['start'] and request.POST['end'] and request.POST['pos']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        if start_date and end_date and request.POST['pos']:
             pos = request.POST['pos']
             com = Companydb.objects.all()
             user = request.user
@@ -633,7 +634,7 @@ def cashallpdf(request):
 
 @login_required(login_url="/accounts/login")
 def transaction(request):
-    pos = Transaction.objects.values('pos_name').distinct()
+    pos = Tblpermit.objects.values('pc').distinct()
 
     context = {
         'pos': pos,
@@ -718,9 +719,10 @@ def transactionxl(request):
 @login_required(login_url="/accounts/login")
 def transactionexcel(request):
     if request.method == 'POST':
-        if request.POST['start'] and request.POST['end'] and request.POST['pos']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        if start_date and end_date and request.POST['pos']:
             pos = request.POST['pos']
             user = request.user
             com = Companydb.objects.all()
@@ -954,14 +956,14 @@ class Cashier(APIView):
         return render(request, 'isa/cashier.html', context)
 
     def post(self, request):
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
         user = request.user
-        operator = request.POST.get('pos', '')
-        pos = request.POST.get('pos', '')
-        start_date = request.POST['start']
-        end_date = request.POST['end']
+        operator = request.POST.get('pos-op', '')
+        pos = request.POST.get('pos-dev', '')
         com = Companydb.objects.all()
-        rep = request.POST.get("rep", None)
-        if rep == "operators":
+        if operator != "":
             cash = Transaction.objects.values(
                 'or_number', 'pos_name', 'business_date', 'cardcode', 'plate_num', 'voucher', 'vehicle_type', 'time_in',
                 'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
@@ -1002,7 +1004,7 @@ class Cashier(APIView):
                 response.write(output.read())
             logger.info('cash operator pdfreport generated successfully')
             return response
-        elif rep == "terminal":
+        elif pos != "":
             cash = Transaction.objects.values(
                 'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type', 'time_in',
                 'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
@@ -1042,10 +1044,6 @@ class Cashier(APIView):
             logger.info('cashier pos detailed pdfreport successfully')
             return response
         else:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            com = Companydb.objects.all()
-            user = request.user
             cash = Transaction.objects.values(
                 'or_number', 'username', 'pos_name', 'business_date', 'voucher', 'cardcode', 'plate_num',
                 'vehicle_type', 'time_in', 'time_out', 'duration', 'gross_amount', 'discount_special',
@@ -1500,9 +1498,10 @@ def manual(request):
 @login_required(login_url="/accounts/login")
 def manualpdf(request):
     if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        if start_date and end_date:
             user = request.user
             # cash = ManualTransaction.objects.values('ticket_no', 'business_date', 'vat_payable', 'operator', 'plate_number', 'time_in', 'time_out', 'vehicle_type', 'gross_amount', 'vatable_sale', 'vat', 'discount_type', 'vat_exempt_sale', 'regular_discount', 'special_discount', 'vat_adjustment', 'vat_payable', 'net_sales', 'remarks', 'parker_name', 'parker_id', 'date_entry', 'operator').filter(business_date__gte=start_date, business_date__lte=end_date).order_by('date_entry')
             com = Companydb.objects.all()
@@ -1560,9 +1559,10 @@ def manualxl(request):
 @login_required(login_url="/accounts/login")
 def manualexcel(request):
     if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        if start_date and end_date:
             com = Companydb.objects.all()
             user = request.user
 

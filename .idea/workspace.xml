@@ -2,17 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ef8fe1f-0e42-4871-b58e-9cadc0a411ac" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/isa/library.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pms_win_3.0.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pms_win_3.0.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/isa/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/base/layouts/head.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/base/layouts/head.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/base/layouts/scripts.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/base/layouts/scripts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/isa/templates/isa/birmonthly.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/birmonthly.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/isa/cashier.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/cashier.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/isa/discountpos.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/discountpos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/isa/excel/manualxl.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/excel/manualxl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/isa/excel/transactionxl.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/excel/transactionxl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/isa/manual.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/manual.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa/templates/isa/transaction.html" beforeDir="false" afterPath="$PROJECT_DIR$/isa/templates/isa/transaction.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/isa/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/isa/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pms_win/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/pms_win/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,7 +42,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
     <configuration name="scratch_3" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -68,6 +84,14 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="708" y="156" width="1119" height="730" key="SettingsEditor" timestamp="1606090678451">
+      <screen x="61" y="25" width="1859" height="1055" />
+    </state>
+    <state x="708" y="156" width="1119" height="730" key="SettingsEditor/61.25.1859.1055/1920.0.1920.1080@61.25.1859.1055" timestamp="1606090678451" />
+    <state x="682" y="203" width="627" height="650" key="find.popup" timestamp="1605855794497">
+      <screen x="67" y="36" width="1853" height="1044" />
+    </state>
+    <state x="682" y="203" width="627" height="650" key="find.popup/67.36.1853.1044/1920.0.1920.1080@67.36.1853.1044" timestamp="1605855794497" />
     <state x="656" y="266" width="672" height="678" key="search.everywhere.popup" timestamp="1605681935987">
       <screen x="67" y="36" width="1853" height="1044" />
     </state>

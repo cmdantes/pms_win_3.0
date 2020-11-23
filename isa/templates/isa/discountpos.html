@@ -31,11 +31,8 @@
          <form action="{% url 'seniorpospdf' %}" method="POST">
             {% csrf_token %}
             <!-- <Label class="mt-2">ALL: </Label> -->
-            <Label>Start Date: </Label>
-            <input type="date" class="form-control" name="start">
-            <br>
-            <Label>End Date: </Label>
-            <input type="date" class="form-control" name="end">
+            <Label>Start & End Date </Label>
+            <input name="daterange" id="daterange" class="form-control">
             <br>
             <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
          </form>
