@@ -1,1 +1,61 @@
 {% load static %}
+<script src="{% static 'vendor/assets/js/jquery.js' %}"></script>
+<script src="{% static 'vendor/assets/js/jquery.bez.js' %}"></script>
+<script src="{% static 'vendor/assets/js/TweenMax.min.js' %}"></script>
+<script src="{% static 'vendor/assets/js/pace.js' %}"></script>
+<script>
+paceOptions = {
+    ajax: true,
+    document: true,
+    eventLag: false
+};
+Pace.on('done', function() {
+    $('.p').delay(500).animate({
+        top: '30%',
+        opacity: '0'
+    }, 3000, $.bez([0.19, 1, 0.22, 1]));
+    $('#preloader').delay(1500).animate({
+        top: '-100%'
+    }, 2000, $.bez([0.19, 1, 0.22, 1]));
+    TweenMax.from(".title", 2, {
+        delay: 1.8,
+        y: 10,
+        opacity: 0,
+        ease: Expo.easeInOut
+    })
+});
+
+function fnExcelReport(name, excel_name) {
+    var a = []
+    $('#ourDiv table').each(function() {
+        a.push($("#" + this.id + "").html());
+    });
+    stu = a.toString()
+
+    var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+    tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+    tab_text = tab_text + '<x:Name>' + name + '</x:Name>';
+    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+    tab_text = tab_text + "<table border='0.5px'>";
+    tab_text = tab_text + $('#myTable').html() + $('#myTable2').html() + stu.replace(/,/g, "");
+    tab_text = tab_text + '</table></body></html>';
+
+    var data_type = 'data:application/vnd.ms-excel';
+
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+        if (window.navigator.msSaveBlob) {
+            var blob = new Blob([tab_text], {
+                type: "application/csv;charset=utf-8;"
+            });
+            navigator.msSaveBlob(blob, excel_name + '.xls');
+        }
+    } else {
+        $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+        $('#test').attr('download', excel_name + '.xls');
+    }
+}
+</script>

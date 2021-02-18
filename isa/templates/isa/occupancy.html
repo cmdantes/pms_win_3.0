@@ -4,10 +4,10 @@
 <h1 class="text-center mb-4 mt-5 pt-5 white1">Occupancy Report</h1>
 <div class="container">
    <div class="card text-center col-md-4 offset-md-4">
-      {% if error %}
-      <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
-      <br>
-      {% endif %}
+<!--      {% if error %}-->
+<!--      <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>-->
+<!--      <br>-->
+<!--      {% endif %}-->
       <form action="{% url 'occupancypdf' %}" method="POST">
          {% csrf_token %}
          <br>
@@ -17,7 +17,7 @@
          <Label>End Date: </Label>
          <input type="datetime-local" class="form-control" name="end" step="1">
          <br>
-         <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
+         <input type="submit" class="btn btn-primary btn-block mb-2" >
       </form>
    </div>
 </div>

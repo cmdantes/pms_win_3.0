@@ -167,3 +167,4 @@ LOGOUT_REDIRECT_URL = '/isa'
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+WKHTMLTOPDF_CMD = '/usr/local/bin/wkhtmltopdf'

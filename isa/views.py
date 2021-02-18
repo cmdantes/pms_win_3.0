@@ -1,33 +1,29 @@
-import tempfile
-import logging
-import hashlib
-import os
 import base64
-import paho.mqtt.client as mqtt
+import calendar
+import hashlib
 import json
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.contrib import auth
-from rest_framework.views import APIView
+import logging
+import os
+from datetime import date
 
-from .library import Library
-from .models import *
-from django.contrib.auth.models import User
-from django.db.models import Avg, Count, Min, Sum, Max, IntegerField, Window, Func, Subquery, Case, When, F, Func, Q
-from django.db.models.expressions import RawSQL, Window
-from django.db.models.functions import Cast, Right, Lag, Left, Substr, Coalesce
-from django.template.loader import render_to_string
-from weasyprint import HTML
-from django.utils import timezone
+import paho.mqtt.client as mqtt
+from django.contrib import auth
 from django.contrib import messages
-from django.db import connections, IntegrityError
-from datetime import datetime
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.db import connections, IntegrityError
+from django.db.models import Count, Min, Sum, Max, Q
+from django.shortcuts import render, redirect
+from rest_framework.views import APIView
+from soupsieve.util import upper
+from collections import defaultdict
+from .library import Library
+from .models import *
 
 # from .forms import UserCreationForm, UsersForm
-month = {'1': 'Janauary',
+month = {'1': 'January',
          '2': 'February',
          '3': 'March',
          '4': 'April',
@@ -44,7 +40,11 @@ LOG_FORMAT = "%(Levelname)s:%(asctime)s:%(message)s"
 logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s:%(name)s:%(message)s')
 logger = logging.getLogger(__name__)
 
+# Commonly Used variables
+com = Companydb.objects.all()
 
+
+# dashboard
 @login_required(login_url="/accounts/login")
 def index(request):
     user = request.user
@@ -52,31 +52,211 @@ def index(request):
     return render(request, 'isa/index.html', {'user': user})
 
 
-@login_required(login_url="/accounts/login")
-def income(request):
-    # operators = Transaction.objects.values('pos_name').distinct()
-    operators = Transaction.objects.values('pos_name').distinct()
-    logger.info('accessing bir report')
-    return render(request, 'isa/income.html', {'operators': operators})
+class BIRMonthly():
+    def view(request):
+        operators = Transaction.objects.values('pos_name').distinct()
+        logger.info(upper('accessing bir report'))
+        return render(request, 'isa/income.html', {'operators': operators})
+
+    def renderPDF(request):
+        if request.POST['start']:
+            try:
+                start_date = request.POST['start']
+                new_start = list(start_date)
+                start_month = new_start[0]
+                year_join = new_start[2:]
+                year_join = ''.join(year_join)
+                start_year = year_join
+                user = request.user
+                # incomer = Transaction.objects.raw(
+                #     'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-1" GROUP BY t.business_date, t.pos_name order by t.business_date;',
+                #     [start_year, start_month])
+
+                incomerm = ManualTransaction.objects.raw(
+                    'SELECT t.business_date, t.pos_name, min(ticket_no) as id, min(ticket_no) as beginning_or, '
+                    'max(ticket_no) as ending_or, (SELECT SUM(x.gross_amount) FROM manual_transaction x WHERE x.id <= '
+                    'MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning,'
+                    '(SELECT SUM(x.gross_amount) FROM manual_transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = '
+                    'x.pos_name) AS accum_sales_ending, sum(gross_amount) as gross_sales_day, 0.00 as manual_or, '
+                    'sum(gross_amount) as gross_sales_pos, SUM(vatable_sale) as vatable_sales, SUM(vat) as '
+                    'vat_amount,  sum(vat_exempt_sale) as vat_exempt_sales, 0.00 as zero_rated_sales, '
+                    'sum(regular_discount) as regular_discount, sum(special_discount) as special_discount, '
+                    '0.00 as returns, 0.00 as void, sum(special_discount) + sum(regular_discount) as '
+                    'total_deductions, sum(vat_adjustment) as vat_special_discount, 0 as vat_on_returns, '
+                    '0.00 as other, sum(vat_adjustment) as total_vat_adjustment, sum(vat_payable) as vat_payable, '
+                    'sum(gross_amount) - sum(regular_discount) - sum(special_discount) - sum(vat)  as net_sales, '
+                    '0.00 as other_income, 0 as sales_overrun_overflow, sum(gross_amount) - sum(regular_discount) - '
+                    'sum(special_discount) - sum(vat) as total_net_sales, 0 as reset_counter FROM manual_transaction '
+                    't WHERE year(business_date) = %s and month(business_date) = %s group by t.business_date, '
+                    't.pos_name;',
+                    [start_year, start_month])
+
+                incomermg = ManualTransaction.objects.raw(
+                    'SELECT min(ticket_no) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales_day, '
+                    'SUM(vatable_sale) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sale) as '
+                    'vat_exempt_sales, 0.00 as zero_rated_sales, sum(regular_discount) as regular_discount, '
+                    'sum(special_discount) as special_discount, 0.00 as returns, 0 as void, sum(special_discount) + '
+                    'sum(regular_discount) as total_deductions, sum(vat_adjustment) as vat_special_discount, '
+                    '0.00 as vat_on_returns, 0.00 as other, sum(vat_adjustment) as total_vat_adjustment, '
+                    'sum(vat_payable) as vat_payable, sum(gross_amount) - sum(regular_discount) - sum('
+                    'special_discount) - sum(vat)  as net_sales, 0.00 as other_income, '
+                    '0.00 as sales_overrun_overflow, sum(gross_amount) - sum(regular_discount) - sum('
+                    'special_discount) - sum(vat) as total_net_sales, 0 as reset_counter FROM manual_transaction '
+                    'WHERE year(business_date) = %s and month(business_date) = %s;',
+                    [start_year, start_month])
+
+                incomer4 = Transaction.objects.raw(
+                    'select 1 as id, sum(gross_amount) as gross_sales_day, sum(vat_sales) as vatable_sales, '
+                    'sum(vat)as vat_amount, sum(vat_exempt_sales)as vat_exempt_sales, 0.00 as zero_rated_sales, '
+                    'sum(discount_regular)as regular_discount,sum(discount_special)as special_discount, 0.00 as void, '
+                    '0.00 as returns, sum(discount_regular) + sum(discount_special) as total_deductions, '
+                    'sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, '
+                    'sum(net_amount)as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow,'
+                    'sum(vat_payable) as vat_payable, sum(net_amount)as total_net_sales, 0 as reset_counter from '
+                    '`transaction` where year(business_date) = %s and month(business_date) = %s;',
+                    [start_year, start_month])
+
+                incom = Transaction.objects.raw(
+                    'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, '
+                    'min(or_number) as id, max(or_number) as ending_or, (SELECT IFNULL(SUM(x.gross_amount), '
+                    '0)  FROM transaction x WHERE x.business_date < t.business_date AND t.pos_name = x.pos_name)  AS '
+                    'accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.business_date <= '
+                    't.business_date AND t.pos_name = x.pos_name) AS accum_sales_ending,  0.00 as manual_or, '
+                    'sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as '
+                    'vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, '
+                    'sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, '
+                    'sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) '
+                    '+ sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, '
+                    '0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, '
+                    'sum(vat_payable) as vat_payable, sum(net_amount)  as net_sales, 0.00 as other_income, '
+                    '0.00 as sales_overrun_overflow, sum(net_amount) as total_net_sales, 0 as reset_counter FROM '
+                    'transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY '
+                    't.business_date, t.pos_name order by t.business_date;',
+                    [start_year, start_month])
+
+                total = Transaction.objects.raw(
+                    'SELECT t.pos_name,min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, '
+                    'sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  '
+                    'sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, '
+                    'sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, '
+                    '0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as '
+                    'total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, '
+                    '0.00 as other, sum(vat_spcl_disc) as total_vat_vadjustment, sum(vat_payable) as vat_payable, '
+                    'sum(net_amount)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, '
+                    'sum(net_amount) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year('
+                    't.business_date) = %s and month(t.business_date) = %s GROUP BY  t.pos_name order by '
+                    't.business_date;',
+                    [start_year, start_month])
+                new_date = month[start_month]
+
+                # print(days)
+                context = {
+                    'start_month': start_month,
+                    'incomerg': total,
+                    'incomerm': incomerm,
+                    'incomermg': incomermg,
+                    'incomer4': incomer4,
+                    'start_date': start_date,
+                    'com': com,
+                    'user': user,
+                    'new_date': new_date,
+                    'start_year': start_year,
+                    'pos_name': Tblpermit.objects.all(),
+                    'all': incom,
+                    'get_pos': Library.getposnotinlist(),
+                    'days': Library.getdaysinmonth(start_year, start_month),
+                    'nems': Library.getdates(start_year, start_month)
+
+                }
+
+                if not com:
+                    logger.info("No Company Details")
+                    return render(request, 'isa/income.html', {'error': 'No Company Details'})
+                if not total:
+                    logger.info("No Data on Selected Date")
+                    return render(request, 'isa/income.html', {'error': 'No Data on Selected Date'})
+                logger.info("BIR REPORT GENERATED")
+                return Library.reportGeneration(context, "income_report_monthly", 'isa/birmonthly.html')
+            except Exception as e:
+                logger.info(e)
+                return render(request, 'isa/income.html', {'error': 'No Data'})
 
 
-@login_required(login_url="/accounts/login")
-def bir(request):
-    if request.method == 'POST':
+class Occupancies():
+    def view(request):
+        logger.info('accessing occupancies')
+        return render(request, 'isa/occupancy.html')
+
+    def renderPDF(request):
+        logger.info('OCCUPANCIES PDF GENERATED')
+        context = {'com': com}
+        return Library.reportGeneration(context, 'occupancy_report', "isa/pdf/occupancypdf.html")
+
+
+class Transactions(APIView):
+    def view(request):
+        pos = Tblpermit.objects.values('pc')
+        context = {'pos': pos, }
+        logger.info(upper('accessing transaction flow report'))
+        return render(request, 'isa/transaction.html', context)
+
+    def renderPDF(request):
         startnend = request.POST.get('daterange', '').split(' - ')
         start_date = datetime.strptime(startnend[0], '%m/%d/%Y').strftime('%Y-%m-%d')
         end_date = datetime.strptime(startnend[1], '%m/%d/%Y').strftime('%Y-%m-%d')
-        if start_date and end_date and request.POST['pos']:
-            pos = request.POST['pos']
-            user = request.user
+        pos = request.POST['pos']
+        user = request.user
+        if pos == "0":
             incomer = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_spcl_disc, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE t.business_date between %s and %s and t.pos_name = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',
+                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) '
+                'as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= '
+                'MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM('
+                'x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS '
+                'accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as '
+                'gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as '
+                'vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as '
+                'regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, '
+                'sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as '
+                'vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as '
+                'total_vat_spcl_disc, sum(vat_payable) as vat_payable, sum(net_amount)  as net_sales, '
+                '0.00 as other_income, 0.00 as sales_overrun_overflow, sum(net_amount) as total_net_sales, '
+                '0 as reset_counter FROM transaction t WHERE t.business_date between %s and %s GROUP BY '
+                't.business_date, t.pos_name order by t.business_date;',
+                [start_date, end_date])
+            incomerg = Transaction.objects.raw(
+                'SELECT t.pos_name, min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, '
+                'max(business_date) as max_date, min(business_date) as min_date, sum(gross_amount) as '
+                'gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as '
+                'vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as '
+                'regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, '
+                'sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as '
+                'vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as '
+                'total_vat_spcl_disc, sum(vat_payable) as vat_payable, sum(net_amount)  as net_sales, '
+                '0.00 as other_income, 0.00 as sales_overrun_overflow, sum(net_amount) as total_net_sales, '
+                '0 as reset_counter FROM transaction t WHERE t.business_date between %s and %s GROUP BY t.pos_name;',
+                [start_date, end_date])
+            context = {
+                'incomer': incomer,
+                'incomerg': incomerg,
+                'start_date': start_date,
+                'end_date': end_date,
+                'pos': Tblpermit.objects.all(),
+                'com': com,
+                'user': user,
+                'check': Library.getposnotinlist()
+            }
+            if not com:
+                return render(request, 'isa/income.html', {'error': 'No Company Details'})
+            if not incomer:
+                return render(request, 'isa/income.html', {'error': 'No Data on Selected Date'})
+            return Library.reportGeneration(context, 'income_report', 'isa/pdf/bir.html')
+        else:
+            incomer = Transaction.objects.raw(
+                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_spcl_disc, sum(vat_payable) as vat_payable, sum(net_amount)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(net_amount) as total_net_sales, 0 as reset_counter FROM transaction t WHERE t.business_date between %s and %s and t.pos_name = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',
                 [start_date, end_date, pos])
             incomerg = Transaction.objects.raw(
-                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, max(business_date) as max_date, min(business_date) as min_date, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_spcl_disc, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE t.business_date between %s and %s and t.pos_name = %s GROUP BY t.pos_name;',
+                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, max(business_date) as max_date, min(business_date) as min_date, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_spcl_disc, sum(vat_payable) as vat_payable, sum(net_amount)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(net_amount) as total_net_sales, 0 as reset_counter FROM transaction t WHERE t.business_date between %s and %s and t.pos_name = %s GROUP BY t.pos_name;',
                 [start_date, end_date, pos])
-
-            com = Companydb.objects.all()
             context = {
                 'incomer': incomer,
                 'incomerg': incomerg,
@@ -86,188 +266,97 @@ def bir(request):
                 'com': com,
                 'user': user,
             }
-
             if not com:
+                logger.info(upper("no company details"))
                 return render(request, 'isa/income.html', {'error': 'No Company Details'})
             if not incomer:
+                logger.info(upper("no date on selected date"))
                 return render(request, 'isa/income.html', {'error': 'No Data on Selected Date'})
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/income.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/bir.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=income_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('bir pdfreport generated successfully')
-    return response
+            logger.info(upper("income report generated"))
+            return Library.reportGeneration(context, 'income_report', 'isa/pdf/bir.html')
+        return render(request, 'isa/income.html', {'error': 'All fields required'})
 
 
-# registered = template.Library()
+class TransactionsExcel(APIView):
+    def get(self, request):
+        pos = Tblpermit.objects.values('pc')
+        context = {'pos': pos, }
+        logger.info('accessing transactionxl report')
+        return render(request, 'isa/excel/transactionxl.html', context)
 
-
-def get_weekday(value):
-    """returns the weekday for the given number - 0 indexed"""
-    return wd_list[int(value)]
-
-
-@login_required(login_url="/accounts/login")
-def birmonthly(request):
-    if request.method == 'POST':
-        if request.POST['start']:
-            start_date = request.POST['start']
-
-            new_start = list(start_date)
-            start_month = new_start[0]
-            year_join = new_start[2:]
-            year_join = ''.join(year_join)
-            start_year = year_join
-            user = request.user
-            com = Companydb.objects.all()
-            incomer = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-1" GROUP BY t.business_date, t.pos_name order by t.business_date;',
-                [start_year, start_month])
-            incomerg = Transaction.objects.raw(
-                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-1" order by t.business_date',
-                [start_year, start_month])
-            incomer2 = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-2" GROUP BY t.business_date, t.pos_name order by t.business_date;',
-                [start_year, start_month])
-
-            incomer2g = Transaction.objects.raw(
-                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s order by t.business_date',
-                [start_year, start_month])
-
-            incomer3 = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-3" GROUP BY t.business_date, t.pos_name order by t.business_date;',
-                [start_year, start_month])
-
-            incomer3g = Transaction.objects.raw(
-                'SELECT min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s and t.pos_name = "pos-3" order by t.business_date',
-                [start_year, start_month])
-
-            incomerm = ManualTransaction.objects.raw(
-                'SELECT t.business_date, t.pos_name, min(ticket_no) as id, min(ticket_no) as beginning_or, max(ticket_no) as ending_or, (SELECT SUM(x.gross_amount) FROM manual_transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) - SUM(t.gross_amount) AS accum_sales_beginning,(SELECT SUM(x.gross_amount) FROM manual_transaction x WHERE x.id <= MAX(t.id) AND t.pos_name = x.pos_name) AS accum_sales_ending, sum(gross_amount) as gross_sales_day, 0.00 as manual_or, sum(gross_amount) as gross_sales_pos, SUM(vatable_sale) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sale) as vat_exempt_sales, 0.00 as zero_rated_sales, sum(regular_discount) as regular_discount, sum(special_discount) as special_discount, 0.00 as returns, 0.00 as void, sum(special_discount) + sum(regular_discount) as total_deductions, sum(vat_adjustment) as vat_special_discount, 0 as vat_on_returns, 0.00 as other, sum(vat_adjustment) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(regular_discount) - sum(special_discount) - sum(vat)  as net_sales, 0.00 as other_income, 0 as sales_overrun_overflow, sum(gross_amount) - sum(regular_discount) - sum(special_discount) - sum(vat) as total_net_sales, 0 as reset_counter FROM manual_transaction t WHERE year(business_date) = %s and month(business_date) = %s group by t.business_date, t.pos_name;',
-                [start_year, start_month])
-
-            incomermg = ManualTransaction.objects.raw(
-                'SELECT min(ticket_no) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales_day, SUM(vatable_sale) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sale) as vat_exempt_sales, 0.00 as zero_rated_sales, sum(regular_discount) as regular_discount, sum(special_discount) as special_discount, 0.00 as returns, 0 as void, sum(special_discount) + sum(regular_discount) as total_deductions, sum(vat_adjustment) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_adjustment) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(regular_discount) - sum(special_discount) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(regular_discount) - sum(special_discount) - sum(vat) as total_net_sales, 0 as reset_counter FROM manual_transaction WHERE year(business_date) = %s and month(business_date) = %s;',
-                [start_year, start_month])
-
-            incomer4 = Transaction.objects.raw(
-                'select 1 as id, sum(gross_amount) as gross_sales_day, sum(vat_sales) as vatable_sales, sum(vat)as vat_amount, sum(vat_exempt_sales)as vat_exempt_sales, 0.00 as zero_rated_sales, sum(discount_regular)as regular_discount,sum(discount_special)as special_discount, 0.00 as void, 0.00 as returns, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(net_amount)as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(net_amount)as total_net_sales, 0 as reset_counter from `transaction` where year(business_date) = %s and month(business_date) = %s;',
-                [start_year, start_month])
-
-            incom = Transaction.objects.raw(
-                'SELECT t.business_date as business_date, t.pos_name, min(or_number) as beginning_or, min(or_number) as id, max(or_number) as ending_or, (SELECT IFNULL(SUM(x.gross_amount), 0)  FROM transaction x WHERE x.business_date < t.business_date AND t.pos_name = x.pos_name)  AS accum_sales_beginning, (SELECT SUM(x.gross_amount) FROM transaction x WHERE x.business_date <= t.business_date AND t.pos_name = x.pos_name) AS accum_sales_ending,  0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY t.business_date, t.pos_name order by t.business_date;',
-                [start_year, start_month])
-
-            total = Transaction.objects.raw(
-                'SELECT t.pos_name,min(or_number) as id, 0.00 as manual_or, sum(gross_amount) as gross_sales, sum(gross_amount) as gross_sales_day, SUM(vat_sales) as vatable_sales, SUM(vat) as vat_amount,  sum(vat_exempt_sales) as vat_exempt_sales, sum(vat_zero_rated_sales) as zero_rated_sales, sum(discount_regular) as regular_discount, sum(discount_special) as special_discount, 0.00 as returns, 0.00 as void, sum(discount_regular) + sum(discount_special) as total_deductions, sum(vat_spcl_disc) as vat_special_discount, 0.00 as vat_on_returns, 0.00 as other, sum(vat_spcl_disc) as total_vat_adjustment, sum(vat_payable) as vat_payable, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat)  as net_sales, 0.00 as other_income, 0.00 as sales_overrun_overflow, sum(gross_amount) - sum(discount_regular) - sum(discount_special) - sum(vat) as total_net_sales, 0 as reset_counter FROM transaction t WHERE year(t.business_date) = %s and month(t.business_date) = %s GROUP BY  t.pos_name order by t.business_date;',
-                [start_year, start_month])
-            month = {'1': 'Janauary',
-                     '2': 'February',
-                     '3': 'March',
-                     '4': 'April',
-                     '5': 'May',
-                     '6': 'June',
-                     '7': 'July',
-                     '8': 'August',
-                     '9': 'September',
-                     '10': 'October',
-                     '11': 'November',
-                     '12': 'December'}
-
-            new_date = month[start_month]
-            a = list()
-            for i in range(0, Tblpermit.objects.all().values('pc').count()):
-                a.append(str(i))
-            s = Tblpermit.objects.values_list('pc', flat=True)
-            b = list(Transaction.objects.values_list("pos_name", flat=True).distinct())
-            g = list(s)
-            for item in b:
-                if item in b:
-                    g.remove(item)
+    def post(self, request):
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        pos = request.POST['pos']
+        user = request.user
+        if pos == "0":
+            tocash = Transaction.objects.values('business_date', 'pos_name').annotate(
+                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'),
+                txncount=Count('or_number')).filter(
+                business_date__gte=start_date, business_date__lte=end_date)
+            trans = Transaction.objects.values('pos_name').filter(
+                business_date__gte=start_date, business_date__lte=end_date).annotate(
+                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
+                timein=Min('time_in'), timeout=Max('time_out'))
             context = {
-                'start_month': start_month,
-                'start_year': start_year,
-
-                # 'incomer': incomer,
-                'incomerg': total,
-                # 'incomer2': incomer2,
-
-                # 'incomer2g': incomer2g,
-
-                # 'incomer3': incomer3,
-                # 'incomer3g': incomer3g,
-                'incomerm': incomerm,
-                'incomermg': incomermg,
-                'incomer4': incomer4,
-
                 'start_date': start_date,
                 'com': com,
+                'tocash': tocash,
+                'pos': pos,
                 'user': user,
-                'new_date': new_date,
-                'start_year': start_year,
+                'trans': trans,
+                'check': Library.getposnotinlist(),
                 'pos_name': Tblpermit.objects.all(),
-                'sampsss': incom,
-                # 'ex': total,
-                'how': g,
             }
-
-            if not com:
-                return render(request, 'isa/income.html', {'error': 'No Company Details'})
-            if not incomer:
-                return render(request, 'isa/income.html', {'error': 'No Data on Selected Date'})
-
+            return render(request, 'isa/excel/transactionexcel.html', context)
         else:
-            logger.info('Missing field')
-            return render(request, 'isa/income.html', {'error': 'All fields required'})
+            tocash = Transaction.objects.values('business_date').annotate(
+                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'),
+                txncount=Count('or_number')).filter(
+                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos)
+            trans = Transaction.objects.values('pos_name').filter(
+                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
+                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sales'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                cash=Sum('cash'),
+                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
+                timein=Min('time_in'), timeout=Max('time_out'))
+            context = {
+                'start_date': start_date,
+                'com': com,
+                'tocash': tocash,
+                'pos': pos,
+                'user': user,
+                'trans': trans,
 
-    # Rendered
+            }
+            return render(request, 'isa/excel/transactionexcel.html', context)
 
-    html_string = render_to_string('isa/birmonthly.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=income_report_monthly.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('bir monthly pdfreport generated successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def discountpos(request):
-    operators = Transaction.objects.values('pos_name').distinct()
-
-    context = {
-        'operators': operators,
-    }
-    logger.info('accessing discount bir report')
-    return render(request, 'isa/discountpos.html', context)
+        # return render(request, 'isa/excel/transactionxl.html', {'error': 'All fields required'})
 
 
-@login_required(login_url="/accounts/login")
-def seniorpospdf(request):
-    if request.method == 'POST':
+class Discounts():
+    def view(request, format=None):
+        operators = Transaction.objects.values('pos_name').distinct()
+        context = {'operators': operators, }
+        logger.info('accessing discount bir report')
+        return render(request, 'isa/discountpos.html', context)
+
+    def renderPDF(request):
         startnend = request.POST.get('daterange', '').split(' - ')
         start_date = Library.timeanddateconversion(startnend[0])
         end_date = Library.timeanddateconversion(startnend[1])
@@ -284,9 +373,6 @@ def seniorpospdf(request):
                 min_date=Min('business_date'), max_date=Max('business_date'), vat_special=Sum('vat_spcl_disc'),
                 gross=Sum('gross_amount'), discount=Sum('discount_special'), vat_exempt=Sum('vat_exempt_sales'),
                 net_sales=Sum('net_amount'))
-
-            com = Companydb.objects.all()
-
             context = {
                 'start_date': start_date,
                 'end_date': end_date,
@@ -295,67 +381,35 @@ def seniorpospdf(request):
                 'user': user,
                 'gtotal': gtotal,
             }
-
             if not com:
                 return render(request, 'isa/discountpos.html', {'error': 'No Company Details'})
             if not seniors:
                 return render(request, 'isa/discountpos.html', {'error': 'No Data on Selected Date'})
-
+            return Library.reportGeneration(context, 'seniorcitizen_report', 'isa/pdf/seniorpospdf.html')
         else:
             logger.info('Missing field')
             return render(request, 'isa/discountpos.html', {'error': 'All fields required'})
 
-    # Rendered
 
-    html_string = render_to_string('isa/pdf/seniorpospdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
+class Cash():
+    def view(request):
+        operators = Transaction.objects.values('username').distinct()
+        pos = Transaction.objects.values('pos_name').distinct()
+        context = {
+            'operators': operators,
+            'pos': pos,
+        }
+        logger.info('accessing cash and card report')
+        return render(request, 'isa/cash.html', context)
 
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=seniorcitizen_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('senior discount pdfreport generated successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def cash(request):
-    operators = Transaction.objects.values('username').distinct()
-    # operator_id = Transaction.objects.values('users_id').distinct()
-    pos = Transaction.objects.values('pos_name').distinct()
-
-    context = {
-        'operators': operators,
-        'pos': pos,
-    }
-    logger.info('accessing cash and card report')
-    return render(request, 'isa/cash.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def cashpdf(request):
-    if request.method == 'POST':
-        try:
-            operator = request.POST['operator']
-        except Exception:
-            return render(request, 'isa/cash.html', {'error': 'No Operator Selected'})
-
-        # if not operator:
-        #     return render(request, 'isa/cash.html',{'error': 'No Operator Selected'})
-        if request.POST['start'] and request.POST['end'] and request.POST['operator']:
-
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            operator = request.POST['operator']
-            print(operator)
-            user = request.user
-            com = Companydb.objects.all()
+    def renderPDF(request):
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        user = request.user
+        operator = request.POST.get('pos-op', '')
+        pos = request.POST.get('pos-dev', '')
+        if operator != "":
             cash = Transaction.objects.values('username').filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator).aggregate(
                 gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatspecial=Sum('vat_spcl_disc'),
@@ -365,7 +419,6 @@ def cashpdf(request):
                 cash=Sum('cash'),
                 credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
                 timein=Min('time_in'), timeout=Max('time_out'), lost_card=Sum('fee_lostcard'))
-
             cashes = Transaction.objects.values('username', 'pos_name').filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator).annotate(
                 gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatspecial=Sum('vat_spcl_disc'),
@@ -374,27 +427,23 @@ def cashpdf(request):
                 vatpayable=Sum('vat_payable'), netsales=Sum('net_amount'), cash=Sum('cash'),
                 credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
                 timein=Min('time_in'), timeout=Max('time_out'), lost_card=Sum('fee_lostcard')).order_by('pos_name')
-
             losts = Transaction.objects.filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator,
                 fee_lostcard__gte=1).aggregate(clost=Count('fee_lostcard'),
                                                lost_sum=Sum('fee_lostcard'))
-
             trans = Transaction.objects.values('vehicle_type').annotate(txncount=Count('or_number'),
                                                                         gross=Sum('gross_amount')).filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator)
-
             lostd = Transaction.objects.annotate(clost=Count('fee_lostcard')).filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator, fee_lostcard__gte=1)
-
             grace = TransactionZeroAmount.objects.values('vehicle_type').annotate(
                 cgrace=Count('transaction_datetime')).filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator)
-
             graces = TransactionZeroAmount.objects.filter(
                 business_date__gte=start_date, business_date__lte=end_date, username=operator).aggregate(
                 cgrace=Count('transaction_datetime'),
             )
+            operators = Transaction.objects.values('username').distinct()
 
             context = {
                 'start_date': start_date,
@@ -410,50 +459,12 @@ def cashpdf(request):
                 'grace': grace,
                 'graces': graces,
             }
-
             if not com:
                 return render(request, 'isa/cash.html', {'error': 'No Company Details'})
-            if not cash:
-                return render(request, 'isa/cash.html', {'error': 'No Data on Selected Date'})
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/cash.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/cashpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cash_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('cash accountability pdfreport generated successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def cashpospdf(request):
-    if request.method == 'POST':
-        try:
-            # pos = request.POST['pos']
-            pass
-        except Exception:
-            return render(request, 'isa/cash.html', {'error': 'No POS Selected'})
-        startnend = request.POST.get('daterange', '').split(' - ')
-        start_date = Library.timeanddateconversion(startnend[0])
-        end_date = Library.timeanddateconversion(startnend[1])
-        if start_date and end_date and request.POST['pos']:
-            pos = request.POST['pos']
-            com = Companydb.objects.all()
-            user = request.user
-
+            if not cashes:
+                return render(request, 'isa/cash.html', {'error': 'No Data on Selected Date', "operators": operators})
+            return Library.reportGeneration(context, 'cash_report', 'isa/pdf/cashpdf.html')
+        elif pos != "":
             cash = Transaction.objects.values('pos_name', 'username').annotate(
                 gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
                 vatexemptsales=Sum('vat_exempt_sales'),
@@ -484,12 +495,13 @@ def cashpospdf(request):
                 fee_lostcard__gte=1).aggregate(clost=Count('fee_lostcard'),
                                                lost_sum=Sum('fee_lostcard'))
 
-            lostd = Transaction.objects.annotate(clost=Count('fee_lostcard')).filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos, fee_lostcard__gte=1)
+            lostd = Transaction.objects.filter(
+                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos,
+                fee_lostcard__gte=1).aggregate(clost=Count('fee_lostcard'))
 
-            grace = TransactionZeroAmount.objects.values('vehicle_type').annotate(
-                cgrace=Count('transaction_datetime')).filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos)
+            grace = TransactionZeroAmount.objects.values('vehicle_type').filter(
+                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
+                cgrace=Count('transaction_datetime'))
 
             graces = TransactionZeroAmount.objects.filter(
                 business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
@@ -510,39 +522,14 @@ def cashpospdf(request):
                 'graces': graces,
 
             }
+            pos = Transaction.objects.values('pos_name').distinct()
 
+            if not com:
+                return render(request, 'isa/cash.html', {'error': 'No Company Details'})
+            if not cash:
+                return render(request, 'isa/cash.html', {'error': 'No Data on Selected Date', "pos": pos})
+            return Library.reportGeneration(context, 'cash_report', 'isa/pdf/cashpospdf.html')
         else:
-            logger.info('Missing field')
-            return render(request, 'isa/cash.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/cashpospdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cash_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('cashpos accountability pdfreport generated successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def cashallpdf(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            user = request.user
-            com = Companydb.objects.all()
-
             cash = Transaction.objects.values('username', 'pos_name').annotate(
                 gross=Sum('gross_amount'), vatpayable=Sum('vat_payable'), vatsales=Sum('vat_sales'),
                 vatamount=Sum('vat'), vatexemptsales=Sum('vat_exempt_sales'),
@@ -551,13 +538,6 @@ def cashallpdf(request):
                 credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
                 timein=Min('time_in'), timeout=Max('time_out'), lost_card=Sum('fee_lostcard')).filter(
                 business_date__gte=start_date, business_date__lte=end_date).order_by('pos_name')
-
-            # cash = Transaction.objects.values('username', 'pos_name').annotate(
-            #     gross=Sum('gross_amount'), vatpayable=Sum('vat_payable'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'), vatexemptsales=Sum('vat_exempt_sales'),
-            #     specialdiscount=Sum('discount_special'), vatspecial=Sum('vat_spcl_disc'), voucher=Sum('voucher'), discount=Sum('discount_regular'), netsales=Sum('net_amount'), cash=Sum('cash'),
-            #     credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-            #     timein=Min('time_in'), timeout=Max('time_out'), lost_card=Sum('fee_lostcard')).filter(
-            #   business_date__gte=start_date, business_date__lte=end_date).order_by('pos_name')
 
             tocash = Transaction.objects.values('pos_name').filter(
                 business_date__gte=start_date, business_date__lte=end_date).aggregate(
@@ -603,351 +583,96 @@ def cashallpdf(request):
                 'graces': graces,
 
             }
-
             if not com:
                 return render(request, 'isa/cash.html', {'error': 'No Company Details'})
             if not cash:
                 return render(request, 'isa/cash.html', {'error': 'No Data on Selected Date'})
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/cash.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/cashallpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cash_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('cash all accountability pdfreport generated successfully')
-    return response
+            return Library.reportGeneration(context, 'cashreport', 'isa/pdf/cashallpdf.html')
 
 
-@login_required(login_url="/accounts/login")
-def transaction(request):
-    pos = Tblpermit.objects.values('pc').distinct()
-
-    context = {
-        'pos': pos,
-    }
-    logger.info('accessing transaction flow report')
-    return render(request, 'isa/transaction.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def transactionpdf(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end'] and request.POST['pos']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            pos = request.POST['pos']
-            user = request.user
-            com = Companydb.objects.all()
-
-            tocash = Transaction.objects.values('business_date').annotate(
-                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'),
-                txncount=Count('or_number')).filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos)
-
-            trans = Transaction.objects.values('pos_name').filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
-                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-                timein=Min('time_in'), timeout=Max('time_out'))
-
-            context = {
-                'start_date': start_date,
-                'com': com,
-                'pos': pos,
-                'trans': trans,
-                'user': user,
-                'tocash': tocash,
-
-            }
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/transaction.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/transactionpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=transaction_flow.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('transaction flow pdfreport generated successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def transactionxl(request):
-    pos = Transaction.objects.values('pos_name').distinct()
-
-    context = {
-        'pos': pos,
-    }
-
-    logger.info('accessing transactionxl report')
-    return render(request, 'isa/excel/transactionxl.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def transactionexcel(request):
-    if request.method == 'POST':
-        startnend = request.POST.get('daterange', '').split(' - ')
-        start_date = Library.timeanddateconversion(startnend[0])
-        end_date = Library.timeanddateconversion(startnend[1])
-        if start_date and end_date and request.POST['pos']:
-            pos = request.POST['pos']
-            user = request.user
-            com = Companydb.objects.all()
-
-            tocash = Transaction.objects.values('business_date').annotate(
-                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'),
-                txncount=Count('or_number')).filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos)
-
-            trans = Transaction.objects.values('pos_name').filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
-                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-                timein=Min('time_in'), timeout=Max('time_out'))
-
-            context = {
-                'start_date': start_date,
-                'com': com,
-                'tocash': tocash,
-                'pos': pos,
-                'transaction': transaction,
-                'user': user,
-                'trans': trans,
-            }
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/excel/transactionxl.html', {'error': 'All fields required'})
-
-    return render(request, 'isa/excel/transactionexcel.html', context)
-
-
-class Vehicle(APIView):
-    def get(self, request):
+class Vehicle():
+    def view(request):
         logger.info('accessing vehicle in/out report')
         return render(request, 'isa/vehicle.html')
 
-    def post(self, request):
-        # vehicle pdf
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            com = Companydb.objects.all()
-            user = request.user
+    def renderPDF(request):
+        business_date = request.POST.get("daterange", "").split(' - ')
+        time_exit_range = request.POST.get('datetimerange', '').split(' - ')
+        user = request.user
+        if time_exit_range:
+            try:
+                te_start = time_exit_range[0].split(None, 1)
+                te_end = time_exit_range[1].split(None, 1)
+                start_date = Library.timeanddateconversion(te_start[0]) + 'T' + Library.twelvehourto24hr(te_start[1])
+                end_date = Library.timeanddateconversion(te_end[0]) + 'T' + Library.twelvehourto24hr(te_end[1])
+                cash = Transaction.objects.values('pos_name', 'or_number', 'cardcode', 'plate_num', 'vehicle_type',
+                                                  'time_in', 'time_out', 'duration', 'gross_amount').filter(
+                    time_out__gte=start_date, time_out__lte=end_date).order_by('pos_name', 'time_in').order_by(
+                    'or_number')
 
-            cash = Transaction.objects.values('pos_name', 'or_number', 'cardcode', 'plate_num', 'vehicle_type',
-                                              'time_in', 'time_out', 'duration', 'gross_amount').filter(
-                time_out__gte=start_date, time_out__lte=end_date).order_by('pos_name', 'time_in').order_by('or_number')
+                trans = Transaction.objects.filter(
+                    time_out__gte=start_date, time_out__lte=end_date).aggregate(
+                    gross=Sum('gross_amount'), timein=Min('time_in'), timeout=Max('time_out'),
+                    txncount=Count('or_number'))
 
-            trans = Transaction.objects.filter(
-                time_out__gte=start_date, time_out__lte=end_date).aggregate(
-                gross=Sum('gross_amount'), timein=Min('time_in'), timeout=Max('time_out'), txncount=Count('or_number'))
+                context = {
+                    'user': user,
+                    'com': com,
+                    'cash': cash,
+                    'trans': trans,
 
-            context = {
-                'user': user,
-                'com': com,
-                'cash': cash,
-                'trans': trans,
-
-            }
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/vehicle.html', {'error': 'All fields required'})
-
-        # Rendered
-
-        html_string = render_to_string('isa/pdf/vehiclepdf.html', context)
-        html = HTML(string=html_string)
-        result = html.write_pdf()
-
-        # Creating http response
-        response = HttpResponse(content_type='application/pdf;')
-        response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
-        response['Content-Transfer-Encoding'] = 'binary'
-        with tempfile.NamedTemporaryFile(delete=True) as output:
-            output.write(result)
-            output.flush()
-            output = open(output.name, 'rb')
-            response.write(output.read())
-        print('vehicle in/out pdfreport generated successfully')
-        return response
-
-
-@login_required(login_url="/accounts/login")
-def vehiclepdf(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            com = Companydb.objects.all()
-            user = request.user
-
-            cash = Transaction.objects.values('pos_name', 'or_number', 'cardcode', 'plate_num', 'vehicle_type',
-                                              'time_in', 'time_out', 'duration', 'gross_amount').filter(
-                time_out__gte=start_date, time_out__lte=end_date).order_by('pos_name', 'time_in').order_by('or_number')
-
-            trans = Transaction.objects.filter(
-                time_out__gte=start_date, time_out__lte=end_date).aggregate(
-                gross=Sum('gross_amount'), timein=Min('time_in'), timeout=Max('time_out'), txncount=Count('or_number'))
-
-            context = {
-                'user': user,
-                'com': com,
-                'cash': cash,
-                'trans': trans,
-
-            }
-            html_string = render_to_string('isa/pdf/vehiclepdf.html', context)
-            html = HTML(string=html_string)
-            result = html.write_pdf()
-            response = HttpResponse(content_type='application/pdf;')
-            response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
-            response['Content-Transfer-Encoding'] = 'binary'
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(result)
-                output.flush()
-                output = open(output.name, 'rb')
-                response.write(output.read())
-            print('vehicle in/out pdfreport generated successfully')
-            return response
+                }
+                if not cash:
+                    return render(request, 'isa/vehicle.html', {"error": "No Data on Selected Date"})
+                return Library.reportGeneration(context, 'exited_vehicles', "isa/pdf/vehiclepdf.html")
+            except Exception as e:
+                start_date = Library.timeanddateconversion(business_date[0])
+                end_date = Library.timeanddateconversion(business_date[1])
+                cash = Transaction.objects.values('pos_name', 'or_number', 'cardcode', 'plate_num', 'vehicle_type',
+                                                  'time_in', 'time_out', 'duration', 'gross_amount').filter(
+                    business_date__gte=start_date, business_date__lte=end_date).order_by('pos_name',
+                                                                                         'time_in').order_by(
+                    'or_number')
+                trans = Transaction.objects.filter(
+                    business_date__gte=start_date, business_date__lte=end_date).aggregate(
+                    gross=Sum('gross_amount'), timein=Min('time_in'), timeout=Max('time_out'),
+                    txncount=Count('or_number'))
+                context = {
+                    'user': user,
+                    'com': com,
+                    'cash': cash,
+                    'trans': trans,
+                }
+                if not cash:
+                    return render(request, 'isa/vehicle.html', {"error": "No Data on Selected Date"})
+                return Library.reportGeneration(context, 'exited_vehicles', "isa/pdf/vehiclepdfbdate.html")
         else:
             logger.info('Missing field')
             return render(request, 'isa/vehicle.html', {'error': 'All fields required'})
 
 
-@login_required(login_url="/accounts/login")
-def vehiclepdfbdate(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            com = Companydb.objects.all()
-            user = request.user
+class StayIn():
+    def view(request):
+        logger.info('accessing stay-in vehicles report')
+        return render(request, 'isa/stay_in.html')
 
-            cash = Transaction.objects.values('pos_name', 'or_number', 'cardcode', 'plate_num', 'vehicle_type',
-                                              'time_in', 'time_out', 'duration', 'gross_amount').filter(
-                business_date__gte=start_date, business_date__lte=end_date).order_by('pos_name', 'time_in').order_by(
-                'or_number')
-
-            trans = Transaction.objects.filter(
-                business_date__gte=start_date, business_date__lte=end_date).aggregate(
-                gross=Sum('gross_amount'), timein=Min('time_in'), timeout=Max('time_out'), txncount=Count('or_number'))
-
-            context = {
-                'user': user,
-                'com': com,
-                'cash': cash,
-                'trans': trans,
-
-            }
-            # Rendered
-
-            html_string = render_to_string('isa/pdf/vehiclepdfbdate.html', context)
-            html = HTML(string=html_string)
-            result = html.write_pdf()
-
-            # Creating http response
-            response = HttpResponse(content_type='application/pdf;')
-            response['Content-Disposition'] = 'inline; filename=exited_vehicles.pdf'
-            response['Content-Transfer-Encoding'] = 'binary'
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(result)
-                output.flush()
-                output = open(output.name, 'rb')
-                response.write(output.read())
-            logger.info('vehicle in/out pdfreport generated successfully')
-            return response
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/vehicle.html', {'error': 'All fields required'})
+    def renderPDF(request):
+        # start_date = request.POST['start']
+        # end_date = request.POST['end']
+        # time = Transaction.objects.values('cardcode', 'time_in', 'duration', 'plate_num', 'parker_address').filter(time_in__gte=start_date, time_in__lte=end_date)
+        # totime = Transaction.objects.filter(time_in__gte=start_date, time_in__lte=end_date).aggregate(txncount=Count('cardcode'))
+        user = request.user
+        context = {
+            'com': com,
+            'user': user,
+        }
+        return Library.reportGeneration(context, 'stay_in_report', 'isa/pdf/stay_inpdf.html')
 
 
-@login_required(login_url="/accounts/login")
-def stay_in(request):
-    logger.info('accessing stay-in vehicles report')
-    return render(request, 'isa/stay_in.html')
-
-
-@login_required(login_url="/accounts/login")
-def stay_inpdf(request):
-    # start_date = request.POST['start']
-    # end_date = request.POST['end']
-    # time = Transaction.objects.values('cardcode', 'time_in', 'duration', 'plate_num', 'parker_address').filter(time_in__gte=start_date, time_in__lte=end_date)
-    # totime = Transaction.objects.filter(time_in__gte=start_date, time_in__lte=end_date).aggregate(txncount=Count('cardcode'))
-    com = Companydb.objects.all()
-    user = request.user
-
-    context = {
-
-        'com': com,
-        'user': user,
-
-    }
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/stay_inpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=stay_in_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('vehicle in/out pdfreport generated successfully')
-    return response
-
-
-class Cashier(APIView):
-    def get(self, request):
+class CashierPDF():
+    def view(request):
         operators = Transaction.objects.values('username').distinct()
         pos = Transaction.objects.values('pos_name').distinct()
-
         context = {
             'operators': operators,
             'pos': pos,
@@ -955,14 +680,14 @@ class Cashier(APIView):
         logger.info('accessing cashier detailed report')
         return render(request, 'isa/cashier.html', context)
 
-    def post(self, request):
+    def renderPDF(request):
         startnend = request.POST.get('daterange', '').split(' - ')
         start_date = Library.timeanddateconversion(startnend[0])
         end_date = Library.timeanddateconversion(startnend[1])
         user = request.user
         operator = request.POST.get('pos-op', '')
         pos = request.POST.get('pos-dev', '')
-        com = Companydb.objects.all()
+        pdf_name = 'cashier_detailed_report'
         if operator != "":
             cash = Transaction.objects.values(
                 'or_number', 'pos_name', 'business_date', 'cardcode', 'plate_num', 'voucher', 'vehicle_type', 'time_in',
@@ -989,21 +714,9 @@ class Cashier(APIView):
                 'trans': trans,
                 'user': user,
             }
-            html_string = render_to_string('isa/pdf/cashierpdf.html', context)
-            html = HTML(string=html_string)
-            result = html.write_pdf()
-
-            # Creating http response
-            response = HttpResponse(content_type='application/pdf;')
-            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-            response['Content-Transfer-Encoding'] = 'binary'
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(result)
-                output.flush()
-                output = open(output.name, 'rb')
-                response.write(output.read())
-            logger.info('cash operator pdfreport generated successfully')
-            return response
+            if not cash:
+                return render(request, "isa/cashier.html", {"error": "No data on selected date"})
+            return Library.reportGeneration(context, pdf_name, 'isa/pdf/cashierpdf.html')
         elif pos != "":
             cash = Transaction.objects.values(
                 'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type', 'time_in',
@@ -1028,21 +741,9 @@ class Cashier(APIView):
                 'pos': pos,
                 'user': user
             }
-            html_string = render_to_string('isa/pdf/cashierpospdf.html', context)
-            html = HTML(string=html_string)
-            result = html.write_pdf()
-
-            # Creating http response
-            response = HttpResponse(content_type='application/pdf;')
-            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-            response['Content-Transfer-Encoding'] = 'binary'
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(result)
-                output.flush()
-                output = open(output.name, 'rb')
-                response.write(output.read())
-            logger.info('cashier pos detailed pdfreport successfully')
-            return response
+            if not cash:
+                return render(request, "isa/cashier.html", {"error": "No data on selected date"})
+            return Library.reportGeneration(context, "cashier", 'isa/pdf/cashierpospdf.html')
         else:
             cash = Transaction.objects.values(
                 'or_number', 'username', 'pos_name', 'business_date', 'voucher', 'cardcode', 'plate_num',
@@ -1068,237 +769,30 @@ class Cashier(APIView):
                 'trans': trans,
                 'user': user,
             }
-            html_string = render_to_string('isa/pdf/cashierallpdf.html', context)
-            html = HTML(string=html_string)
-            result = html.write_pdf()
-
-            # Creating http response
-            response = HttpResponse(content_type='application/pdf;')
-            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-            response['Content-Transfer-Encoding'] = 'binary'
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(result)
-                output.flush()
-                output = open(output.name, 'rb')
-                response.write(output.read())
-            logger.info('cash all detailed pdfreport successfully')
-            return response
-        logger.info('Missing field')
-        return render(request, 'isa/cashier.html', {'error': 'All fields required'})
-
-        # Rendered
+            if not cash:
+                return render(request, "isa/cashier.html", {"error": "No data on selected date"})
+            return Library.reportGeneration(context, "cashier", 'isa/pdf/cashierallpdf.html')
 
 
-@login_required(login_url="/accounts/login")
-def cashier(request):
-    operators = Transaction.objects.values('username').distinct()
-    pos = Transaction.objects.values('pos_name').distinct()
+class CashierExcel(APIView):
+    def get(self, request):
+        operators = Transaction.objects.values('username').distinct()
+        pos = Tblpermit.objects.values('pc')
+        context = {
+            'operators': operators,
+            'pos': pos,
+        }
+        logger.info('accessing cashierexcel report')
+        return render(request, 'isa/excel/cashierxl.html', context)
 
-    context = {
-        'operators': operators,
-        'pos': pos,
-    }
-    logger.info('accessing cashier detailed report')
-    return render(request, 'isa/cashier.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def cashierpdf(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['pos'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            operator = request.POST['pos']
-            user = request.user
-            print(user)
-            print(operator)
-            com = Companydb.objects.all()
-
-            cash = Transaction.objects.values(
-                'or_number', 'pos_name', 'business_date', 'cardcode', 'plate_num', 'voucher', 'vehicle_type', 'time_in',
-                'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
-                'net_amount', 'vat_sales', 'vat', 'cash', 'credit', 'vat_payable', 'vat_spcl_disc').filter(
-                business_date__gte=start_date, business_date__lte=end_date, username=operator).order_by('or_number')
-
-            trans = Transaction.objects.filter(
-                business_date__gte=start_date, business_date__lte=end_date, username=operator).aggregate(
-                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-                voucher=Sum('voucher'),
-                timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
-                vat_special=Sum('vat_spcl_disc'))
-
-            context = {
-                'start_date': start_date,
-                'operator': operator,
-                'cash': cash,
-                'com': com,
-                'trans': trans,
-                'user': user,
-            }
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/cashier.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/cashierpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('cash operator pdfreport generated successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def cashierallpdf(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            com = Companydb.objects.all()
-            user = request.user
-            print(user)
-
-            cash = Transaction.objects.values(
-                'or_number', 'username', 'pos_name', 'business_date', 'voucher', 'cardcode', 'plate_num',
-                'vehicle_type', 'time_in', 'time_out', 'duration', 'gross_amount', 'discount_special',
-                'discount_regular', 'vat_exempt_sales', 'net_amount', 'vat_sales', 'vat', 'cash', 'credit',
-                'vat_payable', 'vat_spcl_disc').filter(
-                business_date__gte=start_date, business_date__lte=end_date).order_by('or_number')
-
-            trans = Transaction.objects.filter(
-                business_date__gte=start_date, business_date__lte=end_date).aggregate(
-                gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-                timein=Min('time_in'), voucher=Sum('voucher'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
-                vat_special=Sum('vat_spcl_disc'))
-
-            context = {
-                'start_date': start_date,
-                'cash': cash,
-                'com': com,
-                'trans': trans,
-                'user': user,
-            }
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/cashier.html', {'error': 'All fields required'})
-
-    # Rendered
-
-    html_string = render_to_string('isa/pdf/cashierallpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('cash all detailed pdfreport successfully')
-    return response
-
-
-@login_required(login_url="/accounts/login")
-def cashierpospdf(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end'] and request.POST['pos']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            pos = request.POST['pos']
-            user = request.user
-            print(pos)
-            print(user)
-            com = Companydb.objects.all()
-
-            cash = Transaction.objects.values(
-                'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type', 'time_in',
-                'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
-                'net_amount', 'vat_sales', 'vat', 'cash', 'credit', 'vat_payable', 'vat_spcl_disc').filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).order_by('or_number')
-
-            trans = Transaction.objects.filter(
-                business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
-                gross=Sum('gross_amount'), voucher=Sum('voucher'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
-                vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
-                cash=Sum('cash'),
-                credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-                timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
-                vat_special=Sum('vat_spcl_disc'))
-
-            context = {
-                'cash': cash,
-                'com': com,
-                'trans': trans,
-                'pos': pos,
-                'user': user
-            }
-            html_string = render_to_string('isa/pdf/cashierpospdf.html', context)
-            html = HTML(string=html_string)
-            result = html.write_pdf()
-
-            # Creating http response
-            response = HttpResponse(content_type='application/pdf;')
-            response['Content-Disposition'] = 'inline; filename=cashier_detailed_report.pdf'
-            response['Content-Transfer-Encoding'] = 'binary'
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(result)
-                output.flush()
-                output = open(output.name, 'rb')
-                response.write(output.read())
-            logger.info('cashier pos detailed pdfreport successfully')
-            return response
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/cashier.html', {'error': 'All fields required'})
-
-
-@login_required(login_url="/accounts/login")
-def cashierxl(request):
-    operators = Transaction.objects.values('username').distinct()
-    pos = Transaction.objects.values('pos_name').distinct()
-
-    context = {
-        'operators': operators,
-        'pos': pos,
-    }
-    logger.info('accessing cashierexcel report')
-    return render(request, 'isa/excel/cashierxl.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def excel(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end'] and request.POST['operator']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            operator = request.POST['operator']
-            user = request.user
-            com = Companydb.objects.all()
-
+    def post(self, request):
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        user = request.user
+        operator = request.POST.get('pos-op', '')
+        pos = request.POST.get('pos-dev', '')
+        if operator != "":
             cash = Transaction.objects.values(
                 'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type', 'time_in',
                 'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
@@ -1323,26 +817,12 @@ def excel(request):
                 'operator': operator,
                 'user': user,
             }
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/excel/cashierxl.html', {'error': 'All fields required'})
-
-    return render(request, 'isa/excel/excel.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def cashierposexcel(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end'] and request.POST['pos']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            pos = request.POST['pos']
-            user = request.user
-            com = Companydb.objects.all()
+            return render(request, 'isa/excel/excel.html', context)
+        elif pos != '':
 
             cash = Transaction.objects.values(
-                'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type', 'time_in',
+                'or_number', 'pos_name', 'business_date', 'cardcode', 'voucher', 'plate_num', 'vehicle_type',
+                'time_in',
                 'time_out', 'duration', 'gross_amount', 'discount_special', 'discount_regular', 'vat_exempt_sales',
                 'net_amount', 'vat_sales', 'vat', 'cash', 'credit', 'vat_payable', 'vat_spcl_disc').filter(
                 business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).order_by('or_number')
@@ -1351,7 +831,8 @@ def cashierposexcel(request):
                 business_date__gte=start_date, business_date__lte=end_date, pos_name=pos).aggregate(
                 gross=Sum('gross_amount'), voucher=Sum('voucher'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
                 vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'),
+                netsales=Sum('net_amount'),
                 cash=Sum('cash'),
                 credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
                 timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
@@ -1365,22 +846,8 @@ def cashierposexcel(request):
                 'trans': trans,
 
             }
-
+            return render(request, 'isa/excel/cashierposexcel.html', context)
         else:
-            logger.info('Missing field')
-            return render(request, 'isa/excel/cashierxl.html', {'error': 'All fields required'})
-
-    return render(request, 'isa/excel/cashierposexcel.html', context)
-
-
-@login_required(login_url="/accounts/login")
-def cashierallexcel(request):
-    if request.method == 'POST':
-        if request.POST['start'] and request.POST['end']:
-            start_date = request.POST['start']
-            end_date = request.POST['end']
-            user = request.user
-            com = Companydb.objects.all()
             cash = Transaction.objects.values(
                 'or_number', 'username', 'pos_name', 'business_date', 'voucher', 'cardcode', 'plate_num',
                 'vehicle_type', 'time_in', 'time_out', 'duration', 'gross_amount', 'discount_special',
@@ -1392,10 +859,12 @@ def cashierallexcel(request):
                 business_date__gte=start_date, business_date__lte=end_date).aggregate(
                 gross=Sum('gross_amount'), vatsales=Sum('vat_sales'), vatamount=Sum('vat'),
                 vatexemptsales=Sum('vat_exempt_sales'),
-                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'), netsales=Sum('net_amount'),
+                specialdiscount=Sum('discount_special'), discount=Sum('discount_regular'),
+                netsales=Sum('net_amount'),
                 cash=Sum('cash'),
                 credit=Sum('credit'), orstart=Min('or_number'), orend=Max('or_number'), txncount=Count('or_number'),
-                timein=Min('time_in'), voucher=Sum('voucher'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
+                timein=Min('time_in'), voucher=Sum('voucher'), timeout=Max('time_out'),
+                vat_payable=Sum('vat_payable'),
                 vat_special=Sum('vat_spcl_disc'))
 
             context = {
@@ -1405,18 +874,14 @@ def cashierallexcel(request):
                 'user': user,
                 'trans': trans,
             }
-
-        else:
-            logger.info('Missing field')
-            return render(request, 'isa/cashier.html', {'error': 'All fields required'})
-
-    return render(request, 'isa/excel/cashierallexcel.html', context)
+            return render(request, 'isa/excel/cashierallexcel.html', context)
 
 
-@login_required(login_url="/accounts/login")
-def example(request):
-    if request.method == 'POST':
+class ManualTicketEncoding(APIView):
+    def get(self, request):
+        return render(request, 'isa/manualticketencoding.html')
 
+    def post(self, request):
         if request.POST['trno'] and request.POST['businessdate'] and request.POST['transaction'] and request.POST[
             'vehicle'] and request.POST['plate'] and request.POST['timein'] and request.POST['timeout'] and \
                 request.POST['net_sales'] and request.POST['vat'] and request.POST['total']:
@@ -1444,7 +909,6 @@ def example(request):
             parker_id = request.POST['parker_id']
             operator = request.user
             date_entry = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
             try:
                 trans = ManualTransaction(business_date=busnessdate, operator=operator, ticket_no=trno,
                                           discount_type=dtype, plate_number=plate, time_in=timein, time_out=timeout,
@@ -1456,16 +920,13 @@ def example(request):
                                           vat_payable=vat_payable, pos_name='manual')
                 trans.save()
             except IntegrityError as e:
-                return render(request, 'isa/example.html', {'error': 'Ticket Number Already Exist.'})
+                return render(request, 'isa/manualticketencoding.html', {'error': 'Ticket Number Already Exist.'})
             messages.success(request, 'Data submission successful')
             logger.info('insert new data successfully')
-            return redirect('/isa/example')
+            return redirect('/isa/ticket')
         else:
             logger.info('Missing field')
-            return render(request, 'isa/example.html', {'error': '* fields are required'})
-    else:
-        logger.info('inserting new data')
-        return render(request, 'isa/example.html')
+            return render(request, 'isa/manualticketencoding.html', {'error': '* fields are required'})
 
 
 @login_required(login_url="/accounts/login")
@@ -1480,31 +941,18 @@ def manualreport(request):
     return render(request, 'isa/manualreport.html', {'tocash': tocash}, )
 
 
-class Manual(APIView):
-    def get(self, request):
+class ManualPDF():
+    def view(request):
         logger.info('accessing manual ticketing report')
         return render(request, 'isa/manual.html')
 
-    def post(self):
-        print("dsadasda")
-
-
-@login_required(login_url="/accounts/login")
-def manual(request):
-    logger.info('accessing manual ticketing report')
-    return render(request, 'isa/manual.html')
-
-
-@login_required(login_url="/accounts/login")
-def manualpdf(request):
-    if request.method == 'POST':
+    def renderPDF(request):
         startnend = request.POST.get('daterange', '').split(' - ')
         start_date = Library.timeanddateconversion(startnend[0])
         end_date = Library.timeanddateconversion(startnend[1])
         if start_date and end_date:
             user = request.user
             # cash = ManualTransaction.objects.values('ticket_no', 'business_date', 'vat_payable', 'operator', 'plate_number', 'time_in', 'time_out', 'vehicle_type', 'gross_amount', 'vatable_sale', 'vat', 'discount_type', 'vat_exempt_sale', 'regular_discount', 'special_discount', 'vat_adjustment', 'vat_payable', 'net_sales', 'remarks', 'parker_name', 'parker_id', 'date_entry', 'operator').filter(business_date__gte=start_date, business_date__lte=end_date).order_by('date_entry')
-            com = Companydb.objects.all()
             cash = ManualTransaction.objects.raw(
                 'select ticket_no, vat as id, CONCAT(TIMESTAMPDIFF(day,time_in,time_out) , "  Day(s) ", MOD( TIMESTAMPDIFF(hour,time_in,time_out), 24), " Hr(s) ", MOD( TIMESTAMPDIFF(minute,time_in,time_out), 60), " Min(s) ") AS duration, business_date, vat_payable, operator, plate_number, time_in, time_out, vehicle_type, gross_amount, vatable_sale, vat, discount_type, vat_exempt_sale, regular_discount, special_discount, vat_adjustment, vat_payable, net_sales, remarks, parker_name, parker_id, date_entry, operator from manual_transaction where business_date between %s and %s;',
                 [start_date, end_date])
@@ -1526,46 +974,72 @@ def manualpdf(request):
                 'tocash': tocash,
                 'user': user,
             }
-
+            if not cash:
+                return render(request, "isa/manual.html", {"error": "No data on selected date"})
+            return Library.reportGeneration(context, 'cash_report', 'isa/pdf/manualpdf.html')
         else:
             logger.info('Missing field')
             return render(request, 'isa/manual.html', {'error': 'All fields required'})
 
-    # Rendered
 
-    html_string = render_to_string('isa/pdf/manualpdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
+class ManualTransPDF():
+    def view(request):
+        logger.info('accessing manual ticketing report')
+        return render(request, 'isa/manualtrans.html')
 
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=cash_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('manual ticketing pdfreport generated successfully')
-    return response
+    def renderPDF(request):
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        print(start_date)
+        if start_date and end_date:
+            user = request.user
+            # cash = ManualTransaction.objects.values('ticket_no', 'business_date', 'vat_payable', 'operator', 'plate_number', 'time_in', 'time_out', 'vehicle_type', 'gross_amount', 'vatable_sale', 'vat', 'discount_type', 'vat_exempt_sale', 'regular_discount', 'special_discount', 'vat_adjustment', 'vat_payable', 'net_sales', 'remarks', 'parker_name', 'parker_id', 'date_entry', 'operator').filter(business_date__gte=start_date, business_date__lte=end_date).order_by('date_entry')
+            cash = ManualTransaction.objects.raw(
+                'select ticket_no, vat as id, CONCAT(TIMESTAMPDIFF(day,time_in,time_out) , "  Day(s) ", '
+                'MOD( TIMESTAMPDIFF(hour,time_in,time_out), 24), " Hr(s) ", MOD( TIMESTAMPDIFF(minute,time_in,'
+                'time_out), 60), " Min(s) ") AS duration, business_date, vat_payable, operator, plate_number, '
+                'time_in, time_out, vehicle_type, gross_amount, vatable_sale, vat, discount_type, vat_exempt_sale, '
+                'regular_discount, special_discount, vat_adjustment, vat_payable, net_sales, remarks, parker_name, '
+                'parker_id, date_entry, operator from manual_transaction where business_date between %s and %s;',
+                [start_date, end_date])
+            tocash = ManualTransaction.objects.filter(
+                business_date__gte=start_date, business_date__lte=end_date).aggregate(
+                gross=Sum('gross_amount'), vatsales=Sum('vatable_sale'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sale'),
+                specialdiscount=Sum('special_discount'), discount=Sum('regular_discount'), netsales=Sum('net_sales'),
+                orstart=Min('ticket_no'), max_date=Max('business_date'), min_date=Min('business_date'),
+                orend=Max('ticket_no'), txncount=Count('ticket_no'),
+                timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
+                vat_special=Sum('vat_adjustment'))
+
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'cash': cash,
+                'com': com,
+                'tocash': tocash,
+                'user': user,
+            }
+            if not cash:
+                return render(request, "isa/manualtrans.html", {"error": "No data on selected date"})
+            return Library.reportGeneration(context, 'cash_report', 'isa/pdf/manualpdf2.html')
+        else:
+            logger.info('Missing field')
+            return render(request, 'isa/manual.html', {'error': 'All fields required'})
 
 
-@login_required(login_url="/accounts/login")
-def manualxl(request):
-    logger.info('accessing manual ticketing report')
-    return render(request, 'isa/excel/manualxl.html', )
+class ManualExcel(APIView):
+    def get(self, request):
+        logger.info('accessing manual ticketing report')
+        return render(request, 'isa/excel/manualxl.html', )
 
-
-@login_required(login_url="/accounts/login")
-def manualexcel(request):
-    if request.method == 'POST':
+    def post(self, request):
         startnend = request.POST.get('daterange', '').split(' - ')
         start_date = Library.timeanddateconversion(startnend[0])
         end_date = Library.timeanddateconversion(startnend[1])
         if start_date and end_date:
-            com = Companydb.objects.all()
             user = request.user
-
             cash = ManualTransaction.objects.values('ticket_no', 'business_date', 'operator', 'plate_number', 'time_in',
                                                     'time_out', 'vehicle_type', 'gross_amount', 'vatable_sale', 'vat',
                                                     'discount_type', 'vat_exempt_sale', 'regular_discount',
@@ -1592,39 +1066,58 @@ def manualexcel(request):
                 'tocash': tocash,
                 'user': user,
             }
+            if not cash:
+                return render(request, "isa/excel/manualxl.html", {"error": "No Date on Selected Date"})
+            return render(request, 'isa/excel/manualexcel.html', context)
 
         else:
             logger.info('Missing field')
             return render(request, 'isa/excel/manualxl.html', {'error': 'All fields required'})
 
-    return render(request, 'isa/excel/manualexcel.html', context)
 
+class ZeroAmount():
+    def view(request):
+        return render(request, "isa/zero_amount.html")
 
-def occupancy(request):
-    return render(request, 'isa/occupancy.html')
+    def renderPDF(request):
+        startnend = request.POST.get('daterange', '').split(' - ')
+        start_date = Library.timeanddateconversion(startnend[0])
+        end_date = Library.timeanddateconversion(startnend[1])
+        option = request.POST['grace']
+        if start_date and end_date:
+            # if int(option) == 1:
+            user = request.user
+            trans = TransactionZeroAmount.objects.filter(business_date__gte=start_date,
+                                                         business_date__lte=end_date).all().values()
+            # cash = ManualTransaction.objects.values('ticket_no', 'business_date', 'vat_payable', 'operator', 'plate_number', 'time_in', 'time_out', 'vehicle_type', 'gross_amount', 'vatable_sale', 'vat', 'discount_type', 'vat_exempt_sale', 'regular_discount', 'special_discount', 'vat_adjustment', 'vat_payable', 'net_sales', 'remarks', 'parker_name', 'parker_id', 'date_entry', 'operator').filter(business_date__gte=start_date, business_date__lte=end_date).order_by('date_entry')
+            cash = ManualTransaction.objects.raw(
+                'select ticket_no, vat as id, CONCAT(TIMESTAMPDIFF(day,time_in,time_out) , "  Day(s) ", MOD( TIMESTAMPDIFF(hour,time_in,time_out), 24), " Hr(s) ", MOD( TIMESTAMPDIFF(minute,time_in,time_out), 60), " Min(s) ") AS duration, business_date, vat_payable, operator, plate_number, time_in, time_out, vehicle_type, gross_amount, vatable_sale, vat, discount_type, vat_exempt_sale, regular_discount, special_discount, vat_adjustment, vat_payable, net_sales, remarks, parker_name, parker_id, date_entry, operator from manual_transaction where business_date between %s and %s;',
+                [start_date, end_date])
+            tocash = ManualTransaction.objects.filter(
+                business_date__gte=start_date, business_date__lte=end_date).aggregate(
+                gross=Sum('gross_amount'), vatsales=Sum('vatable_sale'), vatamount=Sum('vat'),
+                vatexemptsales=Sum('vat_exempt_sale'),
+                specialdiscount=Sum('special_discount'), discount=Sum('regular_discount'), netsales=Sum('net_sales'),
+                orstart=Min('ticket_no'), max_date=Max('business_date'), min_date=Min('business_date'),
+                orend=Max('ticket_no'), txncount=Count('ticket_no'),
+                timein=Min('time_in'), timeout=Max('time_out'), vat_payable=Sum('vat_payable'),
+                vat_special=Sum('vat_adjustment'))
 
-
-def occupancypdf(request):
-    com = Companydb.objects.all()
-    context = {
-        'com': com,
-    }
-
-    html_string = render_to_string('isa/pdf/occupancypdf.html', context)
-    html = HTML(string=html_string)
-    result = html.write_pdf()
-
-    # Creating http response
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=occupancy_report.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-    logger.info('occupancy pdfreport generated successfully')
-    return response
+            context = {
+                'start_date': start_date,
+                'end_date': end_date,
+                'cash': cash,
+                'com': com,
+                'tocash': tocash,
+                'user': user,
+                'trans': trans,
+            }
+            if not trans:
+                return render(request, "isa/zero_amount.html", {"error": "No data on selected date"})
+            return Library.reportGeneration(context, 'zero_amount', 'isa/pdf/zero_amount.html')
+        else:
+            logger.info('Missing field')
+            return render(request, 'isa/zero_amount.html', {'error': 'All fields required'})
 
 
 @login_required(login_url="/accounts/login")
@@ -1793,28 +1286,3 @@ def on_message(client, userdata, msg):
     print(sub_message)
     # glob = s
     # print(glob)
-    # print(s)
-
-
-def connection_true():
-    client = mqtt.Client()
-    # client.on_connect = on_connect
-    client.on_message = on_message
-    client.on_publish = on_publish
-    client.connect("127.0.0.1", 1883, 60)
-    client.loop_start()
-    # payload = {"logs": "realtime", "value": var2}
-    # clean_payload = json.dumps(payload)
-    client.publish('oki', 'messagesssesa')
-
-
-sub_message = ''
-
-
-def sub():
-    client = mqtt.Client()
-    # client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect("127.0.0.1", 1883, 60)
-    client.loop_start()
-    client.subscribe("test")

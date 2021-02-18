@@ -269,9 +269,6 @@
       <table class="lsummary">
          <thead>
             <th>TERMINAL</th>
-            {% for l in lostd %}
-            <th>{{l.vehicle_type}}</th>
-            {% endfor %}
             <th>COUNT</th>
             <th>TOTAL</th>
          </thead>
@@ -281,8 +278,6 @@
                {% for cas in lostd %}
                <td>{{ cas.clost }}</td>
                {% endfor %}
-               <!-- <td>{{ losts.clost }}</td>
-                  <td>{{ losts.lost_sum }}</td> -->
                <td>0</td>
                <td>0.00</td>
             </tr>

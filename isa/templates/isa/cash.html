@@ -7,55 +7,49 @@
 {% endif %}
 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
    <li class="nav-item">
-      <a class="nav-link active white1" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+      <a class="nav-link active white1" id="operator-tab" data-toggle="tab" href="#home" role="tab" aria-controls="operator"
          aria-selected="true">Operators</a>
    </li>
    <li class="nav-item">
-      <a class="nav-link white1" id="profile-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="profile"
+      <a class="nav-link white1" id="termi-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="profile"
          aria-selected="false">Terminal</a>
    </li>
    <li class="nav-item">
-      <a class="nav-link white1" id="contact-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="contact"
+      <a class="nav-link white1" id="all-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="contact"
          aria-selected="false">All</a>
    </li>
 </ul>
 <div class="tab-content" id="myTabContent">
-<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-   <div class="container">
-      <div class="card text-center col-md-4 offset-md-4">
-         <form action="{% url 'cashpdf' %}" method="POST">
-            {% csrf_token %}
-            <Label class="mt-2">Choose Operator: </Label>
-            <br>
-            <select name="operator" class="form-control">
-               {% for oper in operators %}
-               <option value="{{ oper.username }}">{{ oper.username }}</option>
-               {% endfor %}
-            </select>
-            <br>
-            <Label>Start Date: </Label>
-            <input type="date" class="form-control" name="start">
-            <br>
-            <Label>End Date: </Label>
-            <input type="date" class="form-control" name="end">
-            <br>
-            <input type="submit" class="btn btn-primary btn-block mb-2" >
-         </form>
-      </div>
-   </div>
-</div>
-<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+   <div class="tab-pane fade show active" id="operator" role="tabpanel" aria-labelledby="operator-tab">
       <div class="container">
          <div class="card text-center col-md-4 offset-md-4">
-            <form action="{% url 'cashallpdf' %}" method="POST">
+<!--            {% if error %}-->
+<!--            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>-->
+<!--            <br>-->
+<!--            {% endif %}-->
+            <form action="{% url 'cashpdf' %}" method="POST">
                {% csrf_token %}
+               <div id="pos-div">
+                  <Label class="mt-2">Choose POS: </Label>
+                  <br>
+                  <select name="pos-dev" class="form-control" id="pos-dev" >
+                     {% for po in pos %}
+                     <option value="{{ po.pos_name }}">{{ po.pos_name }}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+               <div id="operator-div">
+                  <Label class="mt-2">Choose Operator: </Label>
+                  <br>
+                  <select name="pos-op" class="form-control" id="pos-op">
+                     {% for oper in operators %}
+                     <option value="{{ oper.username }}">{{ oper.username }}</option>
+                     {% endfor %}
+                  </select>
+               </div>
                <br>
-               <Label>Start Date: </Label>
-               <input type="date" class="form-control" name="start">
-               <br>
-               <Label>End Date: </Label>
-               <input type="date" class="form-control" name="end">
+               <label>Start & End Date</label>
+               <input name="daterange" id="daterange" class="form-control">
                <br>
                <input type="submit" class="btn btn-primary btn-block mb-2">
             </form>
@@ -63,34 +57,8 @@
       </div>
    </div>
 </div>
-<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-      <div class="container">
-         <div class="card text-center col-md-4 offset-md-4">
-            <form action="{% url 'cashpospdf' %}" method="POST">
-               {% csrf_token %}
-               <Label class="mt-2">Choose POS: </Label>
-               <br>
-               <select name="pos" class="form-control">
-                  {% for po in pos %}
-                  <option value="{{ po.pos_name }}">{{ po.pos_name }}</option>
-                  {% endfor %}
-               </select>
-               <br>
-               <Label>Start Date: </Label>
-               <input type="date" class="form-control" name="start">
-               <br>
-               <Label>End Date: </Label>
-               <input type="date" class="form-control" name="end">
-               <br>
-               <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
-            </form>
-         </div>
-      </div>
-   </div>
-</div>
 <div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-   aria-hidden="true">
+   aria-hidden="true" data-backdrop="static" data-keyboard="false" href="#">
    <div class="modal-dialog" role="document">
       <div class="modal-content">
          <div class="modal-header">
@@ -105,20 +73,16 @@
             <p style="color:red; text-align:center; text-transform: uppercase">{{ error }}</p>
          </div>
          <div class="modal-footer">
-            <a href="{% url 'cash' %}">
-            <button type="button" class="btn btn-secondary">
-            <span aria-hidden="true">BACK TO Cashier Accountability</span>
-            </button>
-            </a>
+<!--            <a href="{% url 'cash' %}">-->
+<!--            <button type="button" class="btn btn-secondary">-->
+<!--            <span aria-hidden="true">BACK TO Cashier Accountability</span>-->
+<!--            </button>-->
+<!--            </a>-->
          </div>
       </div>
    </div>
 </div>
-<!--  <script>-->
-<!--   $(function () {-->
-<!--       $('#error').modal('show');-->
-<!--   });-->
-<!--</script>-->
+
 {% endblock %}
 
 <!-- Incomereport.objects.filter(timein__gte='2019-01-01 00:00:00', timeout__lte='2019-01-01 23:59:59', operator='Nucup, Abigai').values('operator').aggregate(Max(trno)) -->

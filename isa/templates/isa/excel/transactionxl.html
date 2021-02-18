@@ -1,21 +1,22 @@
 {% extends 'base/main.html' %}
 {% block content %}
-{% block title %}Transaction Flow Excel Report {% endblock %}
-<h1 class="text-center mb-4 mt-5 pt-5 white1">Transaction Flow Excel Report</h1>
+{% block title %}Daily Sales Excel Report {% endblock %}
+<h1 class="text-center mb-4 mt-5 pt-5 white1">Daily Sales Excel Report</h1>
 <div class="container">
    <div class="card text-center col-md-4 offset-md-4">
       {% if error %}
       <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
       <br>
       {% endif %}
-      <form action="{% url 'transactionexcel' %}" method="POST">
+      <form action="{% url 'transactionxl' %}" method="POST">
          {% csrf_token %}
          <Label class="mt-2">Choose POS: </Label>
          <br>
          <!-- ALL POS OPTION -->
          <select name="pos" class="form-control">
+            <option value="0">ALL</option>
             {% for po in pos %}
-            <option value="{{ po.pos_name }}">{{ po.pos_name }}</option>
+            <option value="{{ po.pc }}">{{ po.pc }}</option>
             {% endfor %}
          </select>
          <label>Start & End Date</label>

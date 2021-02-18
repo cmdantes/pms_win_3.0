@@ -1,0 +1,349 @@
+{% extends 'base/main.html' %}
+{% block content %}
+{% block title %} Manual Transaction {% endblock %}
+<div class="container-fluid">
+   <div class="mb-4 mt-5 pt-5 col-md-2 offset-md-10">
+      <a href="{%url 'manualreport' %}"><button class="btn btn-success">SHOW LATEST ENCODED MANUAL TICKET </button></a>
+   </div>
+</div>
+{% if error %}
+<script>
+   $(function () {
+       $('#error').modal('show');
+   });
+</script>
+{% endif %}
+{% if messages %}
+<script>
+   $(function () {
+       $('#success').modal({ show: true });
+   });
+</script>
+{% endif %}
+<h1 class="text-center">Manual Ticket Encoding </h1>
+<div class="container">
+   <div class="animate-bottom">
+      <div class="card bg-info" style="z-index: 99;">
+         <div class="card-body">
+            <form action="{% url 'example' %}" method="POST">
+               {% csrf_token %}
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="inputPassword4">*Manual Ticket No.</label>
+                     <input type="number" class="form-control" name="trno" step="any" min=0
+                        oninput="this.value = Math.abs(this.value)" required>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="inputAddress2">*Discount Type</label>
+                     <select class="form-control" name="transaction" id="transaction" onchange="calc()">
+                        <option value="--">--</option>
+                        <option value="SENIOR_DISC">SENIOR DISC</option>
+                        <option value="PWD_DISC">PWD DISC</option>
+                        <option value="REGULAR_DISC">REGULAR DISC</option>
+                     </select>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="inputEmail4">*Business Date</label>
+                     <input type="date" class="form-control" name="businessdate" id="bdate" required>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="inputAddress2">Remarks</label>
+                     <input type="text" class="form-control" name="remarks">
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="inputAddress2">*Plate #</label>
+                     <input type="text" class="form-control" name="plate" id="plate" required>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="inputEmail4">*Time-in</label>
+                     <input type="datetime-local" class="form-control" name="timein" id="timein" required>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="inputPassword4">*Time-Out</label>
+                     <input type="datetime-local" class="form-control" name="timeout" id="timeout" required>
+                  </div>
+                  <div class="form-group col-md-3">
+                     <label for="inputAddress2">*Vehicle Type</label>
+                     <input type="text" class="form-control" name="vehicle" id="vehicle" required>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3">
+                     <label for="inputAddress">*Gross Amount: </label>
+                     <input type="number" class="form-control" id="total" name="total" placeholder="Total Amount"
+                        min=0 oninput="this.value = Math.abs(this.value)" required>
+                  </div>
+                  <div class="form-group col-md-3" id="reg1">
+                     <label for="inputAddress2"> Vatable Sale</label>
+                     <input type="number" class="form-control" id="vatable" step="any" name="vatable" min=0
+                        oninput="this.value = Math.abs(this.value)" value="0.00">
+                  </div>
+                  <div class="form-group col-md-2">
+                     <label for="inputAddress2" style="text-align: center;">Vat</label>
+                     <input type="number" class="form-control" id="vat" step="any" name="vat" min=0
+                        oninput="this.value = Math.abs(this.value)" required>
+                  </div>
+                  <div class="form-group col-md-2 d-none" id="reg">
+                     <label for="inputAddress">Regular Discount: </label>
+                     <input type="number" class="form-control" id="regular_discount" step="any" min=0
+                        oninput="this.value = Math.abs(this.value)" name="regular_discount" value="0.00">
+                  </div>
+                  <div class="form-group col-md-2">
+                     <label for="inputAddress2" style="text-align: center;">Net Sales</label>
+                     <input type="number" class="form-control" id="net_sales" step="any" name="net_sales" min=0
+                        oninput="this.value = Math.abs(this.value)" required>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group col-md-3 d-none" id="dis1">
+                     <label for="inputAddress">Vatexempt Sale: </label>
+                     <input type="number" class="form-control" id="vatexempt" step="any" min=0
+                        oninput="this.value = Math.abs(this.value)" name="vatexempt" value="0.00">
+                  </div>
+                  <div class="form-group col-md-3 d-none" id="dis2">
+                     <label for="inputAddress2" style="text-align: center;">Special Discount</label>
+                     <input type="number" class="form-control" id="special_discount" step="any" name="special_discount" min=0
+                        oninput="this.value = Math.abs(this.value)" value="0.00">
+                  </div>
+                  <div class="form-group col-md-3 d-none" id="dis3">
+                     <label for="inputAddress2" style="text-align: center;">Parker Name</label>
+                     <input type="text" class="form-control" id="parker_name" name="parker_name">
+                  </div>
+                  <div class="form-group col-md-3 d-none" id="dis4">
+                     <label for="inputAddress2" style="text-align: center;">Parker ID No.</label>
+                     <input type="text" class="form-control" id="parker_id" name="parker_id">
+                  </div>
+                  <input type="hidden" class="form-control" id="vat_adjust" step="any" name="vat_adjustment" min=0
+                     oninput="this.value = Math.abs(this.value)">
+                  <input type="hidden" class="form-control" id="vat_payable" step="any" name="vat_payable" min=0
+                     oninput="this.value = Math.abs(this.value)">
+               </div>
+               <div class="form-row">
+                  <button class="btn btn-small btn-success btn-block btn-lg col-md-12" id="comp" type="button">COMPUTE</button>
+               </div>
+               <div class="form-row d-none" id="dis5">
+                  <button type="submit" class="btn btn-primary btn-block btn-lg col-md-12 mt-3">SUBMIT</button>
+               </div>
+            </form>
+         </div>
+      </div>
+      <!-- end of card -->
+   </div>
+   <div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Manual Ticketing Transaction</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p style="color:red; text-align:center; text-transform: uppercase">{{ error }}</p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">BACK TO TRANSACTION</span>
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="container">
+      <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Manual Ticketing Transaction</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p style="color:green; text-align:center; text-transform: uppercase;">
+                     {% for message in messages %}{{ message }}{% endfor %}
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">BACK TO TRANSACTION</span>
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+   document.getElementById('bdate').valueAsDate = new Date();
+
+   window.addEventListener("load", function() {
+       var now = new Date();
+       var utcString = now.toISOString().substring(0,19);
+       var year = now.getFullYear();
+       var month = now.getMonth() + 1;
+       var day = now.getDate();
+       var hour = now.getHours();
+       var minute = now.getMinutes();
+       // var second = now.getSeconds();
+       var localDatetime = year + "-" +
+                         (month < 10 ? "0" + month.toString() : month) + "-" +
+                         (day < 10 ? "0" + day.toString() : day) + "T" +
+                         (hour < 10 ? "0" + hour.toString() : hour) + ":" +
+                         (minute < 10 ? "0" + minute.toString() : minute);
+       var datetimeField = document.getElementById("timein");
+       datetimeField.value = localDatetime;
+   });
+
+   window.addEventListener("load", function() {
+       var now = new Date();
+       var utcString = now.toISOString().substring(0,19);
+       var year = now.getFullYear();
+       var month = now.getMonth() + 1;
+       var day = now.getDate();
+       var hour = now.getHours();
+       var minute = now.getMinutes();
+       // var second = now.getSeconds();
+       var localDatetime = year + "-" +
+                         (month < 10 ? "0" + month.toString() : month) + "-" +
+                         (day < 10 ? "0" + day.toString() : day) + "T" +
+                         (hour < 10 ? "0" + hour.toString() : hour) + ":" +
+                         (minute < 10 ? "0" + minute.toString() : minute);
+       var datetimeField = document.getElementById("timeout");
+       datetimeField.value = localDatetime;
+   });
+
+   function calc()
+               {
+
+
+
+                   var oper = document.getElementById('transaction').value;
+
+                   if(oper === 'SENIOR_DISC' || oper === 'PWD_DISC')
+                   {
+
+                       var element = document.getElementById('dis1');
+                       element.classList.remove("d-none")
+                       var element1 = document.getElementById('dis2');
+                       element1.classList.remove("d-none")
+                       var element2 = document.getElementById('dis3');
+                       element2.classList.remove("d-none")
+                       var element3 = document.getElementById('dis4');
+                       element3.classList.remove("d-none");
+                       var element4 = document.getElementById('reg');
+                       element4.classList.add("d-none");
+                       document.getElementById('vatable').value = 0.00;
+                       var element5 = document.getElementById('reg1');
+                       element5.classList.add("d-none");
+                       document.getElementById('regular_discount').value = 0.00
+                       document.getElementById('vatable').value = 0.00
+
+
+
+                   }
+
+                   else if(oper === '--')
+                   {
+
+                       var element = document.getElementById('dis1');
+                       element.classList.add("d-none")
+                       var element1 = document.getElementById('dis2');
+                       element1.classList.add("d-none")
+                       var element2 = document.getElementById('dis3');
+                       element2.classList.add("d-none")
+                       var element3 = document.getElementById('dis4');
+                       element3.classList.add("d-none")
+                       var element4 = document.getElementById('reg');
+                       element4.classList.add("d-none");
+                       document.getElementById('vatexempt').value = 0.00;
+                       document.getElementById('special_discount').value = 0.00;
+                       document.getElementById('regular_discount').value = 0.00;
+                       var element5 = document.getElementById('reg1');
+                       element5.classList.remove("d-none");
+
+
+                   }
+                   else if(oper === 'REGULAR_DISC')
+                   {
+                       var element = document.getElementById('dis1');
+                       element.classList.add("d-none")
+                       var element1 = document.getElementById('dis2');
+                       element1.classList.add("d-none")
+                       var element2 = document.getElementById('dis3');
+                       element2.classList.add("d-none")
+                       var element3 = document.getElementById('dis4');
+                       element3.classList.add("d-none")
+
+                       var element4 = document.getElementById('reg');
+                       element4.classList.remove("d-none");
+                       document.getElementById('vatexempt').value = 0.00;
+                       document.getElementById('special_discount').value = 0.00;
+                       var element5 = document.getElementById('reg1');
+                       element5.classList.remove("d-none");
+
+
+                   }
+
+               }
+
+
+       document.getElementById('comp').onclick = function() {
+           var oper = document.getElementById('transaction').value;
+           var total = document.getElementById('total').value;
+           var vat =  document.getElementById('vat').value;
+           var vatable =  document.getElementById('vatable').value;
+
+           if (total === ""){
+               alert('Enter gross amount first')
+           } else {
+               var element6 = document.getElementById('dis5');
+               element6.classList.remove("d-none");
+           }
+
+           if (oper === '--'){
+
+               document.getElementById('vat').value = (total/1.12 * 0.12).toFixed(2);
+               let vat =  document.getElementById('vat').value;
+               document.getElementById('vatable').value = (total/1.12).toFixed(2);
+               document.getElementById('net_sales').value = (total - vat).toFixed(2);
+               document.getElementById('vat_payable').value = vat;
+               document.getElementById('vat_adjust').value = '0.00';
+
+
+           }
+           else if (oper === 'SENIOR_DISC' || oper === 'PWD_DISC'){
+               document.getElementById('vat').value = (total/1.12 * 0.12).toFixed(2);
+               let vat =  document.getElementById('vat').value;
+               document.getElementById('vatexempt').value = (total/1.12).toFixed(2);
+               let vatex =  document.getElementById('vatexempt').value;
+               document.getElementById('special_discount').value = (vatex * 0.2).toFixed(2);
+               let special = document.getElementById('special_discount').value
+               document.getElementById('net_sales').value = (total - vat - special).toFixed(2);
+               // let vat_p = document.getElementById('vat_payable').value;
+               document.getElementById('vat_adjust').value = vat;
+               document.getElementById('vat_payable').value = '0.00';
+
+
+
+           }
+           else if (oper === 'REGULAR_DISC') {
+               document.getElementById('vat').value = (total/1.12 * 0.12).toFixed(2);
+               let vat =  document.getElementById('vat').value;
+               document.getElementById('vatable').value = (total/1.12).toFixed(2);
+               let vatex =  document.getElementById('vatable').value;
+               document.getElementById('regular_discount').value = (vatex * 0.2).toFixed(2);
+               let reg = document.getElementById('regular_discount').value
+               document.getElementById('net_sales').value = (total - vat - reg).toFixed(2);
+               document.getElementById('vat_payable').value = vat;
+               document.getElementById('vat_adjust').value = '0.00';
+           }
+
+       }
+
+</script>
+{% endblock %}

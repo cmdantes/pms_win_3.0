@@ -4,58 +4,49 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('income', views.income, name='income'),
-    path('bir', views.bir, name='bir'),
 
-    # url("cash", views.Cash.as_view()),
+    url(r"^cashier$", views.CashierPDF.view, name='cashier'),
+    url(r"^cashierpdf$", views.CashierPDF.renderPDF, name='cashierpdf'),
 
-    path('cash', views.cash, name='cash'),
-    path('cashpdf', views.cashpdf, name='cashpdf'),
-    path('cashallpdf', views.cashallpdf, name='cashallpdf'),
-    path('cashpospdf', views.cashpospdf, name='cashpospdf'),
+    url(r"^cashierExcel$", views.CashierExcel.as_view(), name='cashierxl'),
 
-    url("vehicle", views.Vehicle.as_view(), name='vehicle'),
+    url(r"^transaction$", views.Transactions.view, name='transaction'),
+    url(r"^transactionpdf$", views.Transactions.renderPDF, name='transactionpdf'),
 
-    # path('vehiclepdf', views.vehiclepdf, name='vehiclepdf'),
-    path('vehiclepdfbdate', views.vehiclepdfbdate, name='vehiclepdfbdate'),
+    url(r"^transactionxl$", views.TransactionsExcel.as_view(), name='transactionxl'),
 
-    url("cashier", views.Cashier.as_view(), name='cashier'),
+    url(r"^manual$", views.ManualPDF.view, name='manual'),
+    url(r"^manualpdf$", views.ManualPDF.renderPDF, name='manualpdf'),
 
-    # path('cashier', views.cashier, name='cashier'),
-    # path('cashierpdf', views.cashierpdf, name='cashierpdf'),
-    # path('cashierpospdf', views.cashierpospdf, name='cashierpospdf'),
-    # path('cashierallpdf', views.cashierallpdf, name='cashierallpdf'),
+    url(r"^manualtrans$", views.ManualTransPDF.view, name='manualtrans'),
+    url(r"^manualtranspdf$", views.ManualTransPDF.renderPDF, name='manualtranspdf'),
 
-    path('transaction', views.transaction, name='transaction'),
-    path('transactionpdf', views.transactionpdf, name='transactionpdf'),
+    url(r"^manualxl$", views.ManualExcel.as_view(), name='manualxl'),
 
-    path('cashierxl', views.cashierxl, name='cashierxl'),
-    path('excel', views.excel, name='excel'),
-    path('cashierposexcel', views.cashierposexcel, name='cashierposexcel'),
-    path('cashierallexcel', views.cashierallexcel, name='cashierallexcel'),
+    url(r"^cash$", views.Cash.view, name='cash'),
+    url(r"^cashpdf$", views.Cash.renderPDF, name='cashpdf'),
 
-    path('transactionxl', views.transactionxl, name='transactionxl'),
-    path('transactionexcel', views.transactionexcel, name='transactionexcel'),
+    url(r"^vehicle$", views.Vehicle.view, name='vehicle'),
+    url(r"^vehiclepdf$", views.Vehicle.renderPDF, name='vehiclepdf'),
 
-    path('stay_in', views.stay_in, name='stay_in'),
-    path('stay_inpdf', views.stay_inpdf, name='stay_inpdf'),
-    path('birmonthly', views.birmonthly, name='birmonthly'),
+    url(r"^stay_in$", views.StayIn.view, name='stay_in'),
+    url(r"^stay_inpdf$", views.StayIn.renderPDF, name='stay_inpdf'),
 
-    path('discountpos', views.discountpos, name='discountpos'),
-    path('seniorpospdf', views.seniorpospdf, name='seniorpospdf'),
+    url(r"^discount$", views.Discounts.view, name='discount'),
+    url(r"^discountpdf$", views.Discounts.renderPDF, name='discountpost'),
 
-    path('example', views.example, name='example'),
+    url(r"^birmonthly$", views.BIRMonthly.view, name='birmonthly'),
+    url(r"^birmonthlypdf$", views.BIRMonthly.renderPDF, name='birmonthlypdf'),
 
-    # url("manual", views.Manual.as_view(), name='manual'),
+    url(r"^occupancy$", views.Occupancies.view, name='occupancy'),
+    url(r"^occupancypdf$", views.Occupancies.renderPDF, name='occupancypdf'),
 
-    path('manual', views.manual, name='manual'),
-    path('manualpdf', views.manualpdf, name='manualpdf'),
-    path('manualxl', views.manualxl, name='manualxl'),
-    path('manualexcel', views.manualexcel, name='manualexcel'),
+    url(r"^ticket$", views.ManualTicketEncoding.as_view(), name='example'),
+
+    url(r"^zoroamount$", views.ZeroAmount.view, name='zeramount'),
+    url(r"^zoroamountpdf$", views.ZeroAmount.renderPDF, name='zeramountpdf'),
+
     path('manualreport', views.manualreport, name='manualreport'),
-
-    path('occupancy', views.occupancy, name='occupancy'),
-    path('occupancypdf', views.occupancypdf, name='occupancypdf'),
 
     path('register', views.register, name='register'),
     path('register_done', views.register_done, name='register_done'),

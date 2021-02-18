@@ -1,76 +1,76 @@
 {% extends 'base/main.html' %}
-
 {% block content %}
 {% block title %} Exited Vehicles Report {% endblock %}
 <h1 class="text-center mb-4 mt-5 pt-5 white1">Exited Vehicles Report</h1>
 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active white1" id="home-tab" data-toggle="tab" href="#timeout" role="tab"
-            aria-controls="home" aria-selected="true">Time Exit Range</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link white1" id="profile-tab" data-toggle="tab" href="#bdate" role="tab" aria-controls="profile"
-            aria-selected="false">Business Date</a>
-    </li>
-
+   <li class="nav-item">
+      <a class="nav-link active white1" id="home-tab" data-toggle="tab" href="#timeout" role="tab"
+         aria-controls="home" aria-selected="true">Time Exit Range</a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link white1" id="profile-tab" data-toggle="tab" href="#bdate" role="tab" aria-controls="profile"
+         aria-selected="false">Business Date</a>
+   </li>
 </ul>
-<di v class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="timeout" role="tabpanel" aria-labelledby="home-tab">
-        <div class="container">
-            <div class="card text-center col-md-4 offset-md-4">
-                {% if error %}
-                <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
-                <br>
-
-                {% endif %}
-
-                <form action="{% url 'vehicle' %}" method="POST">
-                    {% csrf_token %}
-
-                    <br>
-                    <Label>Date-time from: </Label>
-                    <input type="datetime-local" class="form-control" name="start" step="1">
-                    <br>
-                    <Label>Date-time to: </Label>
-                    <input type="datetime-local" class="form-control" name="end" step="1">
-                    <br>
-
-                    <input type="submit" class="btn btn-primary btn-block mb-2">
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="tab-pane fade show active" id="bdate" role="tabpanel" aria-labelledby="home-tab">
-        <div class="container">
-            <div class="card text-center col-md-4 offset-md-4">
-                {% if error %}
-                <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
-                <br>
-
-                {% endif %}
-
-                <form action="{% url 'vehiclepdfbdate' %}" method="POST">
-                    {% csrf_token %}
-
-                    <br>
-                    <Label>Start Date: </Label>
-                    <input type="date" class="form-control" name="start">
-                    <br>
-                    <Label>End Date: </Label>
-                    <input type="date" class="form-control" name="end">
-                    <br>
-
-                    <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-    <p class="text-center">ISA Copyright &copy; 2019</p>
-</footer>
-
-
-
-
+<div class="tab-content" id="myTabContent">
+   <div class="tab-pane fade show active" id="timeout" role="tabpanel" aria-labelledby="home-tab">
+      <div class="container" >
+         <div class="card text-center col-md-5 offset-md-3 withtime" >
+<!--            {% if error %}-->
+<!--            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>-->
+<!--            <br>-->
+<!--            {% endif %}-->
+            <form action="{% url 'vehiclepdf' %}" method="POST">
+               {% csrf_token %}
+               <br>
+               <label>Start & End Date-time</label>
+               <input name="datetimerange" id="datetimerange" style="width: 425px;" type="text" class="form-control">
+               <br>
+               <input type="submit" class="btn btn-primary btn-block mb-2">
+            </form>
+         </div>
+      </div>
+   </div>
+   <div class="tab-pane fade show active" id="bdate" role="tabpanel" aria-labelledby="home-tab">
+      <div class="container">
+         <div class="card text-center col-md-4 offset-md-4 notime">
+            {% if error %}
+            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
+            <br>
+            {% endif %}
+            <form action="{% url 'vehiclepdf' %}" method="POST">
+               {% csrf_token %}
+               <br>
+               <label>Start & End Date</label>
+               <input name="daterange" id="daterange" class="form-control">
+               <br>
+               <input type="submit" class="btn btn-primary btn-block mb-2">
+            </form>
+         </div>
+      </div>
+   </div>
+   <footer>
+      <p class="text-center">ISA Copyright &copy; 2019</p>
+   </footer>
+</div>
+<div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+   aria-hidden="true" data-backdrop="static" data-keyboard="false" href="#">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Vehicle Report</h5>
+            <a href="{% url 'vehicle' %}">
+            <button type="button" class="close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </a>
+         </div>
+         <div class="modal-body">
+            <p style="color:red; text-align:center; text-transform: uppercase">{{ error }}</p>
+         </div>
+         <div class="modal-footer">
+         </div>
+      </div>
+   </div>
+</div>
 {% endblock %}

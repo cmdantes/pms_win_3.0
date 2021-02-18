@@ -7,16 +7,17 @@ class Tblpermit(models.Model):
     pc = models.CharField(db_column='PC', max_length=100, blank=True, null=True)  # Field name made lowercase.
     min = models.CharField(db_column='MIN', max_length=255, blank=True, null=True)  # Field name made lowercase.
     serial = models.CharField(db_column='Serial', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    accred = models.CharField(db_column='Accred', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    dateissued = models.CharField(db_column='DateIssued', max_length=255, blank=True,
-                                  null=True)  # Field name made lowercase.
+    # accred = models.CharField(db_column='Accred', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    dateissued = models.CharField(db_column='DateIssued', max_length=255, blank=True,null=True)  # Field name made lowercase.
     permit = models.CharField(db_column='Permit', max_length=255, blank=True, null=True)  # Field name made lowercase.
     vatreg = models.CharField(db_column='VATReg', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    accreddate = models.CharField(db_column='AccredDate', max_length=255, blank=True,
-                                  null=True)  # Field name made lowercase.
+    accreddate = models.CharField(db_column='AccredDate', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    canceldate = models.CharField(db_column='CancelDate', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    remarks = models.CharField(db_column='Remarks', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    validuntil = models.CharField(db_column='ValidUntil', max_length=255, blank=True,null=True)  # Field name made lowercase.
 
     class Meta:
-        db_table = 'tblpermit'
+        db_table = 'permit'
 
 
 class Companydb(models.Model):
@@ -35,7 +36,6 @@ class Companydb(models.Model):
 
 class Transaction(models.Model):
     pos_name = models.CharField(max_length=45, blank=True, null=True)
-    pos = models.ForeignKey(Tblpermit, on_delete=models.CASCADE, null=True, related_name='name_pos')
     cardcode = models.CharField(max_length=45, blank=True, null=True)
     or_number = models.CharField(max_length=45, blank=True, null=True)
     time_in = models.DateTimeField(blank=True, null=True)
@@ -237,7 +237,6 @@ class Users(models.Model):
 
 
 class TransactionZeroAmount(models.Model):
-    transaction_datetime = models.DateTimeField(blank=True, null=True)
     business_date = models.DateField(blank=True, null=True)
     vehicle_type = models.CharField(max_length=45, blank=True, null=True)
     time_in = models.DateTimeField(blank=True, null=True)
@@ -248,6 +247,8 @@ class TransactionZeroAmount(models.Model):
     parker_name = models.CharField(max_length=45, blank=True, null=True)
     parker_address = models.CharField(max_length=45, blank=True, null=True)
     parker_ref_id = models.CharField(max_length=45, blank=True, null=True)
+    transaction_datetime = models.DateTimeField(blank=True, null=True)
+    time_stay = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         db_table = 'transaction_zero_amount'

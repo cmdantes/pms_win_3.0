@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load isa_extras %}
 <html lang="en">
    <head>
       <meta charset="UTF-8">
@@ -57,6 +58,16 @@
          border-collapse: collapse;
          width: 100%;
          }
+         th.header-number {
+         border-bottom: none;
+         text-align: right;
+         padding-bottom: 0px;
+         }
+         th.header-name {
+         border-top: none;
+         text-align: center;
+         padding-top: 0px;
+         }
          p {
          font-size: 10px;
          padding: 0px;
@@ -73,6 +84,11 @@
          }
          tfoot {
          font-weight: bold;
+         }
+         table.appendix {
+         width: 100%;
+         border: none;!important
+         color: blue;
          }
       </style>
    </head>
@@ -93,7 +109,7 @@
       </div>
       <table>
          <thead>
-            <th style="width: 30.4%">ALL POS</th>
+            <th style="width: 30.4%;">ALL POS</th>
             <th style="width: 3.2%">Gross Sales</th>
             <th>VATable Sales</th>
             <th>VAT Amount</th>
@@ -147,47 +163,110 @@
       </table>
       {% for i in pos_name %}
       <br>
+      <br>
       <table>
          <thead>
-            <th colspan="29" style="text-align: center;"> {{i.pc}}(MIN# {{i.min}})</th>
+            <th colspan="28" style="text-align: center;"> {{i.pc}}(MIN# {{i.min}})</th>
          </thead>
          <thead>
-            <th>Date</th>
-            <th>Pos</th>
-            <th>Beginning OR No.</th>
-            <th>Ending OR No.</th>
-            <th>Grand Accum Sales Ending Balance</th>
-            <th>Grand Accum Sales Beginning Balance</th>
-            <th>Gross Sales for the Day</th>
-            <th>Sales issued with Manual SI/OR (per RR 16-2018)</th>
-            <th>Gross Sales From POS</th>
-            <th>VATable Sales</th>
-            <th>VAT Amount</th>
-            <th>VAT-Exempt Sales</th>
-            <th>Zero Rated Sales</th>
-            <th>Regular Discount</th>
-            <th>Special Discount (SC/PWD)</th>
-            <th>Returns</th>
-            <th>Void</th>
-            <th>Total Deductions</th>
-            <th>Vat Special Discount</th>
-            <th>VAT on Returns</th>
-            <th>Others</th>
-            <th>Total VAT Adjustment</th>
-            <th>Vat Payable</th>
-            <th>Net Sales</th>
-            <th>Other Income</th>
-            <th>Sales Overrun/Overflow</th>
-            <th>Total Net Sales</th>
-            <th>Reset Counter</th>
-            <th>Remarks</th>
+            <th style="width: 30.4%;" class="header-number">1</th>
+            <th style="width: 3.2%" class="header-number">2</th>
+            <th class="header-number">3</th>
+            <th class="header-number">4</th>
+            <th class="header-number">5</th>
+            <th class="header-number">6</th>
+            <th class="header-number">7</th>
+            <th class="header-number">8</th>
+            <th class="header-number">9</th>
+            <th class="header-number">10</th>
+            <th class="header-number">11</th>
+            <th class="header-number">12</th>
+            <th class="header-number">13</th>
+            <th class="header-number">14</th>
+            <th class="header-number">15</th>
+            <th class="header-number">16</th>
+            <th class="header-number">17</th>
+            <th class="header-number">18</th>
+            <th class="header-number">19</th>
+            <th class="header-number">20</th>
+            <th class="header-number">21</th>
+            <th class="header-number">22</th>
+            <th class="header-number">23</th>
+            <th class="header-number">24</th>
+            <th class="header-number">25</th>
+            <th class="header-number">26</th>
+            <th class="header-number">27</th>
+            <th class="header-number">28</th>
+         </thead>
+         <thead>
+            <th class="header-name">Date</th>
+            <th class="header-name">Beginning OR No.</th>
+            <th class="header-name">Ending OR No.</th>
+            <th class="header-name">Grand Accum Sales Ending Balance</th>
+            <th class="header-name">Grand Accum Sales Beginning Balance</th>
+            <th class="header-name">Gross Sales for the Day</th>
+            <th class="header-name">Sales issued with Manual SI/OR (per RR 16-2018)</th>
+            <th class="header-name">Gross Sales From POS</th>
+            <th class="header-name">VATable Sales</th>
+            <th class="header-name">VAT Amount</th>
+            <th class="header-name">VAT-Exempt Sales</th>
+            <th class="header-name">Zero Rated Sales</th>
+            <th class="header-name">Regular Discount</th>
+            <th class="header-name">Special Discount (SC/PWD)</th>
+            <th class="header-name">Returns</th>
+            <th class="header-name">Void</th>
+            <th class="header-name">Total Deductions</th>
+            <th class="header-name">Vat Special Discount</th>
+            <th class="header-name">VAT on Returns</th>
+            <th class="header-name">Others</th>
+            <th class="header-name">Total VAT Adjustment</th>
+            <th class="header-name">Vat Payable</th>
+            <th class="header-name">Net Sales</th>
+            <th class="header-name">Other Income</th>
+            <th class="header-name">Sales Overrun/Overflow</th>
+            <th class="header-name">Total Net Sales</th>
+            <th class="header-name">Reset Counter</th>
+            <th class="header-name">Remarks</th>
          </thead>
          <tbody>
-            {% for incom in sampsss %}
+            {% for j in days %}
+            {% for incom in all %}
             {% if i.pc == incom.pos_name %}
+            {% if not incom.pos_name in i.pc %}
             <tr>
-               <td style="text-align: center">{{ incom.business_date|date:"m-d-Y" }}</td>
-               <td style="text-align: center">{{incom.pos_name}}</td>
+               <td style="text-align: center">{{ j|date:"m-d-Y" }}</td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>None</td>
+               <td>None</td>
+               <td>None</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>None</td>
+               <td>None</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>None</td>
+               <td></td>
+               <td></td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0</td>
+               <td></td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0</td>
+               <td></td>
+            </tr>
+            {% else %}
+            {% if j|date:"m-d-Y" in incom.business_date|date:"m-d-Y" %}
+            <tr>
+               <td style="text-align: center" class="deit">{{ incom.business_date|date:"m-d-Y" }}</td>
                <td>{{ incom.beginning_or }}</td>
                <td>{{ incom.ending_or }}</td>
                <td>{{ incom.accum_sales_ending }}</td>
@@ -214,18 +293,56 @@
                <td>{{ incom.sales_overrun_overflow }}</td>
                <td>{{ incom.total_net_sales|floatformat:2 }}</td>
                <td>{{ incom.reset_counter }}</td>
+               <td>{{ incom.remarks }}</td>
+            </tr>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% for g in nems %}
+            {% if i.pc == g.pc%}
+            {% if j|date:"m-d-Y" in g.business_date|safe  %}
+            {% else %}
+            <tr>
+               <td style="text-align: center">{{ j|date:"m-d-Y" }}</td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>None</td>
+               <td>None</td>
+               <td>None</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>None</td>
+               <td>None</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>None</td>
+               <td></td>
+               <td></td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0</td>
+               <td></td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0.00</td>
+               <td>0</td>
                <td></td>
             </tr>
             {% endif %}
+            {% endif %}
+            {% endfor %}
             {% endfor %}
          </tbody>
          <tfoot>
-         <tr>
-               <th colspan="8" style="text-align: center">TOTAL</th>
-
-            {% if i.pc  %}
-
-            {% for incom in incomerg %}
+            <tr>
+               <th colspan="7" style="text-align: center">TOTAL</th>
+               {% if i.pc  %}
+               {% for incom in incomerg %}
                {% if i.pc in incom.pos_name %}
                <td>{{ incom.gross_sales_day|default:"nothing" }}</td>
                <td>{{ incom.vatable_sales|floatformat:2 }}</td>
@@ -247,10 +364,9 @@
                <td>{{ incom.sales_overrun_overflow }}</td>
                <td>{{ incom.total_net_sales|floatformat:2 }}</td>
                <td>{{ incom.reset_counter }}</td>
-            <td></td>
-            {% endif %}
-            {% endfor %}
-            {% if i.pc in how %}
+               <td>{{ incom.remarks }}</td>
+               {% endif %}
+               {% empty %}
                <td>None</td>
                <td></td>
                <td></td>
@@ -271,119 +387,115 @@
                <td>0.00</td>
                <td></td>
                <td>0</td>
-            <td></td>
-            {% endif %}
-            {% endif %}
-
-
+               <td></td>
+               {% endfor %}
+               {% endif %}
             </tr>
          </tfoot>
       </table>
       <br>
       <br>
       {% endfor %}
-      <table>
-         <br>
-         <thead>
-            <th colspan="29" style="text-align: center;">MANUAL</th>
-         </thead>
-         <thead>
-            <th>Date</th>
-            <th>Pos</th>
-            <th>Beginning OR No.</th>
-            <th>Ending OR No.</th>
-            <th>Grand Accum Sales Ending Balance</th>
-            <th>Grand Accum Sales Beginning Balance</th>
-            <th>Gross Sales for the Day</th>
-            <th>Sales issued with Manual SI/OR (per RR 16-2018)</th>
-            <th>Gross Sales From POS</th>
-            <th>VATable Sales</th>
-            <th>VAT Amount</th>
-            <th>VAT-Exempt Sales</th>
-            <th>Zero Rated Sales</th>
-            <th>Regular Discount</th>
-            <th>Special Discount (SC/PWD)</th>
-            <th>Returns</th>
-            <th>Void</th>
-            <th>Total Deductions</th>
-            <th>Vat Special Discount</th>
-            <th>VAT on Returns</th>
-            <th>Others</th>
-            <th>Total VAT Adjustment</th>
-            <th>Vat Payable</th>
-            <th>Net Sales</th>
-            <th>Other Income</th>
-            <th>Sales Overrun/Overflow</th>
-            <th>Total Net Sales</th>
-            <th>Reset Counter</th>
-            <th>Remarks</th>
-         </thead>
-         <tbody>
-               {% for incom in incomerm %}
-            <tr>
-               <td style="text-align: center">{{ incom.business_date|date:"m-d-Y" }}</td>
-               <td style="text-align: center">manual</td>
-               <td>{{ incom.beginning_or }}</td>
-               <td>{{ incom.ending_or }}</td>
-               <td>{{ incom.accum_sales_ending }}</td>
-               <td>{{ incom.accum_sales_beginning }}</td>
-               <td>{{ incom.gross_sales_pos }}</td>
-               <td>{{ incom.manual_or }}</td>
-               <td>{{ incom.gross_sales_pos }}</td>
-               <td>{{ incom.vatable_sales|floatformat:2 }}</td>
-               <td>{{ incom.vat_amount|floatformat:2 }}</td>
-               <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>
-               <td>{{ incom.zero_rated_sales }}</td>
-               <td>{{ incom.regular_discount }}</td>
-               <td>{{ incom.special_discount }}</td>
-               <td>{{ incom.returns }}</td>
-               <td>{{ incom.void }}</td>
-               <td>{{ incom.total_deductions }}</td>
-               <td>{{ incom.vat_special_discount }}</td>
-               <td>{{ incom.vat_on_returns }}</td>
-               <td>{{ incom.other }}</td>
-               <td>{{ incom.total_vat_adjustment }}</td>
-               <td>{{ incom.vat_payable|floatformat:2 }}</td>
-               <td>{{ incom.net_sales|floatformat:2 }}</td>
-               <td>{{ incom.other_income }}</td>
-               <td>{{ incom.sales_overrun_overflow }}</td>
-               <td>{{ incom.total_net_sales|floatformat:2 }}</td>
-               <td>{{ incom.reset_counter }}</td>
-               <td></td>
-            </tr>
-            {% if empty %}
-            {% endif %}
-            {% endfor %}
-         </tbody>
-         <tfoot>
-            {% for incom in incomermg %}
-            <tr>
-               <th colspan="8" style="text-align: center">TOTAL</th>
-               <td>{{ incom.gross_sales_day }}</td>
-               <td>{{ incom.vatable_sales|floatformat:2 }}</td>
-               <td>{{ incom.vat_amount|floatformat:2 }}</td>
-               <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>
-               <td>{{ incom.zero_rated_sales }}</td>
-               <td>{{ incom.regular_discount }}</td>
-               <td>{{ incom.special_discount }}</td>
-               <td>{{ incom.returns }}</td>
-               <td>{{ incom.void }}</td>
-               <td>{{ incom.total_deductions }}</td>
-               <td>{{ incom.vat_special_discount }}</td>
-               <td>{{ incom.vat_on_returns }}</td>
-               <td>{{ incom.other }}</td>
-               <td>{{ incom.total_vat_adjustment }}</td>
-               <td>{{ incom.vat_payable|floatformat:2 }}</td>
-               <td>{{ incom.net_sales|floatformat:2 }}</td>
-               <td>{{ incom.other_income }}</td>
-               <td>{{ incom.sales_overrun_overflow }}</td>
-               <td>{{ incom.total_net_sales|floatformat:2 }}</td>
-               <td>{{ incom.reset_counter }}</td>
-               <td></td>
-            </tr>
-            {% endfor %}
-         </tfoot>
-      </table>
+      <!--      <table>-->
+      <!--         <br>-->
+      <!--         <thead>-->
+      <!--            <th colspan="29" style="text-align: center;">MANUAL</th>-->
+      <!--         </thead>-->
+      <!--         <thead>-->
+      <!--            <th>Date</th>-->
+      <!--            <th>Pos</th>-->
+      <!--            <th>Beginning OR No.</th>-->
+      <!--            <th>Ending OR No.</th>-->
+      <!--            <th>Grand Accum Sales Ending Balance</th>-->
+      <!--            <th>Grand Accum Sales Beginning Balance</th>-->
+      <!--            <th>Gross Sales for the Day</th>-->
+      <!--            <th>Sales issued with Manual SI/OR (per RR 16-2018)</th>-->
+      <!--            <th>Gross Sales From POS</th>-->
+      <!--            <th>VATable Sales</th>-->
+      <!--            <th>VAT Amount</th>-->
+      <!--            <th>VAT-Exempt Sales</th>-->
+      <!--            <th>Zero Rated Sales</th>-->
+      <!--            <th>Regular Discount</th>-->
+      <!--            <th>Special Discount (SC/PWD)</th>-->
+      <!--            <th>Returns</th>-->
+      <!--            <th>Void</th>-->
+      <!--            <th>Total Deductions</th>-->
+      <!--            <th>Vat Special Discount</th>-->
+      <!--            <th>VAT on Returns</th>-->
+      <!--            <th>Others</th>-->
+      <!--            <th>Total VAT Adjustment</th>-->
+      <!--            <th>Vat Payable</th>-->
+      <!--            <th>Net Sales</th>-->
+      <!--            <th>Other Income</th>-->
+      <!--            <th>Sales Overrun/Overflow</th>-->
+      <!--            <th>Total Net Sales</th>-->
+      <!--            <th>Reset Counter</th>-->
+      <!--            <th>Remarks</th>-->
+      <!--         </thead>-->
+      <!--         <tbody>-->
+      <!--            {% for incom in incomerm %}-->
+      <!--            <tr>-->
+      <!--               <td style="text-align: center">{{ incom.business_date|date:"m-d-Y" }}</td>-->
+      <!--               <td style="text-align: center">manual</td>-->
+      <!--               <td>{{ incom.beginning_or }}</td>-->
+      <!--               <td>{{ incom.ending_or }}</td>-->
+      <!--               <td>{{ incom.accum_sales_ending }}</td>-->
+      <!--               <td>{{ incom.accum_sales_beginning }}</td>-->
+      <!--               <td>{{ incom.gross_sales_pos }}</td>-->
+      <!--               <td>{{ incom.manual_or }}</td>-->
+      <!--               <td>{{ incom.gross_sales_pos }}</td>-->
+      <!--               <td>{{ incom.vatable_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.vat_amount|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.zero_rated_sales }}</td>-->
+      <!--               <td>{{ incom.regular_discount }}</td>-->
+      <!--               <td>{{ incom.special_discount }}</td>-->
+      <!--               <td>{{ incom.returns }}</td>-->
+      <!--               <td>{{ incom.void }}</td>-->
+      <!--               <td>{{ incom.total_deductions }}</td>-->
+      <!--               <td>{{ incom.vat_special_discount }}</td>-->
+      <!--               <td>{{ incom.vat_on_returns }}</td>-->
+      <!--               <td>{{ incom.other }}</td>-->
+      <!--               <td>{{ incom.total_vat_adjustment }}</td>-->
+      <!--               <td>{{ incom.vat_payable|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.net_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.other_income }}</td>-->
+      <!--               <td>{{ incom.sales_overrun_overflow }}</td>-->
+      <!--               <td>{{ incom.total_net_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.reset_counter }}</td>-->
+      <!--               <td></td>-->
+      <!--            </tr>-->
+      <!--            {% endfor %}-->
+      <!--         </tbody>-->
+      <!--         <tfoot>-->
+      <!--            {% for incom in incomermg %}-->
+      <!--            <tr>-->
+      <!--               <th colspan="8" style="text-align: center">TOTAL</th>-->
+      <!--               <td>{{ incom.gross_sales_day }}</td>-->
+      <!--               <td>{{ incom.vatable_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.vat_amount|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.zero_rated_sales }}</td>-->
+      <!--               <td>{{ incom.regular_discount }}</td>-->
+      <!--               <td>{{ incom.special_discount }}</td>-->
+      <!--               <td>{{ incom.returns }}</td>-->
+      <!--               <td>{{ incom.void }}</td>-->
+      <!--               <td>{{ incom.total_deductions }}</td>-->
+      <!--               <td>{{ incom.vat_special_discount }}</td>-->
+      <!--               <td>{{ incom.vat_on_returns }}</td>-->
+      <!--               <td>{{ incom.other }}</td>-->
+      <!--               <td>{{ incom.total_vat_adjustment }}</td>-->
+      <!--               <td>{{ incom.vat_payable|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.net_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.other_income }}</td>-->
+      <!--               <td>{{ incom.sales_overrun_overflow }}</td>-->
+      <!--               <td>{{ incom.total_net_sales|floatformat:2 }}</td>-->
+      <!--               <td>{{ incom.reset_counter }}</td>-->
+      <!--               <td></td>-->
+      <!--            </tr>-->
+      <!--            {% endfor %}-->
+      <!--         </tfoot>-->
+      <!--      </table>-->
       <br>
       <br>
       <table>
@@ -429,7 +541,7 @@
                <td>{{ incom.vat_on_returns }}</td>
                <td>{{ incom.other }}</td>
                <td>{{ incom.vat_special_discount }}</td>
-               <td>{{ incom.vat_special_discount|floatformat:2 }}</td>
+               <td>{{ incom.vat_payable|floatformat:2 }}</td>
                <td>{{ incom.net_sales|floatformat:2 }}</td>
                <td>{{ incom.other_income }}</td>
                <td>{{ incom.sales_overrun_overflow }}</td>
@@ -438,6 +550,32 @@
                <td></td>
             </tr>
             {% endfor %}
+            <!-- {% for incom in incomer4 %}
+               <tr>
+                  <th colspan="1">GRAND TOTAL*</th>
+                  <td>{{ incom.gross_sales_day }}</td>
+                  <td>{{ incom.vatable_sales|floatformat:2 }}</td>
+                  <td>{{ incom.vat_amount|floatformat:2 }}</td>
+                  <td>{{ incom.vat_exempt_sales|floatformat:2 }}</td>
+                  <td>{{ incom.zero_rated_sales }}</td>
+                  <td>{{ incom.regular_discount }}</td>
+                  <td>{{ incom.special_discount }}</td>
+                  <td>{{ incom.returns }}</td>
+                  <td>{{ incom.void }}</td>
+                  <td>{{ incom.total_deductions }}</td>
+                  <td>{{ incom.vat_special_discount }}</td>
+                  <td>{{ incom.vat_on_returns }}</td>
+                  <td>{{ incom.other }}</td>
+                  <td>{{ incom.vat_special_discount }}</td>
+                  <td>{{ incom.vat_special_discount|floatformat:2 }}</td>
+                  <td>{{ incom.net_sales|floatformat:2 }}</td>
+                  <td>{{ incom.other_income }}</td>
+                  <td>{{ incom.sales_overrun_overflow }}</td>
+                  <td>{{ incom.total_net_sales|floatformat:2 }}</td>
+                  <td>{{ incom.reset_counter }}</td>
+                  <td></td>
+               </tr>
+               {% endfor %} -->
          </tfoot>
       </table>
       <div class="footer">
@@ -450,5 +588,124 @@
             nearest centavo
          </p>
       </div>
+      <table class="appendix">
+         <thead>
+            <th style="width: 2%">Column</th>
+            <th>Description</th>
+         </thead>
+         <tbody>
+            <tr>
+               <td style="text-align: center">1</td>
+               <td style="text-align: left!important">This column will start at the first day of the month to the last day of the month.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">2</td>
+               <td style="text-align: left">This column shows the beginning O.R. number of the day.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">3</td>
+               <td style="text-align: left">This column shows the ending O.R. number of the day.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">4</td>
+               <td style="text-align: left">This column shows the Grand Total Accumulated Gross Sales ending balance of the day. - It is the grand total gross sales from day 1 to the end of this business day.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">5</td>
+               <td style="text-align: left">This column shows the Grand Total Accumulated Gross Sales beginning balance of the day. - It is the grand total gross sales from day 1 to the previous business day.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">6</td>
+               <td style="text-align: left">This column represents the Total Gross Sales for the day. This amount can be counter checked also by subtracting the ending balance with the beginning balance of the day of the Grand Total Accumulated Gross Sales.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">7</td>
+               <td style="text-align: left">This column has a default value of zero as we do not use this column because our system does not provide voiding transactions.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">8</td>
+               <td style="text-align: left">This column shows the Gross Sales from POS for the day, it is in this case, the same with column 6.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">9</td>
+               <td style="text-align: left">This column represents the VATable Sales for the day.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">10</td>
+               <td style="text-align: left">This column represents the VAT Amount, it is based on the amount of Gross Sales of the day. Please take note that any discount given to the parker can not be detected from the Gross Sales in the computation of VAT Amount.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">11</td>
+               <td style="text-align: left">This column represents the VAT Exempt Sales for the day.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">12</td>
+               <td style="text-align: left">This column has the default value of zero as we do not use this column because parker can not claim zero rated incentive on the parking fee.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">13</td>
+               <td style="text-align: left">This column represents the Regular Discount given to the parker. Please take note that the VAT Amount portion on the discount shall not be included in the discount per BIR.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">14</td>
+               <td style="text-align: left">This column represent the Special Discount given to the Senior Citizen / PWD. Please take note that even it is free of charge to Senior Citizen/PWD, the transaction shall be treated as a 100% discount from the gross amount.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">15</td>
+               <td style="text-align: left">This column has the default value of zero as we do not use this column because the system has no Void/Cancelled/Returns transactions.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">16</td>
+               <td style="text-align: left">This column has the default value of zero as we do not use this column because the system has no Void/Cancelled/Returns transactions.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">17</td>
+               <td style="text-align: left">This column is the sum total of columns 13 to 16, it represents the total sales discounts given, this sales discounts amount shall be deducted from the gross sales to arrive at the Net Sales in the income tax report.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">18</td>
+               <td style="text-align: left">This column represents the VAT on Special Discount allowed by the law given to the Senior Citizen / PWD.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">19</td>
+               <td style="text-align: left">This column has the default value of zero as we do not use this column because the system has no Void/Cancelled/Returns transactions.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">20</td>
+               <td style="text-align: left">This column has the default value of zero as we do not use this column because the system has no Other Adjustments on VAT</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">21</td>
+               <td style="text-align: left">This column represents the Total Adjustments or Deductions on VAT which is allowed by the law.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">22</td>
+               <td style="text-align: left">This column represents the total VAT Amount Payable to the BIR. This amount can be counter checked also by subtracting column 10 with column 21.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">23</td>
+               <td style="text-align: left">This column represents the Net Sales Amount for the day. <b>Please take note that this Net Sales AMount iw without VAT.</b> This amount can be counter check also by subtracting column 8 with column 17 and column 10.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">24</td>
+               <td style="text-align: left">This column has the default value of zero as we do not have any other income besides parking fee.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">25</td>
+               <td style="text-align: left">This column has the default value of zero as the system records exact amount of fees.</td>
+            <tr>
+               <td style="text-align: center">26</td>
+               <td style="text-align: left">This column represets the Total Net Sales Amount for the day, it is the sum of columns 23 to 25.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">27</td>
+               <td style="text-align: left">This column has the default vakue of zero as the system has no reset counter because it provides more that enough digits for the O.R. number.</td>
+            </tr>
+            <tr>
+               <td style="text-align: center">28</td>
+               <td style="text-align: left">This column is for you to put on any remarks on the report of transactions for the day.</td>
+            </tr>
+         </tbody>
+      </table>
    </body>
 </html>

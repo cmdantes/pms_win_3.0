@@ -1,6 +1,139 @@
-{% extends 'base/layouts_report/main_report.html' %}
-{% load static %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta charset="UTF-8">
+      <title>Exited Vehicles Report</title>
+      <style>
+         @page {
+         margin-top: 0.6cm;
+         margin-bottom: 2cm;
+         margin-right: 0.56cm;
+         margin-left: 1.5cm;
+         size: 330mm 215.9mm;
+         }
+         @media print {
+         @page {
+         size: 330mm 215.9mm;
+         }
+         }
+         @page {
+         @bottom-right {
+         content: "Page "counter(page) " of "counter(pages);
+         font-size: 12px;
+         }
+         }
+         .header h2,
+         .header h4,
+         .header p,
+         .header h3 {
+         text-align: center;
+         padding-bottom: 0px;
+         margin-bottom: 0px;
+         }
+         .header,
+         .hearder p {
+         padding: 0;
+         margin-bottom: 20px;
+         line-height: .4;
+         }
+        th {
+         font-size: 6px;
+         padding: 4px;
+         background-color: lightblue;
+         border: 1px solid black;
+         /* border-bottom: 2px solid black; */
+         text-align: center;
+         }
+         td {
+         font-size: 6px;
+         padding: 4px;
+         border: 1px solid black;
+         text-align: right;
+         }
+         table {
+         border-collapse: collapse;
+         width: 100%;
+         }
+         .summary {
+         border-collapse: collapse;
+         width: 40%;
+         margin-left: auto;
+         margin-right: auto;
+         }
+         .summary td {
+         border: none;
+         text-align: center;
+         font-size: 12px;
+         }
+         .summary tfoot {
+         border-top: 1px solid black;
+         }
+         .lsummary {
+         border-collapse: collapse;
+         width: 40%;
+         border: 1px solid black;
+         margin-left: auto;
+         margin-right: auto;
+         }
+         .lsummary td {
+         text-align: center;
+         font-size: 12px;
+         }
+         .summary th,
+         .lsummary th {
+         font-size: 11px;
+         }
+         p {
+         font-size: 12px;
+         padding: 0px;
+         }
+         span {
+         font-size: 12px;
+         padding: 0px;
+         }
+         #tin {
+         font-size: 11px;
+         }
+         .blue {
+         margin-top: 20px;
+         text-transform: uppercase;
+         }
+         .footer {
+         line-height: 0.4;
+         }
+         .details {
+         line-height: 20%;
+         }
+         .bold {
+         font-weight: bold;
+         }
+         tfoot {
+         font-weight: bold;
+         }
+         #footer {
+         position: fixed;
+         width: 100%;
+         bottom: -60px;
+         left: 0;
+         right: 0;
+         }
+         .tabs {
+         text-align: center;
+         margin-top: 40px;
+         }
+         .label {
+         position: absolute;
+         right: 90px;
+         }
+         .time td{
+         text-align: center;
+         }
+      </style>
+   </head>
+   <body>
 <div class="header">
    {% for coms in com %}
    <h4 style="text-transform:uppercase">{{ coms.company }}</h4>
@@ -45,4 +178,10 @@
       {% endfor %}
    </tbody>
 </table>
-{% endblock %}
+    <div id="footer">
+         <hr>
+         <p> Exited Vehicles Report - {% now "F j Y H:i" %}</p>
+      </div>
+      <script></script>
+   </body>
+</html>

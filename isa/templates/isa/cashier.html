@@ -20,16 +20,17 @@
    <div class="tab-pane fade show active" id="operator" role="tabpanel" aria-labelledby="operator-tab">
       <div class="container">
          <div class="card text-center col-md-4 offset-md-4">
-            {% if error %}
-            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
-            <br>
-            {% endif %}
-            <form action="{% url 'cashier' %}" method="POST">
+<!--            {% if error %}-->
+<!--            <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>-->
+<!--            <br>-->
+<!--            {% endif %}-->
+            <form action="{% url 'cashierpdf' %}" method="POST">
                {% csrf_token %}
                <div id="pos-div">
                   <Label class="mt-2">Choose POS: </Label>
                   <br>
                   <select name="pos-dev" class="form-control" id="pos-dev" >
+<!--                     <option value="0">ALL</option>-->
                      {% for po in pos %}
                      <option value="{{ po.pos_name }}">{{ po.pos_name }}</option>
                      {% endfor %}
@@ -57,33 +58,24 @@
 <footer>
    <p class="text-center">ISA Copyright &copy; 2019</p>
 </footer>
-<script>
-   $(document).ready(function(){
-      $("#pos-div").hide();
-      $("#pos-dev").prop("disabled", true );
-      $("#pos-op").prop("disabled", false );
-
-      $("#termi-tab").on("click", function(){
-         $("#pos-div").show();
-         $("#pos-dev").prop("disabled", false );
-         $("#pos-op").prop("disabled", true );
-         $("#operator-div").hide();
-      });
-
-      $("#all-tab").on("click", function(){
-         $("#operator-div").hide();
-         $("#pos-div").hide();
-         $("#pos-dev").prop("disabled", 'disabled' );
-         $("#pos-op").prop("disabled", 'disabled');
-      });
-
-      $("#operator-tab").on("click", function(){
-         $("#pos-div").hide();
-         $("#pos-dev").prop("disabled", true );
-         $("#pos-op").prop("disabled", false );
-         $("#operator-div").show();
-      });
-   });
-
-</script>
+<div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+   aria-hidden="true" data-backdrop="static" data-keyboard="false">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Cashier Report</h5>
+            <a href="{% url 'cashier' %}">
+            <button type="button" class="close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </a>
+         </div>
+         <div class="modal-body">
+            <p style="color:red; text-align:center; text-transform: uppercase">{{ error }}</p>
+         </div>
+         <div class="modal-footer">
+         </div>
+      </div>
+   </div>
+</div>
 {% endblock %}

@@ -2,13 +2,6 @@
 {% block content %}
 {% block title %} Special Discount Report {% endblock %}
 <h1 class="text-center mb-3 mt-5 pt-5 white1">Special Discount Summary Report</h1>
-{% if error %}
-<script>
-   $(function () {
-       $('#error').modal('show');
-   });
-</script>
-{% endif %}
 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
    <li class="nav-item">
       <a class="nav-link active white1" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -28,24 +21,24 @@
 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
    <div class="container">
       <div class="card text-center col-md-4 offset-md-4">
-         <form action="{% url 'seniorpospdf' %}" method="POST">
+         <form action="discountpdf" method="POST">
             {% csrf_token %}
             <!-- <Label class="mt-2">ALL: </Label> -->
             <Label>Start & End Date </Label>
             <input name="daterange" id="daterange" class="form-control">
             <br>
-            <input type="submit" class="btn btn-primary btn-block mb-2" formtarget="_blank">
+            <input type="submit" class="btn btn-primary btn-block mb-2">
          </form>
       </div>
    </div>
 </div>
 <div class="modal fade" id="error" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-   aria-hidden="true">
+   aria-hidden="true" data-backdrop="static" data-keyboard="false" href="#">
    <div class="modal-dialog" role="document">
       <div class="modal-content">
          <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Discount Report</h5>
-            <a href="{% url 'discountpos' %}">
+            <a href="{% url 'discount' %}">
             <button type="button" class="close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -55,11 +48,11 @@
             <p style="color:red; text-align:center; text-transform: uppercase">{{ error }}</p>
          </div>
          <div class="modal-footer">
-            <a href="{% url 'discountpos' %}">
-            <button type="button" class="btn btn-secondary">
-            <span aria-hidden="true">BACK TO Discount</span>
-            </button>
-            </a>
+<!--            <a href="{% url 'discount' %}">-->
+<!--            <button type="button" class="btn btn-secondary">-->
+<!--            <span aria-hidden="true">BACK TO Discount</span>-->
+<!--            </button>-->
+<!--            </a>-->
          </div>
       </div>
    </div>

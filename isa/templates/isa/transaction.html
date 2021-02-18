@@ -8,7 +8,7 @@
       <p style="color:red; text-align:center; text-transform: capitalize">{{ error }}</p>
       <br>
       {% endif %}
-      <form action="{% url 'bir' %}" method="POST">
+      <form action="{% url 'transactionpdf' %}" method="POST">
          {% csrf_token %}
          <Label class="mt-2">Choose POS: </Label>
          <br>
